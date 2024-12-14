@@ -4,13 +4,17 @@
 /* font */
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam:wght@100;300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap');
 /* variable */
 :root {     
     --base-color: #354d5d;
     --dark-gray: #262b35;
     --medium-gray:#868d98;
-    --primary-font: 'Be Vietnam', sans-serif;
-    --alt-font: 'Sora', sans-serif;
+    /*--primary-font: 'Be Vietnam', sans-serif;
+    --alt-font: 'Sora', sans-serif;*/
+    --primary-font: 'Plus Jakarta Sans', sans-serif;
+    --alt-font: 'Plus Jakarta Sans', sans-serif;
+    
 }
 /* reset */
 body { 
