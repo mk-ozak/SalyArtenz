@@ -6,9 +6,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
 /* variable */
 :root {
-	--base-color: #e99022;
+	--base-color: #1d2e3e;
 	--medium-gray: #7b7a7a;
-	--dark-gray: #1d1d1d;
+	--dark-gray: #1d2e3e;
 	--charcoal-blue: #1d2e3e;
 	--alt-font: "Space Grotesk", sans-serif;
 	--primary-font: "Inter", sans-serif;
@@ -106,7 +106,7 @@ header .navbar-brand img {
 }
 /* text gradient color */
 .text-gradient-base-color {
-	background-image: linear-gradient(to right, #e97522 0%, #1ea3b1 100%);
+	background-image: linear-gradient(to right, #1d2e3e 0%, #415971 100%);
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 }
