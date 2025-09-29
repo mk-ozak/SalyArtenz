@@ -14,6 +14,7 @@
         var scaleFraction = scaleFraction ? scaleFraction : 0.001;
         var lastScrollPos = 0;
         var scrollDir = '';
+        const { animate } = anime;
         function u() {
             var e = t.scrollTop();
             
@@ -42,13 +43,13 @@
                     if (t.attr('data-parallax-scale')) {
                         u + l(t) < e || u > e + o || (
                             n(window).width() > 1050 
-                                ? (anime({targets: r[0], translateY: i / 6 * (u - e) + "px", scale: canScale ? scale : 1}))
+                                ? (animate(r[0],{translateY: i / 6 * (u - e) + "px", scale: canScale ? scale : 1}))
                                 : r.css("transform", "translateY(0px)")
                         )
                     } else {
                         u + l(t) < e || u > e + o || (
                             n(window).width() > 1050 
-                                ? (anime({targets: r[0], translateY: i / 20 * -(u - e) + "px", scale: canScale ? scale : 1}))
+                                ? (animate(r[0],{translateY: i / 20 * -(u - e) + "px", scale: canScale ? scale : 1}))
                                 : r.css("transform", "translateY(0px)")
                         )
                     }
@@ -56,13 +57,13 @@
                     if (t.attr('data-parallax-scale')) {
                         u + l(t) < e || u > e + o || (
                             n(window).width() > 1050 
-                                ? (anime({targets: r[0], translateY: i / 6 * -(u - e) + "px", scale: canScale ? scale : 1}))
+                                ? (animate(r[0],{ translateY: i / 6 * -(u - e) + "px", scale: canScale ? scale : 1}))
                                 : r.css("transform", "translateY(0px)")
                         )
                     } else {
                         u + l(t) < e || u > e + o || (
                             n(window).width() > 1050 
-                                ? (anime({targets: r[0], translateY: i / 20 * (u - e) + "px", scale: canScale ? scale : 1}))
+                                ? (animate(r[0],{translateY: i / 20 * (u - e) + "px", scale: canScale ? scale : 1}))
                                 : r.css("transform", "translateY(0px)")
                         )
                     }

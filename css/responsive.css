@@ -2,11 +2,11 @@
 
     Theme Name: Crafto - The Multipurpose HTML5 Template
     Theme URL: https://craftohtml.themezaa.com/
-    Description: Elevate your online presence with Crafto - a modern, versatile, multipurpose Bootstrap 5 responsive HTML5, SCSS template using highly creative 52+ ready demos.
+    Description: Elevate your online presence with Crafto - a modern, versatile, multipurpose Bootstrap 5 responsive HTML5, SCSS template using highly creative 56+ ready demos.
     Author: ThemeZaa - https://www.themezaa.com/
     Author ThemeForest URL: https://themeforest.net/user/themezaa
-    Copyright(c) 2024 themezaa.com
-    Version: 2.0
+    Copyright(c) 2025 themezaa.com
+    Version: 3.0
 
 ------------------------------------------------------- */
 /* Bootstrap overwrite css */
@@ -1440,6 +1440,16 @@
   .xxl-outside-box-right-7 {
     margin-right: -7vw;
   }
+  .xxl-outside-box-right-20 {
+    margin-right: -20vw;
+  }
+  .xxl-outside-box-right-40 {
+    margin-right: -40vw;
+  }
+  /* Outside box left */
+  .xxl-outside-box-left-40 {
+    margin-left: -40vw;
+  }
 }
 @media (max-width: 1399px) {
   /* Width */
@@ -1509,6 +1519,22 @@
   }
   .xl-h-100 {
     height: 100% !important;
+  }
+  /* Boder align */
+  .xl-border {
+    border: 1px solid;
+  }
+  .xl-border-top {
+    border-top: 1px solid;
+  }
+  .xl-border-bottom {
+    border-bottom: 1px solid;
+  }
+  .xl-border-start {
+    border-left: 1px solid;
+  }
+  .xl-border-end {
+    border-right: 1px solid;
   }
   /* Border none */
   .xl-border-top-0 {
@@ -2657,6 +2683,9 @@
     margin-right: -65vw;
   }
   /* Border radius */
+  .md-border-radius-0px {
+    border-radius: 0px !important;
+  }
   .md-border-radius-6px {
     border-radius: 6px !important;
   }
@@ -2691,6 +2720,10 @@
   }
   .md-position-initial {
     position: initial !important;
+  }
+  /* top */
+  .md-top-auto {
+    top: auto;
   }
   /* Slider shadow */
   .md-slider-shadow-none {
@@ -2821,6 +2854,15 @@
   .looping-wrapper .el {
     height: 18vh;
     margin-top: -20vh;
+  }
+  /* Stack card */
+  .stack-card .stack-item {
+    position: relative;
+    padding-top: 0 !important;
+    top: 0 !important;
+  }
+  .stack-card .stack-card-item {
+    transform: scale(1) !important;
   }
 }
 @media (max-width: 767px) {
@@ -3558,6 +3600,14 @@
   .cookie-message {
     right: 15px;
     max-width: 330px;
+  }
+  /* Marquee slide */
+  .marquee-rotate-down {
+    transform: none;
+    margin-bottom: 0;
+  }
+  .marquee-rotate-up {
+    transform: none;
   }
 }
 @media (max-width: 575px) {
@@ -21061,6 +21111,14 @@
     margin: 0 auto;
   }
 }
+@media (max-width: 991px) {
+  .services-box-style-09:hover .reveal-title {
+    padding-left: 0;
+  }
+  .services-box-style-09:hover .reveal-action {
+    padding-right: 0;
+  }
+}
 @media (max-width: 1199px) {
   .sliding-box .sliding-box-item {
     width: 33.33% !important;
@@ -21128,6 +21186,16 @@
 @media (max-width: 767px) {
   .elements-social ul li {
     margin-bottom: 20px;
+  }
+  .social-icon-style-11 ul {
+    flex-direction: column;
+  }
+  .social-icon-style-11 ul li {
+    margin-bottom: 0;
+  }
+  .social-icon-style-11 ul li a {
+    border-right: 0;
+    border-bottom: 1px solid var(--extra-medium-gray);
   }
 }
 @media (max-width: 575px) {

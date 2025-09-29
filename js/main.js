@@ -5,8 +5,8 @@
  Description: Elevate your online presence with Crafto - a modern, versatile, multipurpose Bootstrap 5 responsive HTML5, SCSS template using highly creative 52+ ready demos.
  Author: ThemeZaa - https://www.themezaa.com/
  Author ThemeForest URL: https://themeforest.net/user/themezaa
- Copyright(c) 2024 themezaa.com
- Version: 2.0
+ Copyright(c) 2025 themezaa.com
+ Version: 3.0
  
  ------------------------------------------------------- */
 
@@ -16,7 +16,7 @@
     /* ===================================
      Change variables value as per your need 
      ====================================== */
-
+    const {animate} = anime;
     var menuBreakPoint = 991;
     var sliderBreakPoint = 991; // It will effect when you have used attribute "data-thumb-slider-md-direction" OR "data-slider-md-direction"
     var animeBreakPoint = 1199;
@@ -517,30 +517,29 @@
             }, 500);
         }
     }
-    
-    // Without link
-    $('.nav-item  .nav-link').on('click',function(e) {
-    var submenuLenth = $(this).closest('.dropdown').find('.dropdown').length;
 
-    if ( $( window ).width() < 992 && $(this).closest('.dropdown').length > 0 ) {
-        var HasClass = $(this).closest('.nav-item').find( '.dropdown-menu' ).hasClass ('show');
-        if ($(this).closest('.nav-item').find( '.dropdown-menu' ).hasClass ('show')) {
-            $(this).closest('.nav-item').find( '.dropdown-menu' ).removeClass('show')
-            $(this).closest('.nav-item').find( '.dropdown-toggle' ).removeClass('show')
-        }
-        else{
-            $( '.navbar-nav' ).find( '.dropdown-menu' ).removeClass('show');
-            $( '.navbar-nav' ).find( '.dropdown-toggle' ).removeClass('show');
-             $(this).closest('.nav-item').find( '.dropdown-menu' ).addClass('show')
-             $(this).closest('.nav-item').find( '.dropdown-toggle' ).addClass('show')
-        }
+    // Without link
+    $('.nav-item  .nav-link').on('click', function (e) {
+        var submenuLenth = $(this).closest('.dropdown').find('.dropdown').length;
+
+        if ($(window).width() < 992 && $(this).closest('.dropdown').length > 0) {
+            var HasClass = $(this).closest('.nav-item').find('.dropdown-menu').hasClass('show');
+            if ($(this).closest('.nav-item').find('.dropdown-menu').hasClass('show')) {
+                $(this).closest('.nav-item').find('.dropdown-menu').removeClass('show')
+                $(this).closest('.nav-item').find('.dropdown-toggle').removeClass('show')
+            } else {
+                $('.navbar-nav').find('.dropdown-menu').removeClass('show');
+                $('.navbar-nav').find('.dropdown-toggle').removeClass('show');
+                $(this).closest('.nav-item').find('.dropdown-menu').addClass('show')
+                $(this).closest('.nav-item').find('.dropdown-toggle').addClass('show')
+            }
         }
     });
 
-    $(window).resize( function () {
-        if ( $( window ).width() > 991 ) {
-            $( '.navbar-nav' ).find( '.dropdown-menu' ).removeClass('show');
-            $( '.navbar-nav' ).find( '.dropdown-toggle' ).removeClass('show');
+    $(window).resize(function () {
+        if ($(window).width() > 991) {
+            $('.navbar-nav').find('.dropdown-menu').removeClass('show');
+            $('.navbar-nav').find('.dropdown-toggle').removeClass('show');
         }
     });
 
@@ -652,44 +651,38 @@
             });
 
             _self.addEventListener("mouseenter", function () {
-                anime({
-                    targets: _self.querySelector(".hover-reveal"),
+                animate(_self.querySelector(".hover-reveal"), {
                     opacity: [0, 1],
                     duration: 1000,
-                    easing: "easeOutQuad"
+                    ease: "OutQuad"
                 })
 
-                anime({
-                    targets: _self.querySelector(".hover-reveal__inner"),
+                animate(_self.querySelector(".hover-reveal__inner"), {
                     scale: [0.5, 1],
-                    easing: "easeOutQuad"
+                    ease: "OutQuad"
                 })
 
-                anime({
-                    targets: _self.querySelector(".hover-reveal__img"),
+                animate(_self.querySelector(".hover-reveal__img"), {
                     scale: [2, 1],
-                    easing: "easeOutQuad"
+                    ease: "OutQuad"
                 })
             })
 
             _self.addEventListener("mouseleave", function () {
-                anime({
-                    targets: _self.querySelector(".hover-reveal"),
+                animate(_self.querySelector(".hover-reveal"), {
                     opacity: 0,
                     duration: 1000,
-                    easing: "easeOutQuad"
+                    ease: "OutQuad"
                 })
 
-                anime({
-                    targets: _self.querySelector(".hover-reveal__inner"),
+                animate(_self.querySelector(".hover-reveal__inner"), {
                     scale: [1, 0.5],
-                    easing: "easeOutQuad"
+                    ease: "OutQuad"
                 })
 
-                anime({
-                    targets: _self.querySelector(".hover-reveal__img"),
+                animate(_self.querySelector(".hover-reveal__img"), {
                     scale: [1, 2],
-                    easing: "easeOutQuad"
+                    ease: "OutQuad"
                 })
             })
 
@@ -707,6 +700,27 @@
         });
     }
     ThreeDLetterMenuEffect();
+
+    // Crafto reveal box
+    const hoverItem = document.querySelectorAll(".reveal-item-hover");
+    function revealImage(e, hoverItem) {
+        const item = hoverItem.getBoundingClientRect();
+        const reveal = hoverItem.querySelector('.hover-reveal');
+        if (!reveal)
+            return;
+        const revealWidth = reveal.offsetWidth;
+        const revealHeight = reveal.offsetHeight;
+        const x = e.clientX - item.left - revealWidth / 2;
+        const y = e.clientY - item.top - revealHeight / 2;
+        $(hoverItem).find('.hover-reveal').css('transform', `translate(${x}px, ${y}px)`);
+    }
+    hoverItem.forEach((item, i) => {
+        item.addEventListener("mousemove", (e) => {
+            setInterval(revealImage(e, item), 150);
+        });
+    });
+
+
 
     // Minimal portfolio 
     const sticky_container = document.querySelector(".sticky-image-distortion-wrapper");
@@ -931,7 +945,7 @@
                 var total = $(this).attr('aria-valuenow'), delay = 300;
                 $(this).animate({'width': total + '%'}, {
                     duration: delay,
-                    easing: "swing",
+                    ease: "swing",
                     progress: function (animation, progress, msRemaining) {
                         var counter = parseInt(total * progress);
                         $(this).find('span').html(counter + '%');
@@ -1047,11 +1061,10 @@
                         var _this = $(this),
                                 value = _this.attr('data-to');
                         if (value <= 9) {
-                            anime({
-                                targets: this.querySelector('ul'),
+                            animate(this.querySelector('ul'), {
                                 translateY: [0, `${-value * 10}%`],
                                 duration: 2000,
-                                easing: 'easeOutCubic'
+                                ease: 'OutCubic'
                             });
                         }
                     });
@@ -1216,12 +1229,14 @@
         let child = target;
         let staggerValue = options.staggervalue || 0;
         let delay = options.delay || 0;
-        let anime_animation = anime.timeline();
+        let anime_animation = anime.createTimeline();
 
         function applyTransitionStyles(elements) {
             for (let i = 0; i < elements.length; i++) {
                 const element = elements[i];
+                element.style.opacity = 0;
                 element.style.transition = 'none';
+                element.style.transform = "none";
                 if (options.willchange) {
                     element.style.willChange = 'transform';
                 }
@@ -1262,11 +1277,10 @@
             target.style.willChange = options.willchange;
         }
 
-        anime_animation.add({
-            targets: child,
+        anime_animation.add(child, {
             ...options,
             delay: anime.stagger(staggerValue, {start: delay}),
-            complete: function () {
+            onComplete: function () {
                 if (options.el) {
                     target.classList.add('anime-child');
                     target.classList.add('anime-complete');
@@ -1305,13 +1319,24 @@
         const $self = $(this);
         const animeOptions = $self.data('anime');
 
+        // Access the delay value
+        const delayValue = animeOptions.delay;
+
         if (animeOptions && getWindowWidth() > animeBreakPoint) {
             try {
                 const effect = animeOptions.effect && animeOptions.effect.toLowerCase();
 
                 $self.on('appear', function () {
+
+                    if ($self.hasClass('appear') || $self.hasClass('animating')) {
+                        return;
+                    }
+                    $self.addClass('animating');
+
                     if (!$self.hasClass('appear')) {
-                        $self.addClass('appear');
+                        setTimeout(function () {
+                            $self.removeClass('animating').addClass('appear');
+                        }, delayValue);
 
                         if (effect === 'slide') {
                             slideAnimation(this, animeOptions);
@@ -1319,7 +1344,6 @@
                             animeAnimation(this, animeOptions);
                         }
                     }
-
                     if ($self.hasClass('grid')) {
                         $self.find('.grid-sizer').removeAttr('style');
                     }
@@ -1340,6 +1364,10 @@
                 delay = options.delay ? options.delay : 0;
 
         target.style.position = 'relative';
+
+        Array.from(target.children).forEach(child => {
+            child.style.opacity = 0;
+        });
 
         // Create slide panel div
         let tmp = document.createElement('div');
@@ -1364,15 +1392,14 @@
         target.appendChild(tmp);
 
         // init Anime js.
-        let slide_anime = anime.timeline();
-        slide_anime.add({
-            targets: tmp,
+        let slide_anime = anime.createTimeline();
+        slide_anime.add(tmp, {
             scaleX: (direction === 'lr' || direction === 'rl') ? [0, 1] : [1, 1],
             scaleY: (direction === 'tb' || direction === 'bt') ? [0, 1] : [1, 1],
             duration: duration + 500,
-            easing: 'easeInOutCubic',
+            ease: 'InOutCubic',
             delay: delay,
-            complete: function () {
+            onComplete: function () {
                 if (direction === 'lr') {
                     tmp.style.WebkitTransformOrigin = tmp.style.transformOrigin = '100% 50%';
                 } else if (direction === 'tb') {
@@ -1383,13 +1410,12 @@
                     tmp.style.WebkitTransformOrigin = tmp.style.transformOrigin = '0% 50%';
                 }
 
-                anime({
-                    targets: tmp,
+                animate(tmp, {
                     duration: duration + 500,
-                    easing: 'easeInOutCubic',
+                    ease: 'InOutCubic',
                     scaleX: (direction === 'lr' || direction === 'rl') ? [1, 0] : [1, 1],
                     scaleY: (direction === 'tb' || direction === 'bt') ? [1, 0] : [1, 1],
-                    complete: function () {
+                    onComplete: function () {
                         target.removeChild(tmp);
                         if (typeof callback === 'function') {
                             callback();
@@ -1397,9 +1423,8 @@
                     }
                 });
             }
-        }).add({
-            targets: target.querySelector('*'),
-            easing: 'easeOutQuint',
+        }).add(target.querySelector('*'), {
+            ease: 'OutQuint',
             delay: direction === 'lr' ? anime.stagger(duration, {start: 1000}) : anime.stagger(-duration, {start: 1000}),
             opacity: [0, 1]
         }, "-=900");
@@ -1413,18 +1438,22 @@
     const curvedTextAnimation = (target, options) => {
         let duration = options.duration ? (options.duration <= 2000 ? 2000 : options.duration) : 2000,
                 content = options.string,
-                curveText = anime.timeline();
+                curveText = anime.createTimeline();
 
         const lineEq = (y2, y1, x2, x1, currentVal) => {
             var m = (y2 - y1) / (x2 - x1),
                     b = y1 - m * x1;
             return m * currentVal + b;
         }
-
-        curveText.add({
-            targets: target.querySelectorAll('.anime-text > .word > .char'),
+        const curveTextchar = target.querySelectorAll('.anime-text > .word > .char')
+        curveTextchar.forEach(curve => {
+            curve.style.opacity = 0;
+            curve.style.transform = 'none';
+            curve.style.willChange = 'transform';
+        });
+        curveText.add(curveTextchar, {
             duration: 800,
-            easing: 'easeOutElastic',
+            ease: 'outElastic',
             opacity: 1,
             translateY: function (el, index) {
                 var p = el.parentNode,
@@ -1442,10 +1471,9 @@
                         rz = lineEq(90, -90, firstElOffL + w, firstElOffL, el.offsetLeft);
                 return [rz, 0];
             }
-        }).add({
-            targets: target.querySelectorAll('.anime-text > .word > .char'),
+        }).add(curveTextchar, {
             duration: 1000,
-            easing: 'easeInExpo',
+            ease: 'inExpo',
             opacity: content.length > 1 ? 0 : 1,
             translateY: function (el, index) {
                 var p = el.parentNode,
@@ -1453,7 +1481,7 @@
                         firstElOffL = p.firstElementChild.offsetLeft,
                         w = p.offsetWidth - lastElOffW - firstElOffL - (p.offsetWidth - lastElOffW - p.lastElementChild.offsetLeft),
                         tyVal = lineEq(0, 100, firstElOffL + w / 2, firstElOffL, el.offsetLeft);
-                return content.length > 1 ? [-Math.abs(tyVal) + '%'] : [Math.abs(tyVal) + '%', '0%'];
+                return content.length > 1 ? ['0%', -Math.abs(tyVal) + '%'] : [Math.abs(tyVal) + '%', '0%'];
             },
             rotateZ: function (el, index) {
                 var p = el.parentNode,
@@ -1487,26 +1515,28 @@
         }
         current_anime_text.appendChild(tmp);
 
+        target.querySelectorAll('.anime-text > .word > .char').forEach(char => {
+            char.style.opacity = 0;
+            char.style.transform = 'none';
+        });
         // init Anime js.
-        let slide_anime = anime.timeline();
-        slide_anime.add({
-            targets: current_anime_text.querySelectorAll('div'),
+        let slide_anime = anime.createTimeline();
+        slide_anime.add(current_anime_text.querySelectorAll('div'), {
             scaleX: [0, 1],
             duration: speed + 500,
-            easing: 'easeInOutCubic',
-            complete: function () {
+            ease: 'inOutCubic',
+            onComplete: function () {
                 if (options.direction === 'left') {
                     tmp.style.WebkitTransformOrigin = tmp.style.transformOrigin = '0% 50%';
                 } else {
                     tmp.style.WebkitTransformOrigin = tmp.style.transformOrigin = '100% 50%';
                 }
 
-                anime({
-                    targets: tmp,
+                animate(tmp, {
                     duration: speed + 500,
-                    easing: 'easeInOutCubic',
+                    ease: 'inOutCubic',
                     scaleX: [1, 0],
-                    complete: function () {
+                    onComplete: function () {
                         current_anime_text.removeChild(tmp);
                         if (typeof callback === 'function') {
                             callback();
@@ -1514,9 +1544,8 @@
                     }
                 });
             }
-        }).add({
-            targets: target.querySelectorAll('.anime-text > .word > .char'),
-            easing: 'easeOutQuint',
+        }).add(target.querySelectorAll('.anime-text > .word > .char'), {
+            ease: 'outQuint',
             delay: options.direction === 'left' ? anime.stagger(speed, {start: 1000}) : anime.stagger(-speed, {start: 1000}),
             opacity: [0, 1],
             translateX: options.direction === 'left' ? [100, 0] : [-100, 0]
@@ -1529,18 +1558,26 @@
                 direction = options.direction,
                 content = options.string,
                 speed = options.speed,
-                waveText = anime.timeline();
+                waveText = anime.createTimeline();
+        const waveTextchar = target.querySelectorAll('.anime-text > .word > .char')
+        waveTextchar.forEach(wave => {
+            wave.style.opacity = 0;
+            wave.style.transform = 'none';
+            wave.style.willChange = 'transform';
+        });
 
-        waveText.add({
-            targets: target.querySelectorAll('.anime-text > .word > .char'),
+        waveText.add(waveTextchar, {
             opacity: [0, 1],
-            translateY: direction === 'down' ? [-20, 0] : [20, 0],
+            translateY: direction === 'down' ? [-40, 0] : [40, 0],
+            duration: 600,
+            ease: 'outElastic(1, .7)',
             delay: anime.stagger(speed ? speed : 50)
-        }).add({
-            targets: target.querySelectorAll('.anime-text .word .char'),
+        }).add(waveTextchar, {
             opacity: content.length > 1 ? [1, 0] : [1, 1],
-            translateY: content.length > 1 ? (direction === 'down' ? [0, 20] : [0, -20]) : [0, 0],
-            delay: anime.stagger(speed ? speed : 50, {start: duration - 1500})
+            duration: 500,
+            ease: 'inBack',
+            translateY: content.length > 1 ? (direction === 'down' ? [0, 40] : [0, -40]) : [0, 0],
+            delay: anime.stagger(speed ? speed : 50, {start: duration - 1200})
         });
     }
 
@@ -1550,22 +1587,25 @@
                 direction = options.direction,
                 content = options.string,
                 speed = options.speed,
-                smoothWaveText = anime.timeline();
-
-        smoothWaveText.add({
-            targets: target.querySelectorAll('.anime-text > .word > .char'),
+                smoothWaveText = anime.createTimeline();
+        const smoothWaveTextchar = target.querySelectorAll('.anime-text > .word > .char')
+        smoothWaveTextchar.forEach(smoothwave => {
+            smoothwave.style.opacity = 0;
+            smoothwave.style.transform = 'none';
+            smoothwave.style.willChange = 'transform';
+        });
+        smoothWaveText.add(smoothWaveTextchar, {
             opacity: [0, 1],
             translateY: direction === 'down' ? [-50, 0] : [50, 0],
             duration: 500,
-            easing: 'easeOutQuad',
-            delay: anime.stagger(speed ? speed : 40, {direction: 'reverse'}),
-        }).add({
-            targets: target.querySelectorAll('.anime-text .word .char'),
+            ease: 'outQuad',
+            delay: anime.stagger(speed ? speed : 40, {reversed: true}),
+        }).add(smoothWaveTextchar, {
             opacity: content.length > 1 ? [1, 0] : [1, 1],
             translateY: content.length > 1 ? (direction === 'down' ? 50 : -50) : 0,
             duration: 500,
-            easing: 'easeOutQuad',
-            delay: anime.stagger(speed ? speed : 40, {start: duration - 1000, direction: 'reverse'})
+            ease: 'outQuad',
+            delay: anime.stagger(speed ? speed : 40, {start: duration - 1000, reversed: true})
         });
     }
 
@@ -1574,22 +1614,26 @@
         let duration = options.duration ? options.duration : 3000,
                 content = options.string,
                 speed = options.speed,
-                rotateText = anime.timeline();
+                rotateText = anime.createTimeline();
+        const rotateTextchar = target.querySelectorAll('.anime-text > .word > .char')
+        rotateTextchar.forEach(rotate => {
+            rotate.style.opacity = 0;
+            rotate.style.transform = 'none';
+            rotate.style.willChange = 'transform';
+        });
 
-        rotateText.add({
-            targets: target.querySelectorAll('.anime-text > .word > .char'),
+        rotateText.add(rotateTextchar, {
             opacity: [0, 1],
             rotateX: [-70, 0],
             duration: 150,
             delay: anime.stagger(speed ? speed : 50),
-            easing: "linear"
-        }).add({
-            targets: target.querySelectorAll('.anime-text > .word > .char'),
+            ease: "linear"
+        }).add(rotateTextchar, {
             opacity: content.length > 1 ? 0 : 1,
             rotateX: content.length > 1 ? [0, 70] : [0, 0],
             duration: 150,
             delay: anime.stagger(speed ? speed : 50, {start: duration - 1500}),
-            easing: "linear"
+            ease: "linear"
         });
     }
 
@@ -1599,21 +1643,21 @@
                 content = options.string,
                 speed = options.speed,
                 delay = options.delay,
-                movingLetter9 = anime.timeline();
+                movingLetter9 = anime.createTimeline();
 
-        movingLetter9.add({
-            targets: target.querySelectorAll('.anime-text > .word > .char'),
+        const jumpTextchar = target.querySelectorAll('.anime-text > .word > .char')
+
+        movingLetter9.add(jumpTextchar, {
             scale: [0, 1],
             duration: 1500,
-            elasticity: 600,
+            ease: "outElastic(1, .5)",
             transformOrigin: '50% 100%',
             delay: anime.stagger(speed ? speed : 45, {start: delay})
-        }).add({
-            targets: target.querySelectorAll('.anime-text > .word > .char'),
+        }).add(jumpTextchar, {
             opacity: content.length > 1 ? 0 : 1,
             scale: content.length > 1 ? 0 : 1,
             duration: 500,
-            easing: "easeOutExpo",
+            ease: "outExpo",
             delay: anime.stagger(speed ? speed : 45)
         }, `+=${duration - 2300}`);
     }
@@ -1623,70 +1667,90 @@
         let duration = options.duration ? options.duration : 3000,
                 content = options.string,
                 speed = options.speed,
-                movingLetter2 = anime.timeline();
+                movingLetter2 = anime.createTimeline();
+        const zoomchars = target.querySelectorAll('.anime-text > .word > .char');
+        if (!zoomchars.length)
+            return;
 
-        movingLetter2.add({
-            targets: target.querySelectorAll('.anime-text > .word > .char'),
+        zoomchars.forEach(zoom => {
+            zoom.style.opacity = 0;
+            zoom.style.transform = 'none';
+            zoom.style.willChange = 'transform';
+        });
+
+        movingLetter2.add(zoomchars, {
             scale: [4, 1],
             opacity: [0, 1],
             translateZ: 0,
-            easing: "easeOutExpo",
+            ease: "outExpo",
             duration: 950,
             delay: anime.stagger(speed ? speed : 70)
-        }).add({
-            targets: target.querySelectorAll('.anime-text > .word'),
+        }).add(target.querySelectorAll('.anime-text > .word'), {
             opacity: content.length > 1 ? 0 : 1,
             duration: 1000,
-            easing: "easeOutExpo",
+            ease: "outExpo",
             delay: 1000
         }, `+=${duration - 2500}`);
     }
 
     // Rubber band text effect
     const rubberbandTextAnimation = (target, options) => {
-        let duration = options.duration ? options.duration : 3000,
+        let duration = options.duration || 3000,
                 content = options.string,
-                speed = options.speed,
+                speed = options.speed || 75,
                 direction = options.direction,
-                rubberband = anime.timeline();
+                rubberband = anime.createTimeline();
 
-        rubberband.add({
-            targets: target.querySelectorAll('.anime-text > .word > .char'),
+        const rubberbandchars = target.querySelectorAll('.anime-text > .word > .char');
+        if (!rubberbandchars.length)
+            return;
+
+        rubberbandchars.forEach(rubberBand => {
+            rubberBand.style.opacity = 0;
+            rubberBand.style.transform = 'none';
+            rubberBand.style.willChange = 'transform';
+        });
+
+        rubberband.add(rubberbandchars, {
             translateX: direction === "right" ? [-40, 0] : [40, 0],
             translateZ: 0,
             opacity: [0, 1],
-            easing: "easeOutExpo",
+            ease: "outExpo",
             duration: 1200,
-            delay: anime.stagger(speed ? speed : 75, {direction: direction === "right" ? 'reverse' : 'normal'})
-        }).add({
-            targets: target.querySelectorAll('.anime-text > .word > .char'),
-            translateX: content.length > 1 ? (direction === "left" ? -40 : 40) : 0,
-            opacity: content.length > 1 ? 0 : 1,
-            easing: "easeInExpo",
-            duration: 500,
-            delay: anime.stagger(speed ? speed : 75, {start: duration - 2500, direction: direction === "right" ? 'reverse' : 'normal'})
-        });
-    }
+            delay: anime.stagger(speed, {direction: direction === "right" ? 'reverse' : 'normal'})
+        })
+                .add(rubberbandchars, {
+                    translateX: content.length > 1 ? (direction === "left" ? -40 : 40) : 0,
+                    opacity: content.length > 1 ? 0 : 1,
+                    ease: "inExpo",
+                    duration: 500,
+                    delay: anime.stagger(speed, {start: duration - 2500, direction: direction === "right" ? 'reverse' : 'normal'})
+                });
+    };
 
     // Fade text effect
     const fadeTextAnimation = (target, options) => {
         let duration = options.duration ? options.duration : 3000,
                 content = options.string,
                 speed = options.speed,
-                fade = anime.timeline();
+                fade = anime.createTimeline();
+        const fadeTextchar = target.querySelectorAll('.anime-text > .word > .char')
+        fadeTextchar.forEach(fadeeffect => {
+            fadeeffect.style.opacity = 0;
+            fadeeffect.style.transform = 'none';
+            fadeeffect.style.willChange = 'transform';
+        });
 
-        fade.add({
-            targets: target.querySelectorAll('.anime-text > .word > .char'),
+        fade.add(fadeTextchar, {
             translateY: [100, 0],
             translateZ: 0,
             opacity: [0, 1],
-            easing: "easeOutExpo",
+            ease: "outExpo",
             delay: anime.stagger(speed ? speed : 30)
-        }).add({
-            targets: target.querySelectorAll('.anime-text > .word > .char'),
+        }).add(fadeTextchar, {
             translateY: content.length > 1 ? [0, -100] : [0, 0],
             opacity: content.length > 1 ? [1, 0] : [1, 1],
-            easing: "easeInExpo",
+            ease: "inExpo",
             delay: anime.stagger(speed ? speed : 40, {start: duration - 3000})
         });
     }
@@ -1746,8 +1810,7 @@
                 }
 
                 if (text_effect === undefined) {
-                    anime({
-                        targets: item.querySelectorAll('.anime-text > .word > .char'),
+                    animate(item.querySelectorAll('.anime-text > .word > .char'), {
                         ...ftOptions,
                         delay: anime.stagger(speed ? speed : 0, {start: delay ? delay : 0})
                     })
@@ -1811,8 +1874,7 @@
                     }
 
                     if (text_effect === undefined) {
-                        anime({
-                            targets: item.querySelectorAll('.anime-text > .word > .char'),
+                        animate(item.querySelectorAll('.anime-text > .word > .char'), {
                             ...ftOptions,
                             delay: anime.stagger(speed ? speed : 0, {start: delay ? delay : 0})
                         });
@@ -1839,12 +1901,26 @@
         }
     });
 
+    if ($('html').attr('dir') === 'rtl') {
+        $('[data-fancy-text]').each(function () {
+            if ($(this).parents('.fancy-text-style-4').length) {
+                $(this).parents('.fancy-text-style-4').css({
+                    direction: 'ltr',
+                });
+            } else {
+                $(this).css({
+                    direction: 'ltr',
+                });
+            }
+        });
+    }
+
     /* ===================================
      Instagram feed
      ====================================== */
     var instagramWrapperItems = document.querySelectorAll('.instafeed-wrapper');
     instagramWrapperItems.forEach(function (instagramWrapperItem) {
-        var token = 'IGQWRPSWZAleS1CRk5UR2dqcWhkam5lTFZAQQUxmQU9MLTgzVi11WjYzY0NVSS10UlVSR195aWxMZAnh5cC1OZAUdFUlFLRnV0M0hFR19pcnhXOU1MZAi1UQTYzZAHl2NmVGVzA1ZAE5pZAllHMGdDaFZA5bFBzUzUxeWF2NVkZD',
+        var token = 'IGQWROLXF6d1l6anM0WU81SkhHdDFsSkZAUNS1xTHdPSm1naXR3UkQzd01jczR6X1Q4cGdsdTVVMjRUX3NNc0RMOTRZAbVdQSjdpMUZAxYjNpc1puc18ycDI1eUZAoaUlxSm5TbW0tOExiUDVpMm12T0hLai10MUxqanMZD',
                 _this = $(instagramWrapperItem),
                 token = _this.attr('data-token') || token,
                 total = _this.attr('data-total') || '6', // how much photos do you want to get
@@ -1864,10 +1940,10 @@
                         if (response.data[x]['media_type'] == 'IMAGE' || response.data[x]['media_type'] == 'CAROUSEL_ALBUM') {
                             console.log('image');
                             var link = response.data[x]['permalink'] || '',
-                                image = response.data[x]['media_url'] || '',
-                                likes = response.data[x]['like_count'] || '',
-                                comments = response.data[x]['comments_count'] || '',
-                                output = _html;
+                                    image = response.data[x]['media_url'] || '',
+                                    likes = response.data[x]['like_count'] || '',
+                                    comments = response.data[x]['comments_count'] || '',
+                                    output = _html;
 
                             output = output.replace(' href="#"', '');
                             output = output.replace(' src="#"', '');
@@ -1875,18 +1951,18 @@
                             output = output.replace('data-src', 'src');
                             output = output.replace('{{link}}', link);
                             output = output.replace('{{image}}', image);
-                            
+
                             output = output.replace('{{likes}}', likes);
                             output = output.replace('{{comments}}', comments);
-                            output = output.replace( '{{image-class}}', 'image' );
+                            output = output.replace('{{image-class}}', 'image');
                             outputHTML += output;
 
-                        }else if( response.data[x]['media_type'] == 'VIDEO' ){
+                        } else if (response.data[x]['media_type'] == 'VIDEO') {
                             var link = response.data[x]['permalink'] || '',
-                                video = response.data[x]['media_url'] || '';
+                                    video = response.data[x]['media_url'] || '';
 
-                            output = output.replace( '{{video}}', video );
-                            output = output.replace( '{{video-class}}', 'video' );
+                            output = output.replace('{{video}}', video);
+                            output = output.replace('{{video-class}}', 'video');
                             outputHTML += output;
                         }
                     }
@@ -2072,7 +2148,7 @@
                 telFormat = /[0-9 -()+]+$/,
                 actionURL = formObj.attr('action'),
                 resultsObj = formObj.find('.form-results'),
-                grecaptchav3= _this.attr( 'data-sitekey' ) || '',
+                grecaptchav3 = _this.attr('data-sitekey') || '',
                 redirectVal = formObj.find('[name="redirect"]').val();
         formObj.find('.required').removeClass('is-invalid');
         formObj.find('.required').each(function () {
@@ -2101,17 +2177,17 @@
         }
 
         // Google reCaptcha verify
-        if ( typeof ( grecaptcha ) !== 'undefined' && grecaptcha !== null ) {
+        if (typeof (grecaptcha) !== 'undefined' && grecaptcha !== null) {
             if (formObj.find('.g-recaptcha').length) {
                 var gResponse = grecaptcha.getResponse();
                 if (!(gResponse.length)) {
                     error = true;
                     formObj.find('.g-recaptcha').addClass('is-invalid');
                 }
-            } else if( grecaptchav3 != '' && grecaptchav3 != undefined ) { // For Version 3
-                grecaptcha.ready(function() {
-                  grecaptcha.execute(grecaptchav3, {action: 'submit'}).then(function(token) {
-                  });
+            } else if (grecaptchav3 != '' && grecaptchav3 != undefined) { // For Version 3
+                grecaptcha.ready(function () {
+                    grecaptcha.execute(grecaptchav3, {action: 'submit'}).then(function (token) {
+                    });
                 });
             }
         }
@@ -2403,18 +2479,18 @@
         } else {
             $('.scroll-top-arrow').fadeOut('300');
         }
-        
-        if ( $( 'nav.header-reverse-back-scroll' ).length > 0 ) {
+
+        if ($('nav.header-reverse-back-scroll').length > 0) {
             var st = scrollPos;
-            if ( st > lastScroll ) {
+            if (st > lastScroll) {
                 st = st - 1;
-                $( 'header' ).removeClass( 'sticky-appear' );
+                $('header').removeClass('sticky-appear');
             } else {
                 $('header').addClass('sticky-appear');
             }
             lastScroll = st;
-            if ( lastScroll <= headerHeight ) {
-                $( 'header' ).removeClass( 'sticky-appear' );
+            if (lastScroll <= headerHeight) {
+                $('header').removeClass('sticky-appear');
             }
         }
 
@@ -2620,17 +2696,17 @@
                                     if (typeof (options) !== 'undefined' && options !== null) {
                                         options = $.parseJSON(options);
 
-                                        element.classList.add('appear');
-                                        element.style.transition = "none";
-
                                         if (options.el) {
                                             for (let i = 0; i < element.children.length; i++) {
-                                                element.children[i].style.transition = "none";
+                                                element.children[i].style.opacity = 0;
                                                 element.children[i].classList.add('appear');
                                             }
+                                        } else {
+                                            element.style.opacity = 0;
+                                            element.classList.add('appear');
+                                            element.style.transition = "none";
                                         }
                                         animeAnimation(element, options);
-                                        element.classList.remove('appear');
                                     }
                                 });
                             }
@@ -2666,14 +2742,15 @@
                                     if (typeof (options) !== 'undefined' && options !== null) {
                                         options = $.parseJSON(options);
 
-                                        element.classList.add('appear');
-                                        element.style.transition = "none";
-
                                         if (options.el) {
                                             for (let i = 0; i < element.children.length; i++) {
-                                                element.children[i].style.transition = "none";
+                                                element.children[i].style.opacity = 0;
                                                 element.children[i].classList.add('appear');
                                             }
+                                        } else {
+                                            element.style.opacity = 0;
+                                            element.classList.add('appear');
+                                            element.style.transition = "none";
                                         }
                                         animeAnimation(element, options);
                                         element.classList.remove('appear');
@@ -3133,10 +3210,9 @@
         var animePath = $(this);
         var paths = animePath.attr('pathdata:id').split(';');
         paths.splice(paths.length, 0, animePath.attr('d'));
-        anime({
-            targets: animePath[0],
+        animate(animePath[0], {
             duration: 10000,
-            easing: 'cubicBezier(0.5, 0, 0.5, 1)',
+            ease: 'cubicBezier(0.5, 0, 0.5, 1)',
             d: paths,
             loop: true
         });
@@ -3169,9 +3245,16 @@
 
     function handleCustomCursor() {
         if ($('body').hasClass('custom-cursor')) {
-            customCursorInit = true;
             const cursorInnerEl = document.querySelector('.circle-cursor-inner');
             const cursorOuterEl = document.querySelector('.circle-cursor-outer');
+
+            // Return early if elements are not found
+            if (!cursorInnerEl || !cursorOuterEl) {
+                console.warn('Custom cursor elements not found.');
+                return;
+            }
+
+            customCursorInit = true;
             let lastY, lastX;
             let magneticFlag = false;
             let anchorHover = false;
@@ -3397,43 +3480,49 @@
      Infinite looping animation
      ====================================== */
 
-    const wrapperEl = document.querySelector('.looping-wrapper') || false;
+    const wrapperEl = document.querySelector('.looping-wrapper');
     const numberOfEls = 100;
     const duration = 6000;
     const delay = duration / numberOfEls;
 
-    let tl = anime.timeline({
-        duration: delay,
-        complete: function () {
-            tl.restart();
-        }
+    // Create timeline
+    let tl = anime.createTimeline({
+        loop: true,
+        loopDelay: -900,
+        autoplay: true,
+        defaults: {
+            ease: 'inOutSine',
+        },
     });
 
     function createEl(i) {
-        let el = document.createElement('div');
-        const rotate = (360 / numberOfEls) * i;
+        const el = document.createElement('div');
+        let rotate = (360 / numberOfEls) * i;
         const translateY = -50;
+
         el.classList.add('el');
         el.style.transform = 'rotate(' + rotate + 'deg) translateY(' + translateY + '%)';
-        tl.add({
-            begin: function () {
-                anime({
-                    targets: el,
-                    rotate: [rotate + 'deg', rotate + 10 + 'deg'],
-                    translateY: [translateY + '%', translateY + 10 + '%'],
-                    scale: [1, 1.25],
-                    easing: 'easeInOutSine',
-                    direction: 'alternate',
-                    duration: duration * .1
-                });
-            }
-        });
-        if (wrapperEl)
+
+        tl.add(el, {
+            keyframes: [
+                {rotate: `${rotate + 10}deg`, translateY: `${translateY + 10}%`, scale: 1.25},
+                {rotate: `${rotate}deg`, translateY: `${translateY}%`, scale: 1}
+            ],
+            delay: i * delay,
+            onComplete: () => {
+                el.style.transform = `rotate(${rotate}deg) translateY(${translateY}%) scale(1)`;
+            },
+
+        }, 0);
+
+        if (wrapperEl) {
             wrapperEl.appendChild(el);
+        }
     }
 
-    for (let i = 0; i < numberOfEls; i++)
+    for (var i = 0; i < numberOfEls; i++) {
         createEl(i);
+    }
 
     /* ===================================
      Background color change on scroll - Adaptive Backgrounds
@@ -3521,6 +3610,7 @@
             $('.theme-demos').fadeIn(600);
         }
     }
+
     $(window).scroll(function () {
         scrollIndicator();
     });
@@ -3539,8 +3629,8 @@
      Theme demo panel
      ====================================== */
 
-    // var themeDemoHTML = '<div class="theme-demos"><div class="demo-button-wrapper"><div class="buy-theme"><a href="https://1.envato.market/R53mL2" target="_blank"><div class="theme-wrapper"><div><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 22.284 25.436"><path d="M19.314,9.285c-.745-.414-2.882-.158-5.449.637-4.492,3.07-8.283,7.594-8.547,14.858-.048.174-.491-.024-.579-.077a10.346,10.346,0,0,1-.681-8.3c.189-.314-.428-.7-.539-.591a12.683,12.683,0,0,0-1.765,2.278,11.061,11.061,0,0,0,19.33,10.759c3.438-6.161.246-18.432-1.77-19.558Z" transform="translate(-0.32 -9.089)" fill="#fff"></path></svg></div></div></a></div><div class="all-demo"><a href="#"><div class="theme-wrapper"><div>52+ Pre-built sites</div></div></a></div></div><span class="close-popup fs-22 text-dark-gray w-40px h-40px d-flex justify-content-center align-items-center"><i class="fa-solid fa-xmark"></i></span></div>';
-    // var themeDemoData = '<section class="theme-demos-main d-flex justify-content-center"> <div class="demos-wrapper w-100"> <div class="w-100 demos-wrapper-inner"> <div class="w-100 text-center mb-15px"> <h3 class="fw-700 text-dark-gray ls-minus-1px ps-20 pe-20 mb-35px"> 52+ Pre-built websites</h3> </div> <div class="container-fluid"> <div class="row"> <div class="col-12"> <ul class="portfolio-wrapper grid grid-4col xxl-grid-4col xl-grid-3col lg-grid-2col md-grid-2col sm-grid-1col xs-grid-1col gutter-extra-large"> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-corporate.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-corporate.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-corporate.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Corporate</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-restaurant.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-restaurant.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-restaurant.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Restaurant</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-branding-agency.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-branding-agency.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-branding-agency.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Branding agency</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-elearning.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-elearning.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-elearning.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> eLearning</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-it-business.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-it-business.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-it-business.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> IT Business</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-data-analysis.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-data-analysis.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-data-analysis.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Data analysis</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-hotel-and-resort.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-hotel-and-resort.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-hotel-and-resort.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Hotel resort</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-scattered-portfolio.html"target="_blank"> <img class="border-radius-6px w-100" src="images/demo-scattered-portfolio.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-scattered-portfolio.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Scattered portfolio</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-beauty-salon.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-beauty-salon.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-beauty-salon.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Beauty salon</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-product-showcase.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-product.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-product-showcase.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Product showcase</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-medical.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-medical.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-medical.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Medical</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-marketing.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-marketing.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-marketing.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Marketing</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-gym-and-fitness.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-gym-and-fitness.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-gym-and-fitness.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Gym & fitness</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-design-agency.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-design-agency.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-design-agency.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Design agency</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-accounting.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-accounting.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-accounting.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Accounting</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-fashion-store.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-fashion-store.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-fashion-store.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Fashion store</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-interactive-portfolio.html"target="_blank"> <img class="border-radius-6px w-100" src="images/demo-interactive-portfolio.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-interactive-portfolio.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Interactive portfolio</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-yoga-and-meditation.html"target="_blank"> <img class="border-radius-6px w-100" src="images/demo-yoga-and-meditation.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-yoga-and-meditation.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Yoga & meditation</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-travel-agency.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-travel-agency.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-travel-agency.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Travel agency</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-photography.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-photography.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-photography.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Photography</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-ebook.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-ebook.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-ebook.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> eBook</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-conference.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-conference.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-conference.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Conference</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-freelancer.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-freelancer.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-freelancer.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Freelancer</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-lawyer.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-lawyer.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-lawyer.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Lawyer</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-blogger.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-blogger.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-blogger.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Blogger</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-business.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-business.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-business.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Business</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-horizontal-portfolio.html"target="_blank"> <img class="border-radius-6px w-100" src="images/demo-horizontal-portfolio.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-horizontal-portfolio.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Horizontal portfolio</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-finance.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-finance.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-finance.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Finance</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-decor-store.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-decor-store.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-decor-store.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Decor store</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-wedding-invitation.html"target="_blank"> <img class="border-radius-6px w-100" src="images/demo-wedding-invitation.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-wedding-invitation.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Wedding invitation</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-vertical-portfolio.html"target="_blank"> <img class="border-radius-6px w-100" src="images/demo-vertical-portfolio.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-vertical-portfolio.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Vertical portfolio</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-pizza-parlor.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-pizza-parlor.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-pizza-parlor.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Pizza parlor</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-music-onepage.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-music.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-music-onepage.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> music</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-magazine.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-magazine.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-magazine.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Magazine</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-charity.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-charity.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-charity.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Charity</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-hosting.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-hosting.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-hosting.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Hosting</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-jewellery-store.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-jewellery-store.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-jewellery-store.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Jewellery store</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-architecture.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-architecture.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-architecture.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Architecture</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-minimal-portfolio.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-minimal-portfolio.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-minimal-portfolio.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Minimal portfolio</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-digital-agency.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-digital-agency.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-digital-agency.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Digital agency</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-consulting.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-consulting.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-consulting.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Consulting</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-application.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-application.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-application.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Application</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-real-estate.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-real-estate.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-real-estate.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Real estate</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-seo-agency.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-seo-agency.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-seo-agency.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Seo agency</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-green-energy.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-green-energy.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-green-energy.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Green energy</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-logistics.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-logistics.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-logistics.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Logistics</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-cryptocurrency.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-cryptocurrency.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-cryptocurrency.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600">Cryptocurrency</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-elder-care.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-elder-care.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-elder-care.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600">Elder care</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-spa-salon.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-spa-salon.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-spa-salon.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Spa salon</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-barber.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-barber.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-barber.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Barber</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-web-agency.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-web-agency.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-web-agency.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Web agency</a> </div> </div> </li> <li class="grid-item"> <div class="box-shadow-medium box-shadow-quadruple-large-hover p-10px bg-white border-radius-10px"> <div class="portfolio-image"> <a href="demo-startup.html" target="_blank"> <img class="border-radius-6px w-100" src="images/demo-startup.jpg" alt=""> </a> </div> <div class="portfolio-caption text-center pt-15px pb-10px"> <a href="demo-startup.html" target="_blank"class="text-dark-gray text-dark-gray-hover fw-600"> Startup</a> </div> </div> </li> </ul> </div> </div> </div> <div class="w-100 text-center"> <a href="https://1.envato.market/R53mL2" target="_blank"class="btn btn-dark-gray btn-large btn-switch-text btn-rounded btn-box-shadow mt-50px text-transform-none"> <span> <span class="btn-double-text" data-text="Purchase Crafto"> Purchase Crafto</span> <span> <i class="feather icon-feather-shopping-cart"> </i> </span> </span> </a> </div> </div> </div> </section>';
+    // var themeDemoHTML = '<div class="theme-demos"><div class="demo-button-wrapper"><div class="buy-theme"><a href="https://1.envato.market/R53mL2" target="_blank"><div class="theme-wrapper"><div><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewbox="0 0 22.284 25.436"><path d="M19.314,9.285c-.745-.414-2.882-.158-5.449.637-4.492,3.07-8.283,7.594-8.547,14.858-.048.174-.491-.024-.579-.077a10.346,10.346,0,0,1-.681-8.3c.189-.314-.428-.7-.539-.591a12.683,12.683,0,0,0-1.765,2.278,11.061,11.061,0,0,0,19.33,10.759c3.438-6.161.246-18.432-1.77-19.558Z" transform="translate(-0.32 -9.089)" fill="#fff"></path></svg></div></div></a></div><div class="all-demo"><a href="#"><div class="theme-wrapper"><div>56+ Pre-built sites</div></div></a></div></div><span class="close-popup fs-22 text-dark-gray w-40px h-40px d-flex justify-content-center align-items-center"><i class="fa-solid fa-xmark"></i></span></div>';
+    // var themeDemoData = '<section class="d-flex justify-content-center theme-demos-main"><div class="w-100 demos-wrapper"><div class="w-100 demos-wrapper-inner"><div class="w-100 text-center mb-15px"><h3 class="text-dark-gray fw-700 ls-minus-1px mb-35px pe-20 ps-20">56+ Pre-built websites</h3></div><div class=container-fluid><div class=row><div class=col-12><ul class="grid grid-4col gutter-extra-large lg-grid-2col md-grid-2col portfolio-wrapper sm-grid-1col xl-grid-3col xs-grid-1col xxl-grid-4col"><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-corporate.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-corporate.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-corporate.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Corporate</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-restaurant.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-restaurant.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-restaurant.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Restaurant</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-branding-agency.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-branding-agency.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-branding-agency.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Branding agency</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-elearning.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-elearning.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-elearning.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">eLearning</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-it-business.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-it-business.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-it-business.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">IT Business</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-data-analysis.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-data-analysis.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-data-analysis.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Data analysis</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-hotel-and-resort.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-hotel-and-resort.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-hotel-and-resort.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Hotel resort</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-scattered-portfolio.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-scattered-portfolio.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-scattered-portfolio.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Scattered portfolio</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-beauty-salon.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-beauty-salon.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-beauty-salon.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Beauty salon</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-product-showcase.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-product.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-product-showcase.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Product showcase</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-medical.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-medical.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-medical.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Medical</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-marketing.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-marketing.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-marketing.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Marketing</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-gym-and-fitness.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-gym-and-fitness.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-gym-and-fitness.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Gym & fitness</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-design-agency.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-design-agency.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-design-agency.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Design agency</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-accounting.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-accounting.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-accounting.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Accounting</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-fashion-store.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-fashion-store.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-fashion-store.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Fashion store</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-interactive-portfolio.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-interactive-portfolio.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-interactive-portfolio.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Interactive portfolio</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-yoga-and-meditation.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-yoga-and-meditation.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-yoga-and-meditation.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Yoga & meditation</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-travel-agency.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-travel-agency.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-travel-agency.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Travel agency</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-photography.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-photography.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-photography.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Photography</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-ebook.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-ebook.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-ebook.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">eBook</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-conference.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-conference.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-conference.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Conference</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-freelancer.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-freelancer.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-freelancer.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Freelancer</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-lawyer.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-lawyer.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-lawyer.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Lawyer</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-blogger.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-blogger.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-blogger.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Blogger</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-business.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-business.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-business.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Business</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-horizontal-portfolio.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-horizontal-portfolio.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-horizontal-portfolio.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Horizontal portfolio</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-finance.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-finance.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-finance.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Finance</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-decor-store.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-decor-store.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-decor-store.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Decor store</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-wedding-invitation.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-wedding-invitation.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-wedding-invitation.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Wedding invitation</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-vertical-portfolio.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-vertical-portfolio.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-vertical-portfolio.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Vertical portfolio</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-pizza-parlor.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-pizza-parlor.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-pizza-parlor.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Pizza parlor</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-music-onepage.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-music.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-music-onepage.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">music</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-magazine.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-magazine.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-magazine.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Magazine</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-charity.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-charity.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-charity.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Charity</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-hosting.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-hosting.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-hosting.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Hosting</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-jewellery-store.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-jewellery-store.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-jewellery-store.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Jewellery store</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-architecture.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-architecture.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-architecture.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Architecture</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-minimal-portfolio.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-minimal-portfolio.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-minimal-portfolio.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Minimal portfolio</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-digital-agency.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-digital-agency.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-digital-agency.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Digital agency</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-consulting.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-consulting.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-consulting.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Consulting</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-application.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-application.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-application.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Application</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-real-estate.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-real-estate.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-real-estate.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Real estate</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-seo-agency.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-seo-agency.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-seo-agency.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Seo agency</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-green-energy.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-green-energy.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-green-energy.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Green energy</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-logistics.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-logistics.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-logistics.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Logistics</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-cryptocurrency.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-cryptocurrency.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-cryptocurrency.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Cryptocurrency</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-elder-care.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-elder-care.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-elder-care.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Elder care</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-spa-salon.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-spa-salon.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-spa-salon.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Spa salon</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-barber.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-barber.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-barber.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Barber</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-web-agency.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-web-agency.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-web-agency.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Web agency</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-startup.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-startup.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-startup.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Startup</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-recruitment.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-recruitment.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-recruitment.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Recruitment</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-branding-studio.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-branding-studio.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-branding-studio.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Branding studio</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-clothing-store.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-clothing-store.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-clothing-store.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Clothing store</a></div></div><li class=grid-item><div class="bg-white border-radius-10px box-shadow-medium box-shadow-quadruple-large-hover p-10px"><div class=portfolio-image><a href=demo-modern-business.html target=_blank><img alt=""class="w-100 border-radius-6px"src=images/demo-modern-business.jpg></a></div><div class="text-center pb-10px portfolio-caption pt-15px"><a href=demo-modern-business.html target=_blank class="text-dark-gray fw-600 text-dark-gray-hover">Modern business</a></div></div></ul></div></div></div><div class="w-100 text-center"><a href=https://1.envato.market/R53mL2 target=_blank class="btn btn-box-shadow btn-dark-gray btn-large btn-rounded btn-switch-text mt-50px text-transform-none"><span><span class=btn-double-text data-text="Purchase Crafto">Purchase Crafto</span> <span><i class="feather icon-feather-shopping-cart"></i></span></span></a></div></div></div></section>';
     // $('body:not( .landing-page )').append(themeDemoHTML);
 
     $(document).on('click', '.all-demo', function () {
@@ -3554,6 +3644,7 @@
             $('body').removeClass('overflow-hidden');
         }
     });
+
     var timer;
     $(document).on('click', '.close-popup', function () {
         var themeDemosObj = $(this).parents('.theme-demos');
@@ -3580,6 +3671,159 @@
 
     $(".all-demo a").click(function (event) {
         event.preventDefault();
+    });
+
+    /* ===================================
+     Stack card animataion
+     ====================================== */
+    $(document).ready(function () {
+        class ScrollObserver {
+            constructor(target, options) {
+                this.target = target;
+                this.offsetTop = options.offsetTop || 0;
+                this.offsetBottom = options.offsetBottom || window.innerHeight;
+                this.callback = options.onScroll || function () { };
+                this.triggerOffset = options.triggerOffset || 0.6;
+                this.ticking = false;
+                this.handleScroll = this.handleScroll.bind(this);
+                this.handleResize = this.handleResize.bind(this);
+                $(window).on('scroll', this.handleScroll);
+                $(window).on('resize', this.handleResize);
+                this.handleScroll();
+            }
+            handleScroll() {
+                if (!this.ticking) {
+                    window.requestAnimationFrame(() => {
+                        const rect = this.target.getBoundingClientRect();
+                        const start = this.offsetTop;
+                        const end = this.offsetBottom;
+                        let percent = (end - rect.top) / (end - start);
+                        percent = (percent - this.triggerOffset) / (1 - this.triggerOffset);
+                        percent = Math.min(Math.max(percent, 0), 1);
+                        this.callback(percent);
+                        this.ticking = false;
+                    });
+                    this.ticking = true;
+                }
+            }
+            handleResize() {
+                this.offsetBottom = window.innerHeight;
+                this.handleScroll();
+            }
+        }
+
+        function interpolate(from, to, percent) {
+            return from + (to - from) * percent;
+        }
+
+        // Loop through each cards section separately
+        $('.cards').each(function () {
+            const $cardsContainer = $(this);
+            const mode = $cardsContainer.attr('data-scale') || 'true';
+            const topDataSpace = parseInt($cardsContainer.attr('data-top-space')) || 0;
+            const topPadding = parseInt($cardsContainer.attr('data-top-padding')) || 0;
+            const $cards = $cardsContainer.find('.stack-item');
+            const total = $cards.length;
+
+            $cards.each(function (index) {
+                const $card = $(this);
+                const $inner = $card.find('.stack-card-item');
+                const topSpace = topDataSpace + index * topDataSpace;
+                const offset = topPadding + index * topPadding;
+                $card.css('padding-top', `${offset}px`);
+                $card.css('top', `${topSpace}px`);
+
+                if (index === total - 1)
+                    return;
+
+                if (mode === 'true') {
+                    const $nextCard = $cards.eq(index + 1);
+                    const minScale = 1 - (total - index - 1) * 0.1;
+                    new ScrollObserver($nextCard[0], {
+                        offsetTop: offset,
+                        offsetBottom: window.innerHeight,
+                        triggerOffset: 0.6,
+                        onScroll: (percent) => {
+                            if (percent <= 0) {
+                                $inner.css('transform', 'scale(1)');
+                                return;
+                            }
+                            const scale = interpolate(1, minScale, percent);
+                            $inner.css('transform', `scale(${scale})`);
+                        }
+                    });
+                }
+            });
+
+            if (mode === 'false') {
+                $(window).on('scroll resize', function () { }).trigger('scroll');
+            }
+        });
+    });
+
+    /* ===================================
+     Crafto progressive blur
+     ====================================== */
+    $(document).ready(function () {
+        const blurContainer = $('.crafto-progressive-blur');
+        const blurTrigger = blurContainer.attr('blur-bottom');
+        const startBlur = 0.15625;
+        const blurMultiplier = 2;
+        const totalLayers = 8;
+        const rangePerLayer = 100 / totalLayers;
+        let blurInitialized = false;
+
+        function initializeBlurLayers() {
+            blurContainer.empty();
+
+            for (let i = 0; i < totalLayers; i++) {
+                const blurValue = startBlur * Math.pow(blurMultiplier, i);
+                const start = i * rangePerLayer;
+                const end = (i + 1) * rangePerLayer;
+
+                const maskGradient = `linear-gradient(to top, rgba(0,0,0,0) ${start}%, rgba(0,0,0,1) ${end}%)`;
+
+                const div = $('<div></div>').css({
+                    'backdrop-filter': `blur(${blurValue}px)`,
+                    '-webkit-backdrop-filter': `blur(${blurValue}px)`,
+                    'mask-image': maskGradient,
+                    '-webkit-mask-image': maskGradient
+                });
+
+                blurContainer.append(div);
+            }
+
+            blurContainer.css('visibility', 'visible');
+            blurInitialized = true;
+        }
+
+        function removeBlurLayers() {
+            blurContainer.empty();
+            blurContainer.css('visibility', 'hidden');
+            blurInitialized = false;
+        }
+
+        function isAtBottom() {
+            return (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 1);
+        }
+
+        // Init based on attribute
+        if (blurTrigger === 'no') {
+            if (!isAtBottom()) {
+                initializeBlurLayers();
+            }
+
+            $(window).on('scroll', function () {
+                if (!isAtBottom() && !blurInitialized) {
+                    initializeBlurLayers();
+                } else if (isAtBottom() && blurInitialized) {
+                    removeBlurLayers();
+                }
+            });
+        } else {
+            // Always show blur by default
+            initializeBlurLayers();
+        }
     });
 
 })(jQuery);
@@ -3631,8 +3875,12 @@ function initMap() {
             zoom: 13,
             center: new google.maps.LatLng(lat, lng),
             mapTypeId: google.maps.MapTypeId.READMAP,
-            styles: map_style
+            mapId: '4687c1d12bdf0955',
         });
+
+        let styledMapType = new google.maps.StyledMapType(map_style, {name: 'Styled Map'});
+        gmap.mapTypes.set('styled_map', styledMapType);
+        gmap.setMapTypeId('styled_map');
 
         // InforWindow variable
         const infowindow = new google.maps.InfoWindow({
@@ -3671,7 +3919,7 @@ function initMap() {
                         infowindow.open(gmap);
                     }
 
-                    google.maps.event.addDomListener(div, "click", function (event) {
+                    google.maps.event.addListener(div, "click", function (event) {
                         if (popup) {
                             infowindow.setOptions({pixelOffset: new google.maps.Size(10, -30)});
                             if (flag === false) {
@@ -3698,12 +3946,20 @@ function initMap() {
 
             } else {
                 // Custom Image Marker
-                const image_marker = new google.maps.Marker({
-                    icon: {url: marker.src},
+                const markerEl = document.createElement('div');
+                markerEl.className = marker.class || 'custom-marker';
+                markerEl.style.backgroundImage = `url(${marker.src})`;
+                markerEl.style.backgroundSize = 'contain';
+                markerEl.style.backgroundRepeat = 'no-repeat';
+                markerEl.style.width = marker.width;
+                markerEl.style.height = marker.height;
+
+                const image_marker = new google.maps.marker.AdvancedMarkerElement({
                     position: {lat: lat, lng: lng},
                     map: gmap,
-                    animation: google.maps.Animation.DROP,
+                    content: markerEl
                 });
+
                 let flag = false;
 
                 if (popup.defaultOpen === true) {
@@ -3739,7 +3995,7 @@ function initMap() {
             }
         } else {
             // Default Marker
-            const marker = new google.maps.Marker({
+            const marker = new google.maps.marker.AdvancedMarkerElement({
                 position: {lat: lat, lng: lng},
                 map: gmap
             });

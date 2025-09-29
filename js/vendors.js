@@ -1,11 +1,10 @@
 /*!
-    Anime
-    Version: v3.2.2
-    Plugin URL: animejs.com
-    License: Copyright 2023 Julian Garnier | Released under the MIT license
+    Anime.js - IIFE
+    Version: v4.1.3
+    Plugin URL: https://animejs.com
+    License: (c) 2025 Julian Garnier | Released under the MIT license
 !*/
-
-!function(n,e){"object"==typeof exports&&"undefined"!=typeof module?module.exports=e():"function"==typeof define&&define.amd?define(e):n.anime=e()}(this,function(){"use strict";var i={update:null,begin:null,loopBegin:null,changeBegin:null,change:null,changeComplete:null,loopComplete:null,complete:null,loop:1,direction:"normal",autoplay:!0,timelineOffset:0},M={duration:1e3,delay:0,endDelay:0,easing:"easeOutElastic(1, .5)",round:0},j=["translateX","translateY","translateZ","rotate","rotateX","rotateY","rotateZ","scale","scaleX","scaleY","scaleZ","skew","skewX","skewY","perspective","matrix","matrix3d"],l={CSS:{},springs:{}};function C(n,e,t){return Math.min(Math.max(n,e),t)}function u(n,e){return-1<n.indexOf(e)}function o(n,e){return n.apply(null,e)}var w={arr:function(n){return Array.isArray(n)},obj:function(n){return u(Object.prototype.toString.call(n),"Object")},pth:function(n){return w.obj(n)&&n.hasOwnProperty("totalLength")},svg:function(n){return n instanceof SVGElement},inp:function(n){return n instanceof HTMLInputElement},dom:function(n){return n.nodeType||w.svg(n)},str:function(n){return"string"==typeof n},fnc:function(n){return"function"==typeof n},und:function(n){return void 0===n},nil:function(n){return w.und(n)||null===n},hex:function(n){return/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(n)},rgb:function(n){return/^rgb/.test(n)},hsl:function(n){return/^hsl/.test(n)},col:function(n){return w.hex(n)||w.rgb(n)||w.hsl(n)},key:function(n){return!i.hasOwnProperty(n)&&!M.hasOwnProperty(n)&&"targets"!==n&&"keyframes"!==n}};function d(n){n=/\(([^)]+)\)/.exec(n);return n?n[1].split(",").map(function(n){return parseFloat(n)}):[]}function c(r,t){var n=d(r),e=C(w.und(n[0])?1:n[0],.1,100),a=C(w.und(n[1])?100:n[1],.1,100),o=C(w.und(n[2])?10:n[2],.1,100),n=C(w.und(n[3])?0:n[3],.1,100),u=Math.sqrt(a/e),i=o/(2*Math.sqrt(a*e)),c=i<1?u*Math.sqrt(1-i*i):0,s=i<1?(i*u-n)/c:-n+u;function f(n){var e=t?t*n/1e3:n,e=i<1?Math.exp(-e*i*u)*(+Math.cos(c*e)+s*Math.sin(c*e)):(1+s*e)*Math.exp(-e*u);return 0===n||1===n?n:1-e}return t?f:function(){var n=l.springs[r];if(n)return n;for(var e=0,t=0;;)if(1===f(e+=1/6)){if(16<=++t)break}else t=0;return n=e*(1/6)*1e3,l.springs[r]=n}}function q(e){return void 0===e&&(e=10),function(n){return Math.ceil(C(n,1e-6,1)*e)*(1/e)}}var H=function(b,e,M,t){if(0<=b&&b<=1&&0<=M&&M<=1){var x=new Float32Array(11);if(b!==e||M!==t)for(var n=0;n<11;++n)x[n]=k(.1*n,b,M);return function(n){return b===e&&M===t||0===n||1===n?n:k(r(n),e,t)}}function r(n){for(var e=0,t=1;10!==t&&x[t]<=n;++t)e+=.1;var r=e+.1*((n-x[--t])/(x[t+1]-x[t])),a=O(r,b,M);if(.001<=a){for(var o=n,u=r,i=b,c=M,s=0;s<4;++s){var f=O(u,i,c);if(0===f)return u;u-=(k(u,i,c)-o)/f}return u}if(0===a)return r;for(var l,d,p=n,h=e,g=e+.1,m=b,v=M,y=0;0<(l=k(d=h+(g-h)/2,m,v)-p)?g=d:h=d,1e-7<Math.abs(l)&&++y<10;);return d}};function r(n,e){return 1-3*e+3*n}function k(n,e,t){return((r(e,t)*n+(3*t-6*e))*n+3*e)*n}function O(n,e,t){return 3*r(e,t)*n*n+2*(3*t-6*e)*n+3*e}e={linear:function(){return function(n){return n}}},t={Sine:function(){return function(n){return 1-Math.cos(n*Math.PI/2)}},Expo:function(){return function(n){return n?Math.pow(2,10*n-10):0}},Circ:function(){return function(n){return 1-Math.sqrt(1-n*n)}},Back:function(){return function(n){return n*n*(3*n-2)}},Bounce:function(){return function(n){for(var e,t=4;n<((e=Math.pow(2,--t))-1)/11;);return 1/Math.pow(4,3-t)-7.5625*Math.pow((3*e-2)/22-n,2)}},Elastic:function(n,e){void 0===e&&(e=.5);var t=C(n=void 0===n?1:n,1,10),r=C(e,.1,2);return function(n){return 0===n||1===n?n:-t*Math.pow(2,10*(n-1))*Math.sin((n-1-r/(2*Math.PI)*Math.asin(1/t))*(2*Math.PI)/r)}}},["Quad","Cubic","Quart","Quint"].forEach(function(n,e){t[n]=function(){return function(n){return Math.pow(n,e+2)}}}),Object.keys(t).forEach(function(n){var r=t[n];e["easeIn"+n]=r,e["easeOut"+n]=function(e,t){return function(n){return 1-r(e,t)(1-n)}},e["easeInOut"+n]=function(e,t){return function(n){return n<.5?r(e,t)(2*n)/2:1-r(e,t)(-2*n+2)/2}},e["easeOutIn"+n]=function(e,t){return function(n){return n<.5?(1-r(e,t)(1-2*n))/2:(r(e,t)(2*n-1)+1)/2}}});var e,t,s=e;function P(n,e){if(w.fnc(n))return n;var t=n.split("(")[0],r=s[t],a=d(n);switch(t){case"spring":return c(n,e);case"cubicBezier":return o(H,a);case"steps":return o(q,a);default:return o(r,a)}}function a(n){try{return document.querySelectorAll(n)}catch(n){}}function I(n,e){for(var t,r=n.length,a=2<=arguments.length?e:void 0,o=[],u=0;u<r;u++)u in n&&(t=n[u],e.call(a,t,u,n))&&o.push(t);return o}function f(n){return n.reduce(function(n,e){return n.concat(w.arr(e)?f(e):e)},[])}function p(n){return w.arr(n)?n:(n=w.str(n)?a(n)||n:n)instanceof NodeList||n instanceof HTMLCollection?[].slice.call(n):[n]}function h(n,e){return n.some(function(n){return n===e})}function g(n){var e,t={};for(e in n)t[e]=n[e];return t}function x(n,e){var t,r=g(n);for(t in n)r[t]=(e.hasOwnProperty(t)?e:n)[t];return r}function D(n,e){var t,r=g(n);for(t in e)r[t]=(w.und(n[t])?e:n)[t];return r}function V(n){var e,t,r,a,o,u,i;return w.rgb(n)?(e=/rgb\((\d+,\s*[\d]+,\s*[\d]+)\)/g.exec(t=n))?"rgba("+e[1]+",1)":t:w.hex(n)?(e=(e=n).replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i,function(n,e,t,r){return e+e+t+t+r+r}),e=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(e),"rgba("+parseInt(e[1],16)+","+parseInt(e[2],16)+","+parseInt(e[3],16)+",1)"):w.hsl(n)?(t=/hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/g.exec(t=n)||/hsla\((\d+),\s*([\d.]+)%,\s*([\d.]+)%,\s*([\d.]+)\)/g.exec(t),n=parseInt(t[1],10)/360,u=parseInt(t[2],10)/100,i=parseInt(t[3],10)/100,t=t[4]||1,0==u?r=a=o=i:(r=c(u=2*i-(i=i<.5?i*(1+u):i+u-i*u),i,n+1/3),a=c(u,i,n),o=c(u,i,n-1/3)),"rgba("+255*r+","+255*a+","+255*o+","+t+")"):void 0;function c(n,e,t){return t<0&&(t+=1),1<t&&--t,t<1/6?n+6*(e-n)*t:t<.5?e:t<2/3?n+(e-n)*(2/3-t)*6:n}}function B(n){n=/[+-]?\d*\.?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?(%|px|pt|em|rem|in|cm|mm|ex|ch|pc|vw|vh|vmin|vmax|deg|rad|turn)?$/.exec(n);if(n)return n[1]}function m(n,e){return w.fnc(n)?n(e.target,e.id,e.total):n}function v(n,e){return n.getAttribute(e)}function y(n,e,t){var r,a,o;return h([t,"deg","rad","turn"],B(e))?e:(r=l.CSS[e+t],w.und(r)?(a=document.createElement(n.tagName),(n=n.parentNode&&n.parentNode!==document?n.parentNode:document.body).appendChild(a),a.style.position="absolute",a.style.width=100+t,o=100/a.offsetWidth,n.removeChild(a),n=o*parseFloat(e),l.CSS[e+t]=n):r)}function $(n,e,t){var r;if(e in n.style)return r=e.replace(/([a-z])([A-Z])/g,"$1-$2").toLowerCase(),e=n.style[e]||getComputedStyle(n).getPropertyValue(r)||"0",t?y(n,e,t):e}function b(n,e){return w.dom(n)&&!w.inp(n)&&(!w.nil(v(n,e))||w.svg(n)&&n[e])?"attribute":w.dom(n)&&h(j,e)?"transform":w.dom(n)&&"transform"!==e&&$(n,e)?"css":null!=n[e]?"object":void 0}function W(n){if(w.dom(n)){for(var e,t=n.style.transform||"",r=/(\w+)\(([^)]*)\)/g,a=new Map;e=r.exec(t);)a.set(e[1],e[2]);return a}}function X(n,e,t,r){var a=u(e,"scale")?1:0+(u(a=e,"translate")||"perspective"===a?"px":u(a,"rotate")||u(a,"skew")?"deg":void 0),o=W(n).get(e)||a;return t&&(t.transforms.list.set(e,o),t.transforms.last=e),r?y(n,o,r):o}function T(n,e,t,r){switch(b(n,e)){case"transform":return X(n,e,r,t);case"css":return $(n,e,t);case"attribute":return v(n,e);default:return n[e]||0}}function E(n,e){var t=/^(\*=|\+=|-=)/.exec(n);if(!t)return n;var r=B(n)||0,a=parseFloat(e),o=parseFloat(n.replace(t[0],""));switch(t[0][0]){case"+":return a+o+r;case"-":return a-o+r;case"*":return a*o+r}}function Y(n,e){var t;return w.col(n)?V(n):/\s/g.test(n)?n:(t=(t=B(n))?n.substr(0,n.length-t.length):n,e?t+e:t)}function F(n,e){return Math.sqrt(Math.pow(e.x-n.x,2)+Math.pow(e.y-n.y,2))}function Z(n){for(var e,t=n.points,r=0,a=0;a<t.numberOfItems;a++){var o=t.getItem(a);0<a&&(r+=F(e,o)),e=o}return r}function G(n){if(n.getTotalLength)return n.getTotalLength();switch(n.tagName.toLowerCase()){case"circle":return 2*Math.PI*v(n,"r");case"rect":return 2*v(t=n,"width")+2*v(t,"height");case"line":return F({x:v(t=n,"x1"),y:v(t,"y1")},{x:v(t,"x2"),y:v(t,"y2")});case"polyline":return Z(n);case"polygon":return e=n.points,Z(n)+F(e.getItem(e.numberOfItems-1),e.getItem(0))}var e,t}function Q(n,e){var e=e||{},n=e.el||function(n){for(var e=n.parentNode;w.svg(e)&&w.svg(e.parentNode);)e=e.parentNode;return e}(n),t=n.getBoundingClientRect(),r=v(n,"viewBox"),a=t.width,t=t.height,e=e.viewBox||(r?r.split(" "):[0,0,a,t]);return{el:n,viewBox:e,x:+e[0],y:+e[1],w:a,h:t,vW:e[2],vH:e[3]}}function z(n,e){var t=/[+-]?\d*\.?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/g,r=Y(w.pth(n)?n.totalLength:n,e)+"";return{original:r,numbers:r.match(t)?r.match(t).map(Number):[0],strings:w.str(n)||e?r.split(t):[]}}function A(n){return I(n?f(w.arr(n)?n.map(p):p(n)):[],function(n,e,t){return t.indexOf(n)===e})}function _(n){var t=A(n);return t.map(function(n,e){return{target:n,id:e,total:t.length,transforms:{list:W(n)}}})}function R(e){for(var t=I(f(e.map(function(n){return Object.keys(n)})),function(n){return w.key(n)}).reduce(function(n,e){return n.indexOf(e)<0&&n.push(e),n},[]),a={},n=0;n<t.length;n++)!function(n){var r=t[n];a[r]=e.map(function(n){var e,t={};for(e in n)w.key(e)?e==r&&(t.value=n[e]):t[e]=n[e];return t})}(n);return a}function J(n,e){var t,r=[],a=e.keyframes;for(t in e=a?D(R(a),e):e)w.key(t)&&r.push({name:t,tweens:function(n,t){var e,r=g(t),a=(/^spring/.test(r.easing)&&(r.duration=c(r.easing)),w.arr(n)&&(2===(e=n.length)&&!w.obj(n[0])?n={value:n}:w.fnc(t.duration)||(r.duration=t.duration/e)),w.arr(n)?n:[n]);return a.map(function(n,e){n=w.obj(n)&&!w.pth(n)?n:{value:n};return w.und(n.delay)&&(n.delay=e?0:t.delay),w.und(n.endDelay)&&(n.endDelay=e===a.length-1?t.endDelay:0),n}).map(function(n){return D(n,r)})}(e[t],n)});return r}function K(i,c){var s;return i.tweens.map(function(n){var n=function(n,e){var t,r={};for(t in n){var a=m(n[t],e);w.arr(a)&&1===(a=a.map(function(n){return m(n,e)})).length&&(a=a[0]),r[t]=a}return r.duration=parseFloat(r.duration),r.delay=parseFloat(r.delay),r}(n,c),e=n.value,t=w.arr(e)?e[1]:e,r=B(t),a=T(c.target,i.name,r,c),o=s?s.to.original:a,u=w.arr(e)?e[0]:o,a=B(u)||B(a),r=r||a;return w.und(t)&&(t=o),n.from=z(u,r),n.to=z(E(t,u),r),n.start=s?s.end:0,n.end=n.start+n.delay+n.duration+n.endDelay,n.easing=P(n.easing,n.duration),n.isPath=w.pth(e),n.isPathTargetInsideSVG=n.isPath&&w.svg(c.target),n.isColor=w.col(n.from.original),n.isColor&&(n.round=1),s=n})}var U={css:function(n,e,t){return n.style[e]=t},attribute:function(n,e,t){return n.setAttribute(e,t)},object:function(n,e,t){return n[e]=t},transform:function(n,e,t,r,a){var o;r.list.set(e,t),e!==r.last&&!a||(o="",r.list.forEach(function(n,e){o+=e+"("+n+") "}),n.style.transform=o)}};function nn(n,u){_(n).forEach(function(n){for(var e in u){var t=m(u[e],n),r=n.target,a=B(t),o=T(r,e,a,n),t=E(Y(t,a||B(o)),o),a=b(r,e);U[a](r,e,t,n.transforms,!0)}})}function en(n,e){return I(f(n.map(function(o){return e.map(function(n){var e,t,r=o,a=b(r.target,n.name);if(a)return t=(e=K(n,r))[e.length-1],{type:a,property:n.name,animatable:r,tweens:e,duration:t.end,delay:e[0].delay,endDelay:t.endDelay}})})),function(n){return!w.und(n)})}function tn(n,e){function t(n){return n.timelineOffset||0}var r=n.length,a={};return a.duration=r?Math.max.apply(Math,n.map(function(n){return t(n)+n.duration})):e.duration,a.delay=r?Math.min.apply(Math,n.map(function(n){return t(n)+n.delay})):e.delay,a.endDelay=r?a.duration-Math.max.apply(Math,n.map(function(n){return t(n)+n.duration-n.endDelay})):e.endDelay,a}var rn=0;var N,S=[],an=("undefined"!=typeof document&&document.addEventListener("visibilitychange",function(){L.suspendWhenDocumentHidden&&(n()?N=cancelAnimationFrame(N):(S.forEach(function(n){return n._onDocumentVisibility()}),an()))}),function(){!(N||n()&&L.suspendWhenDocumentHidden)&&0<S.length&&(N=requestAnimationFrame(on))});function on(n){for(var e=S.length,t=0;t<e;){var r=S[t];r.paused?(S.splice(t,1),e--):(r.tick(n),t++)}N=0<t?requestAnimationFrame(on):void 0}function n(){return document&&document.hidden}function L(n){var c,s=0,f=0,l=0,d=0,p=null;function h(n){var e=window.Promise&&new Promise(function(n){return p=n});return n.finished=e}e=x(i,n=n=void 0===n?{}:n),t=J(r=x(M,n),n),n=_(n.targets),r=tn(t=en(n,t),r),a=rn,rn++;var e,t,r,a,k=D(e,{id:a,children:[],animatables:n,animations:t,duration:r.duration,delay:r.delay,endDelay:r.endDelay});h(k);function g(){var n=k.direction;"alternate"!==n&&(k.direction="normal"!==n?"normal":"reverse"),k.reversed=!k.reversed,c.forEach(function(n){return n.reversed=k.reversed})}function m(n){return k.reversed?k.duration-n:n}function o(){s=0,f=m(k.currentTime)*(1/L.speed)}function v(n,e){e&&e.seek(n-e.timelineOffset)}function y(e){for(var n=0,t=k.animations,r=t.length;n<r;){for(var a=t[n],o=a.animatable,u=a.tweens,i=u.length-1,c=u[i],i=(i&&(c=I(u,function(n){return e<n.end})[0]||c),C(e-c.start-c.delay,0,c.duration)/c.duration),s=isNaN(i)?1:c.easing(i),f=c.to.strings,l=c.round,d=[],p=c.to.numbers.length,h=void 0,g=0;g<p;g++){var m=void 0,v=c.to.numbers[g],y=c.from.numbers[g]||0,m=c.isPath?function(e,t,n){function r(n){return e.el.getPointAtLength(1<=t+(n=void 0===n?0:n)?t+n:0)}var a=Q(e.el,e.svg),o=r(),u=r(-1),i=r(1),c=n?1:a.w/a.vW,s=n?1:a.h/a.vH;switch(e.property){case"x":return(o.x-a.x)*c;case"y":return(o.y-a.y)*s;case"angle":return 180*Math.atan2(i.y-u.y,i.x-u.x)/Math.PI}}(c.value,s*v,c.isPathTargetInsideSVG):y+s*(v-y);!l||c.isColor&&2<g||(m=Math.round(m*l)/l),d.push(m)}var b=f.length;if(b)for(var h=f[0],M=0;M<b;M++){f[M];var x=f[M+1],w=d[M];isNaN(w)||(h+=x?w+x:w+" ")}else h=d[0];U[a.type](o.target,a.property,h,o.transforms),a.currentValue=h,n++}}function b(n){k[n]&&!k.passThrough&&k[n](k)}function u(n){var e=k.duration,t=k.delay,r=e-k.endDelay,a=m(n);if(k.progress=C(a/e*100,0,100),k.reversePlayback=a<k.currentTime,c){var o=a;if(k.reversePlayback)for(var u=d;u--;)v(o,c[u]);else for(var i=0;i<d;i++)v(o,c[i])}!k.began&&0<k.currentTime&&(k.began=!0,b("begin")),!k.loopBegan&&0<k.currentTime&&(k.loopBegan=!0,b("loopBegin")),a<=t&&0!==k.currentTime&&y(0),(r<=a&&k.currentTime!==e||!e)&&y(e),t<a&&a<r?(k.changeBegan||(k.changeBegan=!0,k.changeCompleted=!1,b("changeBegin")),b("change"),y(a)):k.changeBegan&&(k.changeCompleted=!0,k.changeBegan=!1,b("changeComplete")),k.currentTime=C(a,0,e),k.began&&b("update"),e<=n&&(f=0,k.remaining&&!0!==k.remaining&&k.remaining--,k.remaining?(s=l,b("loopComplete"),k.loopBegan=!1,"alternate"===k.direction&&g()):(k.paused=!0,k.completed||(k.completed=!0,b("loopComplete"),b("complete"),!k.passThrough&&"Promise"in window&&(p(),h(k)))))}return k.reset=function(){var n=k.direction;k.passThrough=!1,k.currentTime=0,k.progress=0,k.paused=!0,k.began=!1,k.loopBegan=!1,k.changeBegan=!1,k.completed=!1,k.changeCompleted=!1,k.reversePlayback=!1,k.reversed="reverse"===n,k.remaining=k.loop,c=k.children;for(var e=d=c.length;e--;)k.children[e].reset();(k.reversed&&!0!==k.loop||"alternate"===n&&1===k.loop)&&k.remaining++,y(k.reversed?k.duration:0)},k._onDocumentVisibility=o,k.set=function(n,e){return nn(n,e),k},k.tick=function(n){u(((l=n)+(f-(s=s||l)))*L.speed)},k.seek=function(n){u(m(n))},k.pause=function(){k.paused=!0,o()},k.play=function(){k.paused&&(k.completed&&k.reset(),k.paused=!1,S.push(k),o(),an())},k.reverse=function(){g(),k.completed=!k.reversed,o()},k.restart=function(){k.reset(),k.play()},k.remove=function(n){cn(A(n),k)},k.reset(),k.autoplay&&k.play(),k}function un(n,e){for(var t=e.length;t--;)h(n,e[t].animatable.target)&&e.splice(t,1)}function cn(n,e){var t=e.animations,r=e.children;un(n,t);for(var a=r.length;a--;){var o=r[a],u=o.animations;un(n,u),u.length||o.children.length||r.splice(a,1)}t.length||r.length||e.pause()}return L.version="3.2.2",L.speed=1,L.suspendWhenDocumentHidden=!0,L.running=S,L.remove=function(n){for(var e=A(n),t=S.length;t--;)cn(e,S[t])},L.get=T,L.set=nn,L.convertPx=y,L.path=function(n,e){var t=w.str(n)?a(n)[0]:n,r=e||100;return function(n){return{property:n,el:t,svg:Q(t),totalLength:G(t)*(r/100)}}},L.setDashoffset=function(n){var e=G(n);return n.setAttribute("stroke-dasharray",e),e},L.stagger=function(n,e){var i=(e=void 0===e?{}:e).direction||"normal",c=e.easing?P(e.easing):null,s=e.grid,f=e.axis,l=e.from||0,d="first"===l,p="center"===l,h="last"===l,g=w.arr(n),m=g?parseFloat(n[0]):parseFloat(n),v=g?parseFloat(n[1]):0,y=B(g?n[1]:n)||0,b=e.start||0+(g?m:0),M=[],x=0;return function(n,e,t){if(d&&(l=0),p&&(l=(t-1)/2),h&&(l=t-1),!M.length){for(var r,a,o,u=0;u<t;u++)s?(r=p?(s[0]-1)/2:l%s[0],a=p?(s[1]-1)/2:Math.floor(l/s[0]),r=r-u%s[0],a=a-Math.floor(u/s[0]),o=Math.sqrt(r*r+a*a),"x"===f&&(o=-r),M.push(o="y"===f?-a:o)):M.push(Math.abs(l-u)),x=Math.max.apply(Math,M);c&&(M=M.map(function(n){return c(n/x)*x})),"reverse"===i&&(M=M.map(function(n){return f?n<0?-1*n:-n:Math.abs(x-n)}))}return b+(g?(v-m)/x:m)*(Math.round(100*M[e])/100)+y}},L.timeline=function(u){var i=L(u=void 0===u?{}:u);return i.duration=0,i.add=function(n,e){var t=S.indexOf(i),r=i.children;function a(n){n.passThrough=!0}-1<t&&S.splice(t,1);for(var o=0;o<r.length;o++)a(r[o]);t=D(n,x(M,u)),t.targets=t.targets||u.targets,n=i.duration,t.autoplay=!1,t.direction=i.direction,t.timelineOffset=w.und(e)?n:E(e,n),a(i),i.seek(t.timelineOffset),e=L(t),a(e),r.push(e),n=tn(r,u);return i.delay=n.delay,i.endDelay=n.endDelay,i.duration=n.duration,i.seek(0),i.reset(),i.autoplay&&i.play(),i},i},L.easing=P,L.penner=s,L.random=function(n,e){return Math.floor(Math.random()*(e-n+1))+n},L});
+var anime=function(t){"use strict";const e="undefined"!=typeof window,s=e?window:null,i=e?document:null,r={replace:0,none:1,blend:2},n=Symbol(),o=Symbol(),a=Symbol(),h=Symbol(),l=Symbol(),c=Symbol(),d=1e-11,u=1e12,p=1e3,m="",f=(()=>{const t=new Map;return t.set("x","translateX"),t.set("y","translateY"),t.set("z","translateZ"),t})(),g=["translateX","translateY","translateZ","rotate","rotateX","rotateY","rotateZ","scale","scaleX","scaleY","scaleZ","skew","skewX","skewY","perspective","matrix","matrix3d"],y=g.reduce(((t,e)=>({...t,[e]:e+"("})),{}),_=()=>{},v=/(^#([\da-f]{3}){1,2}$)|(^#([\da-f]{4}){1,2}$)/i,b=/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i,T=/rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(-?\d+|-?\d*.\d+)\s*\)/i,w=/hsl\(\s*(-?\d+|-?\d*.\d+)\s*,\s*(-?\d+|-?\d*.\d+)%\s*,\s*(-?\d+|-?\d*.\d+)%\s*\)/i,S=/hsla\(\s*(-?\d+|-?\d*.\d+)\s*,\s*(-?\d+|-?\d*.\d+)%\s*,\s*(-?\d+|-?\d*.\d+)%\s*,\s*(-?\d+|-?\d*.\d+)\s*\)/i,x=/[-+]?\d*\.?\d+(?:e[-+]?\d)?/gi,k=/^([-+]?\d*\.?\d+(?:e[-+]?\d+)?)([a-z]+|%)$/i,$=/([a-z])([A-Z])/g,C=/(\w+)(\([^)]+\)+)/g,E=/(\*=|\+=|-=)/,B={id:null,keyframes:null,playbackEase:null,playbackRate:1,frameRate:120,loop:0,reversed:!1,alternate:!1,autoplay:!0,duration:p,delay:0,loopDelay:0,ease:"out(2)",composition:r.replace,modifier:t=>t,onBegin:_,onBeforeUpdate:_,onUpdate:_,onLoop:_,onPause:_,onComplete:_,onRender:_},L={current:null,root:i},D={defaults:B,precision:4,timeScale:1,tickThreshold:200},A={version:"4.1.3",engine:null};e&&(s.AnimeJS||(s.AnimeJS=[]),s.AnimeJS.push(A));const N=t=>t.replace($,"$1-$2").toLowerCase(),F=(t,e)=>0===t.indexOf(e),O=Date.now,P=Array.isArray,R=t=>t&&t.constructor===Object,M=t=>"number"==typeof t&&!isNaN(t),I=t=>"string"==typeof t,z=t=>"function"==typeof t,Y=t=>void 0===t,X=t=>Y(t)||null===t,W=t=>e&&t instanceof SVGElement,V=t=>v.test(t),H=t=>F(t,"rgb"),U=t=>F(t,"hsl"),q=t=>!D.defaults.hasOwnProperty(t),Q=t=>I(t)?parseFloat(t):t,j=Math.pow,G=Math.sqrt,Z=Math.sin,J=Math.cos,K=Math.abs,tt=Math.exp,et=Math.ceil,st=Math.floor,it=Math.asin,rt=Math.max,nt=Math.atan2,ot=Math.PI,at=Math.round,ht=(t,e,s)=>t<e?e:t>s?s:t,lt={},ct=(t,e)=>{if(e<0)return t;if(!e)return at(t);let s=lt[e];return s||(s=lt[e]=10**e),at(t*s)/s},dt=(t,e)=>P(e)?e.reduce(((e,s)=>K(s-t)<K(e-t)?s:e)):e?at(t/e)*e:t,ut=(t,e,s)=>t+(e-t)*s,pt=(t,e,s)=>{const i=10**(s||0);return st((Math.random()*(e-t+1/i)+t)*i)/i},mt=t=>{let e,s,i=t.length;for(;i;)s=pt(0,--i),e=t[i],t[i]=t[s],t[s]=e;return t},ft=t=>t===1/0?u:t===-1/0?-1e12:t,gt=t=>t<=d?d:ft(ct(t,11)),yt=t=>P(t)?[...t]:t,_t=(t,e)=>{const s={...t};for(let i in e){const r=t[i];s[i]=Y(r)?e[i]:r}return s},vt=(t,e,s,i="_prev",r="_next")=>{let n=t._head,o=r;for(s&&(n=t._tail,o=i);n;){const t=n[o];e(n),n=t}},bt=(t,e,s="_prev",i="_next")=>{const r=e[s],n=e[i];r?r[i]=n:t._head=n,n?n[s]=r:t._tail=r,e[s]=null,e[i]=null},Tt=(t,e,s,i="_prev",r="_next")=>{let n=t._tail;for(;n&&s&&s(n,e);)n=n[i];const o=n?n[r]:t._head;n?n[r]=e:t._head=e,o?o[i]=e:t._tail=e,e[i]=n,e[r]=o},wt=t=>{let e;return(...s)=>{let i,r,n,o;e&&(i=e.currentIteration,r=e.iterationProgress,n=e.reversed,o=e._alternate,e.revert());const a=t(...s);return a&&!z(a)&&a.revert&&(e=a),Y(r)||(e.currentIteration=i,e.iterationProgress=(o&&i%2?!n:n)?1-r:r),a||_}};class St{constructor(t=0){this.deltaTime=0,this._currentTime=t,this._elapsedTime=t,this._startTime=t,this._lastTime=t,this._scheduledTime=0,this._frameDuration=ct(p/120,0),this._fps=120,this._speed=1,this._hasChildren=!1,this._head=null,this._tail=null}get fps(){return this._fps}set fps(t){const e=this._frameDuration,s=+t,i=s<d?d:s,r=ct(p/i,0);this._fps=i,this._frameDuration=r,this._scheduledTime+=r-e}get speed(){return this._speed}set speed(t){const e=+t;this._speed=e<d?d:e}requestTick(t){const e=this._scheduledTime,s=this._elapsedTime;if(this._elapsedTime+=t-s,s<e)return 0;const i=this._frameDuration,r=s-e;return this._scheduledTime+=r<i?i:r,1}computeDeltaTime(t){const e=t-this._lastTime;return this.deltaTime=e,this._lastTime=t,e}}const xt=(t,e,s,i,n)=>{const o=t.parent,a=t.duration,l=t.completed,c=t.iterationDuration,u=t.iterationCount,p=t._currentIteration,f=t._loopDelay,g=t._reversed,_=t._alternate,v=t._hasChildren,b=t._delay,T=t._currentTime,w=b+c,S=e-b,x=ht(T,-b,a),k=ht(S,-b,a),$=S-T,C=k>0,E=k>=a,B=a<=d,L=2===n;let A=0,N=S,F=0;if(u>1){const e=~~(k/(c+(E?0:f)));t._currentIteration=ht(e,0,u),E&&t._currentIteration--,A=t._currentIteration%2,N=k%(c+f)||0}const O=g^(_&&A),P=t._ease;let R=E?O?0:a:O?c-N:N;P&&(R=c*P(R/c)||0);const M=(o?o.backwards:S<T)?!O:!!O;if(t._currentTime=S,t._iterationTime=R,t.backwards=M,C&&!t.began?(t.began=!0,s||o&&(M||!o.began)||t.onBegin(t)):S<=0&&(t.began=!1),s||v||!C||t._currentIteration===p||t.onLoop(t),L||1===n&&(e>=b&&e<=w||e<=b&&x>b||e>=w&&x!==a)||R>=w&&x!==a||R<=b&&x>0||e<=x&&x===a&&l||E&&!l&&B){if(C&&(t.computeDeltaTime(x),s||t.onBeforeUpdate(t)),!v){const e=L||(M?-1*$:$)>=D.tickThreshold,n=t._offset+(o?o._offset:0)+b+R;let a,l,c,d,u=t._head,p=0;for(;u;){const t=u._composition,s=u._currentTime,o=u._changeDuration,f=u._absoluteStartTime+u._changeDuration,g=u._nextRep,_=u._prevRep,v=t!==r.none;if((e||(s!==o||n<=f+(g?g._delay:0))&&(0!==s||n>=u._absoluteStartTime))&&(!v||!u._isOverridden&&(!u._isOverlapped||n<=f)&&(!g||g._isOverridden||n<=g._absoluteStartTime)&&(!_||_._isOverridden||n>=_._absoluteStartTime+_._changeDuration+u._delay))){const e=u._currentTime=ht(R-u._startTime,0,o),s=u._ease(e/u._updateDuration),n=u._modifier,m=u._valueType,f=u._tweenType,g=0===f,y=0===m,_=y&&g||0===s||1===s?-1:D.precision;let b,T;if(y)b=T=n(ct(ut(u._fromNumber,u._toNumber,s),_));else if(1===m)T=n(ct(ut(u._fromNumber,u._toNumber,s),_)),b=`${T}${u._unit}`;else if(2===m){const t=u._fromNumbers,e=u._toNumbers,i=ct(ht(n(ut(t[0],e[0],s)),0,255),0),r=ct(ht(n(ut(t[1],e[1],s)),0,255),0),o=ct(ht(n(ut(t[2],e[2],s)),0,255),0),a=ht(n(ct(ut(t[3],e[3],s),_)),0,1);if(b=`rgba(${i},${r},${o},${a})`,v){const t=u._numbers;t[0]=i,t[1]=r,t[2]=o,t[3]=a}}else if(3===m){b=u._strings[0];for(let t=0,e=u._toNumbers.length;t<e;t++){const e=n(ct(ut(u._fromNumbers[t],u._toNumbers[t],s),_)),i=u._strings[t+1];b+=`${i?e+i:e}`,v&&(u._numbers[t]=e)}}if(v&&(u._number=T),i||t===r.blend)u._value=b;else{const t=u.property;a=u.target,g?a[t]=b:1===f?a.setAttribute(t,b):(l=a.style,3===f?(a!==c&&(c=a,d=a[h]),d[t]=b,p=1):2===f?l[t]=b:4===f&&l.setProperty(t,b)),C&&(F=1)}}if(p&&u._renderTransforms){let t=m;for(let e in d)t+=`${y[e]}${d[e]}) `;l.transform=t,p=0}u=u._next}!s&&F&&t.onRender(t)}!s&&C&&t.onUpdate(t)}return o&&B?!s&&(o.began&&!M&&S>=a&&!l||M&&S<=d&&l)&&(t.onComplete(t),t.completed=!M):C&&E?u===1/0?t._startTime+=t.duration:t._currentIteration>=u-1&&(t.paused=!0,l||v||(t.completed=!0,s||o&&(M||!o.began)||(t.onComplete(t),t._resolve(t)))):t.completed=!1,F},kt=(t,e,s,i,r)=>{const n=t._currentIteration;if(xt(t,e,s,i,r),t._hasChildren){const o=t,a=o.backwards,h=i?e:o._iterationTime,l=O();let c=0,u=!0;if(!i&&o._currentIteration!==n){const t=o.iterationDuration;vt(o,(e=>{if(a){const i=e.duration,r=e._offset+e._delay;s||!(i<=d)||r&&r+i!==t||e.onComplete(e)}else!e.completed&&!e.backwards&&e._currentTime<e.iterationDuration&&xt(e,t,s,1,2),e.began=!1,e.completed=!1})),s||o.onLoop(o)}vt(o,(t=>{const e=ct((h-t._offset)*t._speed,12),n=t._fps<o._fps?t.requestTick(l):r;c+=xt(t,e,s,i,n),!t.completed&&u&&(u=!1)}),a),!s&&c&&o.onRender(o),(u||a)&&o._currentTime>=o.duration&&(o.paused=!0,o.completed||(o.completed=!0,s||(o.onComplete(o),o._resolve(o))))}},$t={animation:null,update:_},Ct=(()=>e?requestAnimationFrame:setImmediate)(),Et=(()=>e?cancelAnimationFrame:clearImmediate)();class Bt extends St{constructor(t){super(t),this.useDefaultMainLoop=!0,this.pauseOnDocumentHidden=!0,this.defaults=B,this.paused=!0,this.reqId=0}update(){const t=this._currentTime=O();if(this.requestTick(t)){this.computeDeltaTime(t);const e=this._speed,s=this._fps;let i=this._head;for(;i;){const r=i._next;i.paused?(bt(this,i),this._hasChildren=!!this._tail,i._running=!1,i.completed&&!i._cancelled&&i.cancel()):kt(i,(t-i._startTime)*i._speed*e,0,0,i._fps<s?i.requestTick(t):1),i=r}$t.update()}}wake(){return this.useDefaultMainLoop&&!this.reqId&&(this.requestTick(O()),this.reqId=Ct(Dt)),this}pause(){if(this.reqId)return this.paused=!0,At()}resume(){if(this.paused)return this.paused=!1,vt(this,(t=>t.resetTime())),this.wake()}get speed(){return this._speed*(1===D.timeScale?1:p)}set speed(t){this._speed=t*D.timeScale,vt(this,(t=>t.speed=t._speed))}get timeUnit(){return 1===D.timeScale?"ms":"s"}set timeUnit(t){const e="s"===t,s=e?.001:1;if(D.timeScale!==s){D.timeScale=s,D.tickThreshold=200*s;const t=e?.001:p;this.defaults.duration*=t,this._speed*=t}}get precision(){return D.precision}set precision(t){D.precision=t}}const Lt=(()=>{const t=new Bt(O());return e&&(A.engine=t,i.addEventListener("visibilitychange",(()=>{t.pauseOnDocumentHidden&&(i.hidden?t.pause():t.resume())}))),t})(),Dt=()=>{Lt._head?(Lt.reqId=Ct(Dt),Lt.update()):Lt.reqId=0},At=()=>(Et(Lt.reqId),Lt.reqId=0,Lt);function Nt(t){const e=I(t)?L.root.querySelectorAll(t):t;if(e instanceof NodeList||e instanceof HTMLCollection)return e}function Ft(t){if(X(t))return[];if(!e)return P(t)&&t.flat(1/0)||[t];if(P(t)){const e=t.flat(1/0),s=[];for(let t=0,i=e.length;t<i;t++){const i=e[t];if(!X(i)){const t=Nt(i);if(t)for(let e=0,i=t.length;e<i;e++){const i=t[e];if(!X(i)){let t=!1;for(let e=0,r=s.length;e<r;e++)if(s[e]===i){t=!0;break}t||s.push(i)}}else{let t=!1;for(let e=0,r=s.length;e<r;e++)if(s[e]===i){t=!0;break}t||s.push(i)}}}return s}const s=Nt(t);return s?Array.from(s):[t]}function Ot(t){const e=Ft(t),s=e.length;if(s)for(let t=0;t<s;t++){const s=e[t];if(!s[n]){s[n]=!0;const t=W(s);(s.nodeType||t)&&(s[o]=!0,s[a]=t,s[h]={})}}return e}const Pt=t=>{const e=Ft(t)[0];if(e&&W(e))return e},Rt=(t,e,s=0)=>t.getPointAtLength(e+s>=1?e+s:0),Mt=(t,e)=>s=>{const i=+t.getTotalLength(),r=s[a],n=t.getCTM();return{from:0,to:i,modifier:s=>{if("a"===e){const e=Rt(t,s,-1),i=Rt(t,s,1);return 180*nt(i.y-e.y,i.x-e.x)/ot}{const i=Rt(t,s,0);return"x"===e?r||!n?i.x:i.x*n.a+i.y*n.c+n.e:r||!n?i.y:i.x*n.b+i.y*n.d+n.f}}}},It=["opacity","rotate","overflow","color"],zt={morphTo:(t,e=.33)=>s=>{const i=Pt(t);if(!i)return;const r="path"===s.tagName,n=r?" ":",",o=s[l];o&&s.setAttribute(r?"d":"points",o);let a="",h="";if(e){const t=s.getTotalLength(),o=i.getTotalLength(),l=Math.max(Math.ceil(t*e),Math.ceil(o*e));for(let e=0;e<l;e++){const c=e/(l-1),d=s.getPointAtLength(t*c),u=i.getPointAtLength(o*c),p=r?0===e?"M":"L":"";a+=p+ct(d.x,3)+n+d.y+" ",h+=p+ct(u.x,3)+n+u.y+" "}}else a=s.getAttribute(r?"d":"points"),h=i.getAttribute(r?"d":"points");return s[l]=h,[a,h]},createMotionPath:t=>{const e=Pt(t);if(e)return{translateX:Mt(e,"x"),translateY:Mt(e,"y"),rotate:Mt(e,"a")}},createDrawable:(t,e=0,s=0)=>Ft(t).map((t=>((t,e,s)=>{const i=p,r=getComputedStyle(t),n=r.strokeLinecap,o="non-scaling-stroke"===r.vectorEffect?t:null;let a=n;const h=new Proxy(t,{get(t,e){const s=t[e];return e===c?t:"setAttribute"===e?(...e)=>{if("draw"===e[0]){const s=e[1].split(" "),r=+s[0],h=+s[1],l=(t=>{let e=1;if(t&&t.getCTM){const s=t.getCTM();s&&(e=(G(s.a*s.a+s.b*s.b)+G(s.c*s.c+s.d*s.d))/2)}return e})(o),c=-1e3*r*l,d=h*i*l+c,u=i*l+(0===r&&1===h||1===r&&0===h?0:10*l)-d;if("butt"!==n){const e=r===h?"butt":n;a!==e&&(t.style.strokeLinecap=`${e}`,a=e)}t.setAttribute("stroke-dashoffset",`${c}`),t.setAttribute("stroke-dasharray",`${d} ${u}`)}return Reflect.apply(s,t,e)}:z(s)?(...e)=>Reflect.apply(s,t,e):s}});return"1000"!==t.getAttribute("pathLength")&&(t.setAttribute("pathLength","1000"),h.setAttribute("draw",`${e} ${s}`)),h})(t,e,s)))},Yt=(t,e,s)=>(s<0&&(s+=1),s>1&&(s-=1),s<1/6?t+6*(e-t)*s:s<.5?e:s<2/3?t+(e-t)*(2/3-s)*6:t),Xt=(t,e)=>Y(t)?e:t,Wt=(t,e,s,i,r)=>{if(z(t)){const n=()=>{const r=t(e,s,i);return isNaN(+r)?r||0:+r};return r&&(r.func=n),n()}return t},Vt=(t,e)=>t[o]?t[a]&&((t,e)=>{if(It.includes(e))return!1;if(t.getAttribute(e)||e in t){if("scale"===e){const e=t.parentNode;return e&&"filter"===e.tagName}return!0}})(t,e)?1:g.includes(e)||f.get(e)?3:F(e,"--")?4:e in t.style?2:e in t?0:1:0,Ht=(t,e,s)=>{const i=t.style[e];i&&s&&(s[e]=i);const r=i||getComputedStyle(t[c]||t).getPropertyValue(e);return"auto"===r?"0":r},Ut=(t,e,s,i)=>{const r=Y(s)?Vt(t,e):s;return 0===r?t[e]||0:1===r?t.getAttribute(e):3===r?((t,e,s)=>{const i=t.style.transform;let r;if(i){const n=t[h];let o;for(;o=C.exec(i);){const t=o[1],i=o[2].slice(1,-1);n[t]=i,t===e&&(r=i,s&&(s[e]=i))}}return i&&!Y(r)?r:F(e,"scale")?"1":F(e,"rotate")||F(e,"skew")?"0deg":"0px"})(t,e,i):4===r?Ht(t,e,i).trimStart():Ht(t,e,i)},qt=(t,e,s)=>"-"===s?t-e:"+"===s?t+e:t*e,Qt=(t,e)=>{if(e.t=0,e.n=0,e.u=null,e.o=null,e.d=null,e.s=null,!t)return e;const s=+t;if(isNaN(s)){let s=t;"="===s[1]&&(e.o=s[0],s=s.slice(2));const n=!s.includes(" ")&&k.exec(s);if(n)return e.t=1,e.n=+n[1],e.u=n[2],e;if(e.o)return e.n=+s,e;if(V(r=s)||H(r)||U(r))return e.t=2,e.d=H(i=s)?(t=>{const e=b.exec(t)||T.exec(t),s=Y(e[4])?1:+e[4];return[+e[1],+e[2],+e[3],s]})(i):V(i)?(t=>{const e=t.length,s=4===e||5===e;return[+("0x"+t[1]+t[s?1:2]),+("0x"+t[s?2:3]+t[s?2:4]),+("0x"+t[s?3:5]+t[s?3:6]),5===e||9===e?+(+("0x"+t[s?4:7]+t[s?4:8])/255).toFixed(3):1]})(i):U(i)?(t=>{const e=w.exec(t)||S.exec(t),s=+e[1]/360,i=+e[2]/100,r=+e[3]/100,n=Y(e[4])?1:+e[4];let o,a,h;if(0===i)o=a=h=r;else{const t=r<.5?r*(1+i):r+i-r*i,e=2*r-t;o=ct(255*Yt(e,t,s+1/3),0),a=ct(255*Yt(e,t,s),0),h=ct(255*Yt(e,t,s-1/3),0)}return[o,a,h,n]})(i):[0,0,0,1],e;{const t=s.match(x);return e.t=3,e.d=t?t.map(Number):[],e.s=s.split(x)||[],e}}var i,r;return e.n=s,e},jt=(t,e)=>(e.t=t._valueType,e.n=t._toNumber,e.u=t._unit,e.o=null,e.d=yt(t._toNumbers),e.s=yt(t._strings),e),Gt={t:0,n:0,u:null,o:null,d:null,s:null},Zt={_rep:new WeakMap,_add:new Map},Jt=(t,e,s="_rep")=>{const i=Zt[s];let r=i.get(t);return r||(r={},i.set(t,r)),r[e]?r[e]:r[e]={_head:null,_tail:null}},Kt=(t,e)=>t._isOverridden||t._absoluteStartTime>e._absoluteStartTime,te=t=>{t._isOverlapped=1,t._isOverridden=1,t._changeDuration=d,t._currentTime=d},ee=(t,e)=>{const s=t._composition;if(s===r.replace){const s=t._absoluteStartTime;Tt(e,t,Kt,"_prevRep","_nextRep");const i=t._prevRep;if(i){const e=i.parent,r=i._absoluteStartTime+i._changeDuration;if(t.parent.id!==e.id&&e.iterationCount>1&&r+(e.duration-e.iterationDuration)>s){te(i);let t=i._prevRep;for(;t&&t.parent.id===e.id;)te(t),t=t._prevRep}const n=s-t._delay;if(r>n){const t=i._startTime,e=r-(t+i._updateDuration),s=ct(n-e-t,12);i._changeDuration=s,i._currentTime=s,i._isOverlapped=1,s<d&&te(i)}let o=!0;if(vt(e,(t=>{t._isOverlapped||(o=!1)})),o){const t=e.parent;if(t){let s=!0;vt(t,(t=>{t!==e&&vt(t,(t=>{t._isOverlapped||(s=!1)}))})),s&&t.cancel()}else e.cancel()}}}else if(s===r.blend){const e=Jt(t.target,t.property,"_add"),s=(t=>{let e=$t.animation;return e||(e={duration:d,computeDeltaTime:_,_offset:0,_delay:0,_head:null,_tail:null},$t.animation=e,$t.update=()=>{t.forEach((t=>{for(let e in t){const s=t[e],i=s._head;if(i){const t=i._valueType,e=3===t||2===t?yt(i._fromNumbers):null;let r=i._fromNumber,n=s._tail;for(;n&&n!==i;){if(e)for(let t=0,s=n._numbers.length;t<s;t++)e[t]+=n._numbers[t];else r+=n._number;n=n._prevAdd}i._toNumber=r,i._toNumbers=e}}})),xt(e,1,1,0,2)}),e})(Zt._add);let i=e._head;i||(i={...t},i._composition=r.replace,i._updateDuration=d,i._startTime=0,i._numbers=yt(t._fromNumbers),i._number=0,i._next=null,i._prev=null,Tt(e,i),Tt(s,i));const n=t._toNumber;if(t._fromNumber=i._fromNumber-n,t._toNumber=0,t._numbers=yt(t._fromNumbers),t._number=0,i._fromNumber=n,t._toNumbers){const e=yt(t._toNumbers);e&&e.forEach(((e,s)=>{t._fromNumbers[s]=i._fromNumbers[s]-e,t._toNumbers[s]=0})),i._fromNumbers=e}Tt(e,t,null,"_prevAdd","_nextAdd")}return t},se=t=>{const e=t._composition;if(e!==r.none){const s=t.target,i=t.property,n=Zt._rep.get(s)[i];if(bt(n,t,"_prevRep","_nextRep"),e===r.blend){const e=Zt._add,r=e.get(s);if(!r)return;const n=r[i],o=$t.animation;bt(n,t,"_prevAdd","_nextAdd");const a=n._head;if(a&&a===n._tail){bt(n,a,"_prevAdd","_nextAdd"),bt(o,a);let t=!0;for(let e in r)if(r[e]._head){t=!1;break}t&&e.delete(s)}}}return t},ie=t=>(t.paused=!0,t.began=!1,t.completed=!1,t),re=t=>t._cancelled?(t._hasChildren?vt(t,re):vt(t,(t=>{t._composition!==r.none&&ee(t,Jt(t.target,t.property))})),t._cancelled=0,t):t;let ne=0;class oe extends St{constructor(t={},e=null,s=0){super(0);const{id:i,delay:r,duration:n,reversed:o,alternate:a,loop:h,loopDelay:l,autoplay:c,frameRate:u,playbackRate:p,onComplete:m,onLoop:f,onPause:g,onBegin:y,onBeforeUpdate:v,onUpdate:b}=t;L.current&&L.current.register(this);const T=e?0:Lt._elapsedTime,w=e?e.defaults:D.defaults,S=z(r)||Y(r)?w.delay:+r,x=z(n)||Y(n)?1/0:+n,k=Xt(h,w.loop),$=Xt(l,w.loopDelay),C=!0===k||k===1/0||k<0?1/0:k+1;let E=0;e?E=s:(Lt.reqId||Lt.requestTick(O()),E=(Lt._elapsedTime-Lt._startTime)*D.timeScale),this.id=Y(i)?++ne:i,this.parent=e,this.duration=ft((x+$)*C-$)||d,this.backwards=!1,this.paused=!0,this.began=!1,this.completed=!1,this.onBegin=y||w.onBegin,this.onBeforeUpdate=v||w.onBeforeUpdate,this.onUpdate=b||w.onUpdate,this.onLoop=f||w.onLoop,this.onPause=g||w.onPause,this.onComplete=m||w.onComplete,this.iterationDuration=x,this.iterationCount=C,this._autoplay=!e&&Xt(c,w.autoplay),this._offset=E,this._delay=S,this._loopDelay=$,this._iterationTime=0,this._currentIteration=0,this._resolve=_,this._running=!1,this._reversed=+Xt(o,w.reversed),this._reverse=this._reversed,this._cancelled=0,this._alternate=Xt(a,w.alternate),this._prev=null,this._next=null,this._elapsedTime=T,this._startTime=T,this._lastTime=T,this._fps=Xt(u,w.frameRate),this._speed=Xt(p,w.playbackRate)}get cancelled(){return!!this._cancelled}set cancelled(t){t?this.cancel():this.reset(1).play()}get currentTime(){return ht(ct(this._currentTime,D.precision),-this._delay,this.duration)}set currentTime(t){const e=this.paused;this.pause().seek(+t),e||this.resume()}get iterationCurrentTime(){return ct(this._iterationTime,D.precision)}set iterationCurrentTime(t){this.currentTime=this.iterationDuration*this._currentIteration+t}get progress(){return ht(ct(this._currentTime/this.duration,10),0,1)}set progress(t){this.currentTime=this.duration*t}get iterationProgress(){return ht(ct(this._iterationTime/this.iterationDuration,10),0,1)}set iterationProgress(t){const e=this.iterationDuration;this.currentTime=e*this._currentIteration+e*t}get currentIteration(){return this._currentIteration}set currentIteration(t){this.currentTime=this.iterationDuration*ht(+t,0,this.iterationCount-1)}get reversed(){return!!this._reversed}set reversed(t){t?this.reverse():this.play()}get speed(){return super.speed}set speed(t){super.speed=t,this.resetTime()}reset(t=0){return re(this),this._reversed&&!this._reverse&&(this.reversed=!1),this._iterationTime=this.iterationDuration,kt(this,0,1,t,2),ie(this),this._hasChildren&&vt(this,ie),this}init(t=0){this.fps=this._fps,this.speed=this._speed,!t&&this._hasChildren&&kt(this,this.duration,1,t,2),this.reset(t);const e=this._autoplay;return!0===e?this.resume():e&&!Y(e.linked)&&e.link(this),this}resetTime(){const t=1/(this._speed*Lt._speed);return this._startTime=O()-(this._currentTime+this._delay)*t,this}pause(){return this.paused||(this.paused=!0,this.onPause(this)),this}resume(){return this.paused?(this.paused=!1,this.duration<=d&&!this._hasChildren?kt(this,d,0,0,2):(this._running||(Tt(Lt,this),Lt._hasChildren=!0,this._running=!0),this.resetTime(),this._startTime-=12,Lt.wake()),this):this}restart(){return this.reset(0).resume()}seek(t,e=0,s=0){re(this),this.completed=!1;const i=this.paused;return this.paused=!0,kt(this,t+this._delay,~~e,~~s,1),i?this:this.resume()}alternate(){const t=this._reversed,e=this.iterationCount,s=this.iterationDuration,i=e===1/0?st(u/s):e;return this._reversed=+(!this._alternate||i%2?!t:t),e===1/0?this.iterationProgress=this._reversed?1-this.iterationProgress:this.iterationProgress:this.seek(s*i-this._currentTime),this.resetTime(),this}play(){return this._reversed&&this.alternate(),this.resume()}reverse(){return this._reversed||this.alternate(),this.resume()}cancel(){return this._hasChildren?vt(this,(t=>t.cancel()),!0):vt(this,se),this._cancelled=1,this.pause()}stretch(t){const e=this.duration,s=gt(t);if(e===s)return this;const i=t/e,r=t<=d;return this.duration=r?d:s,this.iterationDuration=r?d:gt(this.iterationDuration*i),this._offset*=i,this._delay*=i,this._loopDelay*=i,this}revert(){kt(this,0,1,0,1);const t=this._autoplay;return t&&t.linked&&t.linked===this&&t.revert(),this.cancel()}complete(){return this.seek(this.duration).cancel()}then(t=_){const e=this.then,s=()=>{this.then=null,t(this),this.then=e,this._resolve=_};return new Promise((t=>(this._resolve=()=>t(s()),this.completed&&this._resolve(),this)))}}const ae=t=>t,he=(t,e,s)=>(((1-3*s+3*e)*t+(3*s-6*e))*t+3*e)*t,le=(t=.5,e=0,s=.5,i=1)=>t===e&&s===i?ae:r=>0===r||1===r?r:he(((t,e,s)=>{let i,r,n=0,o=1,a=0;do{r=n+(o-n)/2,i=he(r,e,s)-t,i>0?o=r:n=r}while(K(i)>1e-7&&++a<100);return r})(r,t,s),e,i),ce=(t=10,e)=>{const s=e?et:st;return e=>s(ht(e,0,1)*t)*(1/t)},de=(...t)=>{const e=t.length;if(!e)return ae;const s=e-1,i=t[0],r=t[s],n=[0],o=[Q(i)];for(let e=1;e<s;e++){const i=t[e],r=I(i)?i.trim().split(" "):[i],a=r[0],h=r[1];n.push(Y(h)?e/s:Q(h)/100),o.push(Q(a))}return o.push(Q(r)),n.push(1),function(t){for(let e=1,s=n.length;e<s;e++){const s=n[e];if(t<=s){const i=n[e-1],r=o[e-1];return r+(o[e]-r)*(t-i)/(s-i)}}return o[o.length-1]}},ue=(t=10,e=1)=>{const s=[0],i=t-1;for(let t=1;t<i;t++){const r=s[t-1],n=t/i,o=n*(1-e)+(n+((t+1)/i-n)*Math.random())*e;s.push(ht(o,r,1))}return s.push(1),de(...s)},pe=ot/2,me=2*ot,fe=(t=1.68)=>e=>j(e,+t),ge={[m]:fe,Quad:fe(2),Cubic:fe(3),Quart:fe(4),Quint:fe(5),Sine:t=>1-J(t*pe),Circ:t=>1-G(1-t*t),Expo:t=>t?j(2,10*t-10):0,Bounce:t=>{let e,s=4;for(;t<((e=j(2,--s))-1)/11;);return 1/j(4,3-s)-7.5625*j((3*e-2)/22-t,2)},Back:(t=1.70158)=>e=>(+t+1)*e*e*e-+t*e*e,Elastic:(t=1,e=.3)=>{const s=ht(+t,1,10),i=ht(+e,d,2),r=i/me*it(1/s),n=me/i;return t=>0===t||1===t?t:-s*j(2,-10*(1-t))*Z((1-t-r)*n)}},ye={in:t=>e=>t(e),out:t=>e=>1-t(1-e),inOut:t=>e=>e<.5?t(2*e)/2:1-t(-2*e+2)/2,outIn:t=>e=>e<.5?(1-t(1-2*e))/2:(t(2*e-1)+1)/2},_e=(t,e,s)=>{if(s[t])return s[t];if(t.indexOf("(")<=-1){const i=ye[t]||t.includes("Back")||t.includes("Elastic")?e[t]():e[t];return i?s[t]=i:ae}{const i=t.slice(0,-1).split("("),r=e[i[0]];return r?s[t]=r(...i[1].split(",")):ae}},ve=(()=>{const t={linear:de,irregular:ue,steps:ce,cubicBezier:le};for(let e in ye)for(let s in ge){const i=ge[s],r=ye[e];t[e+s]=s===m||"Back"===s||"Elastic"===s?(t,e)=>r(i(t,e)):r(i)}return t})(),be={linear:ae},Te=t=>z(t)?t:I(t)?_e(t,ve,be):ae,we={},Se=(t,e,s)=>{if(3===s)return f.get(t)||t;if(2===s||1===s&&W(e)&&t in e.style){const e=we[t];if(e)return e;{const e=t?N(t):t;return we[t]=e,e}}return t},xe={deg:1,rad:180/ot,turn:360},ke={},$e=(t,e,s,r=!1)=>{const n=e.u,o=e.n;if(1===e.t&&n===s)return e;const a=o+n+s,h=ke[a];if(Y(h)||r){let r;if(n in xe)r=o*xe[n]/xe[s];else{const e=100,a=t.cloneNode(),h=t.parentNode,l=h&&h!==i?h:i.body;l.appendChild(a);const c=a.style;c.width=e+n;const d=a.offsetWidth||e;c.width=e+s;const u=d/(a.offsetWidth||e);l.removeChild(a),r=u*o}e.n=r,ke[a]=r}else e.n=h;return e.t,e.u=s,e},Ce=t=>{if(t._hasChildren)vt(t,Ce,!0);else{const e=t;e.pause(),vt(e,(t=>{const s=t.property,i=t.target;if(i[o]){const r=i.style,n=e._inlineStyles[s];if(3===t._tweenType){const e=i[h];if(Y(n)||n===m?delete e[s]:e[s]=n,t._renderTransforms)if(Object.keys(e).length){let t=m;for(let s in e)t+=y[s]+e[s]+") ";r.transform=t}else r.removeProperty("transform")}else Y(n)||n===m?r.removeProperty(s):r[s]=n;e._tail===t&&e.targets.forEach((t=>{t.getAttribute&&t.getAttribute("style")===m&&t.removeAttribute("style")}))}}))}return t},Ee={t:0,n:0,u:null,o:null,d:null,s:null},Be={t:0,n:0,u:null,o:null,d:null,s:null},Le={func:null},De=[null],Ae=[null,null],Ne={to:null};let Fe,Oe,Pe=0;class Re extends oe{constructor(t,e,s,i,n=!1,o=0,a=0){super(e,s,i);const h=Ot(t),l=h.length,c=e.keyframes,u=c?_t(((t,e)=>{const s={};if(P(t)){const e=[].concat(...t.map((t=>Object.keys(t)))).filter(q);for(let i=0,r=e.length;i<r;i++){const r=e[i],n=t.map((t=>{const e={};for(let s in t){const i=t[s];q(s)?s===r&&(e.to=i):e[s]=i}return e}));s[r]=n}}else{const i=Xt(e.duration,D.defaults.duration),r=Object.keys(t).map((e=>({o:parseFloat(e)/100,p:t[e]}))).sort(((t,e)=>t.o-e.o));r.forEach((t=>{const e=t.o,r=t.p;for(let t in r)if(q(t)){let n=s[t];n||(n=s[t]=[]);const o=e*i;let a=n.length,h=n[a-1];const l={to:r[t]};let c=0;for(let t=0;t<a;t++)c+=n[t].duration;1===a&&(l.from=h.to),r.ease&&(l.ease=r.ease),l.duration=o-(a?c:0),n.push(l)}return t}));for(let t in s){const e=s[t];let i;for(let t=0,s=e.length;t<s;t++){const s=e[t],r=s.ease;s.ease=i||void 0,i=r}e[0].duration||e.shift()}}return s})(c,e),e):e,{delay:m,duration:f,ease:g,playbackEase:y,modifier:_,composition:v,onRender:b}=u,T=s?s.defaults:D.defaults,w=Xt(y,T.playbackEase),S=w?Te(w):null,x=!Y(g)&&!Y(g.ease),k=x?g.ease:Xt(g,S?"linear":T.ease),$=x?g.duration:Xt(f,T.duration),C=Xt(m,T.delay),E=_||T.modifier,B=Y(v)&&l>=p?r.none:Y(v)?T.composition:v,L={},A=this._offset+(s?s._offset:0);let N=NaN,F=NaN,O=0,I=0;for(let t=0;t<l;t++){const e=h[t],i=o||t,c=a||l;let p=NaN,m=NaN;for(let t in u)if(q(t)){const o=Vt(e,t),a=Se(t,e,o);let h=u[t];const l=P(h);if(n&&!l&&(Ae[0]=h,Ae[1]=h,h=Ae),l){const t=h.length,e=!R(h[0]);2===t&&e?(Ne.to=h,De[0]=Ne,Fe=De):t>2&&e?(Fe=[],h.forEach(((t,e)=>{e?1===e?(Ae[1]=t,Fe.push(Ae)):Fe.push(t):Ae[0]=t}))):Fe=h}else De[0]=h,Fe=De;let f=null,g=null,y=NaN,_=0,v=0;for(let t=Fe.length;v<t;v++){const n=Fe[v];R(n)?Oe=n:(Ne.to=n,Oe=Ne),Le.func=null;const h=Wt(Oe.to,e,i,c,Le);let l;R(h)&&!Y(h.to)?(Oe=h,l=h.to):l=h;const u=Wt(Oe.from,e,i,c),p=Oe.ease,m=!Y(p)&&!Y(p.ease),b=m?p.ease:p||k,T=m?p.duration:Wt(Xt(Oe.duration,t>1?Wt($,e,i,c)/t:$),e,i,c),w=Wt(Xt(Oe.delay,v?0:C),e,i,c),S=Wt(Xt(Oe.composition,B),e,i,c),x=M(S)?S:r[S],D=Oe.modifier||E,N=!Y(u),F=!Y(l),z=P(l),X=z||N&&F,W=g?_+w:w,V=ct(A+W,12);I||!N&&!z||(I=1);let H=g;if(x!==r.none){f||(f=Jt(e,a));let t=f._head;for(;t&&!t._isOverridden&&t._absoluteStartTime<=V;)if(H=t,t=t._nextRep,t&&t._absoluteStartTime>=V)for(;t;)te(t),t=t._nextRep}if(X?(Qt(z?Wt(l[0],e,i,c):u,Ee),Qt(z?Wt(l[1],e,i,c,Le):l,Be),0===Ee.t&&(H?1===H._valueType&&(Ee.t=1,Ee.u=H._unit):(Qt(Ut(e,a,o,L),Gt),1===Gt.t&&(Ee.t=1,Ee.u=Gt.u)))):(F?Qt(l,Be):g?jt(g,Be):Qt(s&&H&&H.parent.parent===s?H._value:Ut(e,a,o,L),Be),N?Qt(u,Ee):g?jt(g,Ee):Qt(s&&H&&H.parent.parent===s?H._value:Ut(e,a,o,L),Ee)),Ee.o&&(Ee.n=qt(H?H._toNumber:Qt(Ut(e,a,o,L),Gt).n,Ee.n,Ee.o)),Be.o&&(Be.n=qt(Ee.n,Be.n,Be.o)),Ee.t!==Be.t)if(3===Ee.t||3===Be.t){const t=3===Ee.t?Ee:Be,e=3===Ee.t?Be:Ee;e.t=3,e.s=yt(t.s),e.d=t.d.map((()=>e.n))}else if(1===Ee.t||1===Be.t){const t=1===Ee.t?Ee:Be,e=1===Ee.t?Be:Ee;e.t=1,e.u=t.u}else if(2===Ee.t||2===Be.t){const t=2===Ee.t?Ee:Be,e=2===Ee.t?Be:Ee;e.t=2,e.s=t.s,e.d=[0,0,0,1]}if(Ee.u!==Be.u){let t=Be.u?Ee:Be;t=$e(e,t,Be.u?Be.u:Ee.u,!1)}if(Be.d&&Ee.d&&Be.d.length!==Ee.d.length){const t=Ee.d.length>Be.d.length?Ee:Be,e=t===Ee?Be:Ee;e.d=t.d.map(((t,s)=>Y(e.d[s])?0:e.d[s])),e.s=yt(t.s)}const U=ct(+T||d,12),q={parent:this,id:Pe++,property:a,target:e,_value:null,_func:Le.func,_ease:Te(b),_fromNumbers:yt(Ee.d),_toNumbers:yt(Be.d),_strings:yt(Be.s),_fromNumber:Ee.n,_toNumber:Be.n,_numbers:yt(Ee.d),_number:Ee.n,_unit:Be.u,_modifier:D,_currentTime:0,_startTime:W,_delay:+w,_updateDuration:U,_changeDuration:U,_absoluteStartTime:V,_tweenType:o,_valueType:Be.t,_composition:x,_isOverlapped:0,_isOverridden:0,_renderTransforms:0,_prevRep:null,_nextRep:null,_prevAdd:null,_nextAdd:null,_prev:null,_next:null};x!==r.none&&ee(q,f),isNaN(y)&&(y=q._startTime),_=ct(W+U,12),g=q,O++,Tt(this,q)}(isNaN(F)||y<F)&&(F=y),(isNaN(N)||_>N)&&(N=_),3===o&&(p=O-v,m=O)}if(!isNaN(p)){let t=0;vt(this,(e=>{t>=p&&t<m&&(e._renderTransforms=1,e._composition===r.blend&&vt($t.animation,(t=>{t.id===e.id&&(t._renderTransforms=1)}))),t++}))}}l||console.warn("No target found. Make sure the element you're trying to animate is accessible before creating your animation."),F?(vt(this,(t=>{t._startTime-t._delay||(t._delay-=F),t._startTime-=F})),N-=F):F=0,N||(N=d,this.iterationCount=0),this.targets=h,this.duration=N===d?d:ft((N+this._loopDelay)*this.iterationCount-this._loopDelay)||d,this.onRender=b||T.onRender,this._ease=S,this._delay=F,this.iterationDuration=N,this._inlineStyles=L,!this._autoplay&&I&&this.onRender(this)}stretch(t){const e=this.duration;if(e===gt(t))return this;const s=t/e;return vt(this,(t=>{t._updateDuration=gt(t._updateDuration*s),t._changeDuration=gt(t._changeDuration*s),t._currentTime*=s,t._startTime*=s,t._absoluteStartTime*=s})),super.stretch(t)}refresh(){return vt(this,(t=>{const e=t._func;if(e){const s=Ut(t.target,t.property,t._tweenType);Qt(s,Gt),Qt(e(),Be),t._fromNumbers=yt(Gt.d),t._fromNumber=Gt.n,t._toNumbers=yt(Be.d),t._strings=yt(Be.s),t._toNumber=Be.o?qt(Gt.n,Be.n,Be.o):Be.n}})),this}revert(){return super.revert(),Ce(this)}then(t){return super.then(t)}}const Me=(t,e=100)=>{const s=[];for(let i=0;i<=e;i++)s.push(t(i/e));return`linear(${s.join(", ")})`},Ie={in:"ease-in",out:"ease-out",inOut:"ease-in-out"},ze=(()=>{const t={};for(let e in ye)t[e]=t=>ye[e](fe(t));return t})(),Ye=t=>{let e=Ie[t];if(e)return e;if(e="linear",I(t)){if(F(t,"linear")||F(t,"cubic-")||F(t,"steps")||F(t,"ease"))e=t;else if(F(t,"cubicB"))e=N(t);else{const s=_e(t,ze,Ie);z(s)&&(e=s===ae?"linear":Me(s))}Ie[t]=e}else if(z(t)){const s=Me(t);s&&(e=s)}else t.ease&&(e=Me(t.ease));return e},Xe=["x","y","z"],We=["perspective","width","height","margin","padding","top","right","bottom","left","borderWidth","fontSize","borderRadius",...Xe],Ve=(()=>[...Xe,...g.filter((t=>["X","Y","Z"].some((e=>t.endsWith(e)))))])();let He=null;const Ue={_head:null,_tail:null},qe=(t,e,s)=>{let i=Ue._head;for(;i;){const r=i._next,n=i.$el===t,o=!e||i.property===e,a=!s||i.parent===s;if(n&&o&&a){const t=i.animation;try{t.commitStyles()}catch{}t.cancel(),bt(Ue,i);const e=i.parent;e&&(e._completed++,e.animations.length===e._completed&&(e.completed=!0,e.muteCallbacks||(e.paused=!0,e.onComplete(e),e._resolve(e))))}i=r}},Qe=(t,e,s,i,r)=>{const n=e.animate(i,r),o=r.delay+ +r.duration*r.iterations;n.playbackRate=t._speed,t.paused&&n.pause(),t.duration<o&&(t.duration=o,t.controlAnimation=n),t.animations.push(n),qe(e,s),Tt(Ue,{parent:t,animation:n,$el:e,property:s,_next:null,_prev:null});const a=()=>{qe(e,s,t)};return n.onremove=a,n.onfinish=a,n},je=(t,e,s,i,r)=>{let n=Wt(e,s,i,r);return M(n)?We.includes(t)||F(t,"translate")?`${n}px`:F(t,"rotate")||F(t,"skew")?`${n}deg`:`${n}`:n},Ge=(t,e,s,i,r,n)=>{let o="0";const a=Y(i)?getComputedStyle(t)[e]:je(e,i,t,r,n);return o=Y(s)?P(i)?i.map((s=>je(e,s,t,r,n))):a:[je(e,s,t,r,n),a],o};class Ze{constructor(t,s){L.current&&L.current.register(this),X(He)&&(!e||!Y(CSS)&&Object.hasOwnProperty.call(CSS,"registerProperty")?(g.forEach((t=>{const e=F(t,"skew"),s=F(t,"scale"),i=F(t,"rotate"),r=F(t,"translate"),n=i||e,o=n?"<angle>":s?"<number>":r?"<length-percentage>":"*";try{CSS.registerProperty({name:"--"+t,syntax:o,inherits:!1,initialValue:r?"0px":n?"0deg":s?"1":"0"})}catch{}})),He=!0):He=!1);const i=Ot(t),r=i.length;r||console.warn("No target found. Make sure the element you're trying to animate is accessible before creating your animation.");const n=Xt(s.ease,Ye(D.defaults.ease)),o=n.ease&&n,a=Xt(s.autoplay,D.defaults.autoplay),l=!(!a||!a.link)&&a,c=s.alternate&&!0===s.alternate,d=s.reversed&&!0===s.reversed,u=Xt(s.loop,D.defaults.loop),v=!0===u||u===1/0?1/0:M(u)?u+1:1,b=c?d?"alternate-reverse":"alternate":d?"reverse":"normal",T=Ye(n),w=1===D.timeScale?1:p;this.targets=i,this.animations=[],this.controlAnimation=null,this.onComplete=s.onComplete||_,this.duration=0,this.muteCallbacks=!1,this.completed=!1,this.paused=!a||!1!==l,this.reversed=d,this.autoplay=a,this._speed=Xt(s.playbackRate,D.defaults.playbackRate),this._resolve=_,this._completed=0,this._inlineStyles=i.map((t=>t.getAttribute("style"))),i.forEach(((t,e)=>{const i=t[h],a=Ve.some((t=>s.hasOwnProperty(t))),l=(o?o.duration:Wt(Xt(s.duration,D.defaults.duration),t,e,r))*w,c=Wt(Xt(s.delay,D.defaults.delay),t,e,r)*w,d=Xt(s.composition,"replace");for(let o in s){if(!q(o))continue;const h={},u={iterations:v,direction:b,fill:"forwards",easing:T,duration:l,delay:c,composite:d},p=s[o],m=!!a&&(g.includes(o)?o:f.get(o));let y;if(R(p)){const s=p,a=Xt(s.ease,n),f=a.ease&&a,g=s.to,_=s.from;if(u.duration=(f?f.duration:Wt(Xt(s.duration,l),t,e,r))*w,u.delay=Wt(Xt(s.delay,c),t,e,r)*w,u.composite=Xt(s.composition,d),u.easing=Ye(a),y=Ge(t,o,_,g,e,r),m?(h[`--${m}`]=y,i[m]=y):h[o]=Ge(t,o,_,g,e,r),Qe(this,t,o,h,u),!Y(_))if(m){const e=`--${m}`;t.style.setProperty(e,h[e][0])}else t.style[o]=h[o][0]}else y=P(p)?p.map((s=>je(o,s,t,e,r))):je(o,p,t,e,r),m?(h[`--${m}`]=y,i[m]=y):h[o]=y,Qe(this,t,o,h,u)}if(a){let e=m;for(let t in i)e+=`${y[t]}var(--${t})) `;t.style.transform=e}})),l&&this.autoplay.link(this)}forEach(t){const e=I(t)?e=>e[t]():t;return this.animations.forEach(e),this}get speed(){return this._speed}set speed(t){this._speed=+t,this.forEach((e=>e.playbackRate=t))}get currentTime(){const t=this.controlAnimation,e=D.timeScale;return this.completed?this.duration:t?+t.currentTime*(1===e?1:e):0}set currentTime(t){const e=t*(1===D.timeScale?1:p);this.forEach((t=>{e>=this.duration&&t.play(),t.currentTime=e}))}get progress(){return this.currentTime/this.duration}set progress(t){this.forEach((e=>e.currentTime=t*this.duration||0))}resume(){return this.paused?(this.paused=!1,this.forEach("play")):this}pause(){return this.paused?this:(this.paused=!0,this.forEach("pause"))}alternate(){return this.reversed=!this.reversed,this.forEach("reverse"),this.paused&&this.forEach("pause"),this}play(){return this.reversed&&this.alternate(),this.resume()}reverse(){return this.reversed||this.alternate(),this.resume()}seek(t,e=!1){return e&&(this.muteCallbacks=!0),t<this.duration&&(this.completed=!1),this.currentTime=t,this.muteCallbacks=!1,this.paused&&this.pause(),this}restart(){return this.completed=!1,this.seek(0,!0).resume()}commitStyles(){return this.forEach("commitStyles")}complete(){return this.seek(this.duration)}cancel(){return this.forEach("cancel"),this.pause()}revert(){return this.cancel(),this.targets.forEach(((t,e)=>t.setAttribute("style",this._inlineStyles[e]))),this}then(t=_){const e=this.then,s=()=>{this.then=null,t(this),this.then=e,this._resolve=_};return new Promise((t=>(this._resolve=()=>t(s()),this.completed&&this._resolve(),this)))}}const Je={animate:(t,e)=>new Ze(t,e),convertEase:Me},Ke=(t=_)=>new oe({duration:1*D.timeScale,onComplete:t},null,0).resume();function ts(t,e,s){const i=Ot(t);if(!i.length)return;const[r]=i,n=Vt(r,e),o=Se(e,r,n);let a=Ut(r,o);if(Y(s))return a;if(Qt(a,Gt),0===Gt.t||1===Gt.t){if(!1===s)return Gt.n;{const t=$e(r,Gt,s,!1);return`${ct(t.n,D.precision)}${t.u}`}}}const es=(t,e)=>{if(!Y(e))return e.duration=d,e.composition=Xt(e.composition,r.none),new Re(t,e,null,0,!0).resume()},ss=(t,e,s)=>{let i=!1;return vt(e,(r=>{const n=r.target;if(t.includes(n)){const t=r.property,o=r._tweenType,a=Se(s,n,o);(!a||a&&a===t)&&(r.parent._tail===r&&3===r._tweenType&&r._prev&&3===r._prev._tweenType&&(r._prev._renderTransforms=1),bt(e,r),se(r),i=!0)}}),!0),i},is=(t,e,s)=>{const i=Ft(t),r=e||Lt,n=e&&e.controlAnimation&&e;for(let t=0,e=i.length;t<e;t++){const e=i[t];qe(e,s,n)}let o;if(r._hasChildren){let e=0;vt(r,(n=>{if(!n._hasChildren)if(o=ss(i,n,s),o&&!n._head)n.cancel(),bt(r,n);else{const t=n._offset+n._delay+n.duration;t>e&&(e=t)}n._head?is(t,n,s):n._hasChildren=!1}),!0),Y(r.iterationDuration)||(r.iterationDuration=e)}else o=ss(i,r,s);return o&&!r._head&&(r._hasChildren=!1,r.cancel&&r.cancel()),i},rs=(t,e,s,i,r)=>i+(t-e)/(s-e)*(r-i),ns=(t,e,s,i)=>{let r=p/D.defaults.frameRate;if(!1!==i){const t=i||Lt._hasChildren&&Lt;t&&t.deltaTime&&(r=t.deltaTime)}const n=1-Math.exp(-s*r*.1);return s?1===s?e:(1-n)*t+n*e:t},os=t=>(...e)=>{const s=t(...e);return new Proxy(_,{apply:(t,e,[i])=>s(i),get:(t,e)=>os(((...t)=>{const i=hs[e](...t);return t=>i(s(t))}))})},as=(t,e=0)=>(...s)=>(s.length<t.length?os(((t,e=0)=>(...s)=>e?e=>t(...s,e):e=>t(e,...s))(t,e)):t)(...s),hs={$:Ot,get:ts,set:es,remove:is,cleanInlineStyles:Ce,random:pt,randomPick:t=>t[pt(0,t.length-1)],shuffle:mt,lerp:ns,sync:Ke,keepTime:wt,clamp:as(ht),round:as(ct),snap:as(dt),wrap:as(((t,e,s)=>((t-e)%(s-e)+(s-e))%(s-e)+e)),interpolate:as(ut,1),mapRange:as(rs),roundPad:as(((t,e)=>(+t).toFixed(e))),padStart:as(((t,e,s)=>`${t}`.padStart(e,s))),padEnd:as(((t,e,s)=>`${t}`.padEnd(e,s))),degToRad:as((t=>t*ot/180)),radToDeg:as((t=>180*t/ot))},ls=(t,e)=>{let s=t.iterationDuration;if(s===d&&(s=0),Y(e))return s;if(M(+e))return+e;const i=e,r=t?t.labels:null,n=!X(r),o=((t,e)=>{if(F(e,"<")){const s="<"===e[1],i=t._tail,r=i?i._offset+i._delay:0;return s?r:r+i.duration}})(t,i),a=!Y(o),h=E.exec(i);if(h){const t=h[0],e=i.split(t),l=n&&e[0]?r[e[0]]:s,c=a?o:n?l:s,d=+e[1];return qt(c,d,t[0])}return a?o:n?Y(r[i])?s:r[i]:s};function cs(t,e,s,i,r,n){const o=M(t.duration)&&t.duration<=d?s-d:s;kt(e,o,1,1,1);const a=i?new Re(i,t,e,o,!1,r,n):new oe(t,e,o);return a.init(1),Tt(e,a),vt(e,(t=>{const s=t._offset+t._delay+t.duration;s>e.iterationDuration&&(e.iterationDuration=s)})),e.duration=function(t){return ft((t.iterationDuration+t._loopDelay)*t.iterationCount-t._loopDelay)||d}(e),e}class ds extends oe{constructor(t={}){super(t,null,0),this.duration=0,this.labels={};const e=t.defaults,s=D.defaults;this.defaults=e?_t(e,s):s,this.onRender=t.onRender||s.onRender;const i=Xt(t.playbackEase,s.playbackEase);this._ease=i?Te(i):null,this.iterationDuration=0}add(t,e,s){const i=R(e),r=R(t);if(i||r){if(this._hasChildren=!0,i){const i=e;if(z(s)){const e=s,r=Ft(t),n=this.duration,o=this.iterationDuration,a=i.id;let h=0;const l=r.length;r.forEach((t=>{const s={...i};this.duration=n,this.iterationDuration=o,Y(a)||(s.id=a+"-"+h),cs(s,this,ls(this,e(t,h,l,this)),t,h,l),h++}))}else cs(i,this,ls(this,s),t)}else cs(t,this,ls(this,e));return this.init(1)}}sync(t,e){if(Y(t)||t&&Y(t.pause))return this;t.pause();const s=+(t.effect?t.effect.getTiming().duration:t.duration);return this.add(t,{currentTime:[0,s],duration:s,ease:"linear"},e)}set(t,e,s){return Y(e)?this:(e.duration=d,e.composition=r.replace,this.add(t,e,s))}call(t,e){return Y(t)||t&&!z(t)?this:this.add({duration:0,onComplete:()=>t(this)},e)}label(t,e){return Y(t)||t&&!I(t)||(this.labels[t]=ls(this,e)),this}remove(t,e){return is(t,this,e),this}stretch(t){const e=this.duration;if(e===gt(t))return this;const s=t/e,i=this.labels;vt(this,(t=>t.stretch(t.duration*s)));for(let t in i)i[t]*=s;return super.stretch(t)}refresh(){return vt(this,(t=>{t.refresh&&t.refresh()})),this}revert(){return super.revert(),vt(this,(t=>t.revert),!0),Ce(this)}then(t){return super.then(t)}}class us{constructor(t,e){L.current&&L.current.register(this);const s=()=>{if(this.callbacks.completed)return;let t=!0;for(let e in this.animations)if(!this.animations[e].paused&&t){t=!1;break}t&&this.callbacks.complete()},i={onBegin:()=>{this.callbacks.completed&&this.callbacks.reset(),this.callbacks.play()},onComplete:s,onPause:s},n={v:1,autoplay:!1},o={};if(this.targets=[],this.animations={},this.callbacks=null,!Y(t)&&!Y(e)){for(let t in e){const s=e[t];q(t)?o[t]=s:F(t,"on")?n[t]=s:i[t]=s}this.callbacks=new Re({v:0},n);for(let e in o){const s=o[e],n=R(s);let a={},h="+=0";if(n){const t=s.unit;I(t)&&(h+=t)}else a.duration=s;a[e]=n?_t({to:h},s):h;const l=_t(i,a);l.composition=r.replace,l.autoplay=!1;const c=this.animations[e]=new Re(t,l,null,0,!1).init();this.targets.length||this.targets.push(...c.targets),this[e]=(t,e,s)=>{const i=c._head;if(Y(t)&&i){const t=i._numbers;return t&&t.length?t:i._modifier(i._number)}return vt(c,(e=>{if(P(t))for(let s=0,i=t.length;s<i;s++)Y(e._numbers[s])||(e._fromNumbers[s]=e._modifier(e._numbers[s]),e._toNumbers[s]=t[s]);else e._fromNumber=e._modifier(e._number),e._toNumber=t;Y(s)||(e._ease=Te(s)),e._currentTime=0})),Y(e)||c.stretch(e),c.reset(1).resume(),this}}}}revert(){for(let t in this.animations)this[t]=_,this.animations[t].revert();return this.animations={},this.targets.length=0,this.callbacks&&this.callbacks.revert(),this}}const ps=10*p;class ms{constructor(t={}){this.timeStep=.02,this.restThreshold=5e-4,this.restDuration=200,this.maxDuration=6e4,this.maxRestSteps=this.restDuration/this.timeStep/p,this.maxIterations=this.maxDuration/this.timeStep/p,this.m=ht(Xt(t.mass,1),0,ps),this.s=ht(Xt(t.stiffness,100),1,ps),this.d=ht(Xt(t.damping,10),.1,ps),this.v=ht(Xt(t.velocity,0),-1e4,ps),this.w0=0,this.zeta=0,this.wd=0,this.b=0,this.solverDuration=0,this.duration=0,this.compute(),this.ease=t=>0===t||1===t?t:this.solve(t*this.solverDuration)}solve(t){const{zeta:e,w0:s,wd:i,b:r}=this;let n=t;return n=e<1?tt(-n*e*s)*(1*J(i*n)+r*Z(i*n)):(1+r*n)*tt(-n*s),1-n}compute(){const{maxRestSteps:t,maxIterations:e,restThreshold:s,timeStep:i,m:r,d:n,s:o,v:a}=this,h=this.w0=ht(G(o/r),d,p),l=this.zeta=n/(2*G(o*r)),c=this.wd=l<1?h*G(1-l*l):0;this.b=l<1?(l*h-a)/c:-a+h;let u=0,m=0,f=0;for(;m<t&&f<e;)K(1-this.solve(u))<s?m++:m=0,this.solverDuration=u,u+=i,f++;this.duration=ct(this.solverDuration*p,0)*D.timeScale}get mass(){return this.m}set mass(t){this.m=ht(Xt(t,1),0,ps),this.compute()}get stiffness(){return this.s}set stiffness(t){this.s=ht(Xt(t,100),1,ps),this.compute()}get damping(){return this.d}set damping(t){this.d=ht(Xt(t,10),.1,ps),this.compute()}get velocity(){return this.v}set velocity(t){this.v=ht(Xt(t,0),-1e4,ps),this.compute()}}const fs=t=>new ms(t),gs=t=>{t.cancelable&&t.preventDefault()};class ys{constructor(t){this.el=t,this.zIndex=0,this.parentElement=null,this.classList={add:_,remove:_}}get x(){return this.el.x||0}set x(t){this.el.x=t}get y(){return this.el.y||0}set y(t){this.el.y=t}get width(){return this.el.width||0}set width(t){this.el.width=t}get height(){return this.el.height||0}set height(t){this.el.height=t}getBoundingClientRect(){return{top:this.y,right:this.x,bottom:this.y+this.height,left:this.x+this.width}}}class _s{constructor(t){this.$el=t,this.inlineTransforms=[],this.point=new DOMPoint,this.inversedMatrix=this.getMatrix().inverse()}normalizePoint(t,e){return this.point.x=t,this.point.y=e,this.point.matrixTransform(this.inversedMatrix)}traverseUp(t){let e=this.$el.parentElement,s=0;for(;e&&e!==i;)t(e,s),e=e.parentElement,s++}getMatrix(){const t=new DOMMatrix;return this.traverseUp((e=>{const s=getComputedStyle(e).transform;if(s){const e=new DOMMatrix(s);t.preMultiplySelf(e)}})),t}remove(){this.traverseUp(((t,e)=>{this.inlineTransforms[e]=t.style.transform,t.style.transform="none"}))}revert(){this.traverseUp(((t,e)=>{const s=this.inlineTransforms[e];""===s?t.style.removeProperty("transform"):t.style.transform=s}))}}const vs=(t,e)=>t&&z(t)?t(e):t;let bs=0;class Ts{constructor(t,e={}){if(!t)return;L.current&&L.current.register(this);const r=e.x,n=e.y,o=e.trigger,a=e.modifier,h=e.releaseEase,l=h&&Te(h),c=!Y(h)&&!Y(h.ease),d=R(r)&&!Y(r.mapTo)?r.mapTo:"translateX",p=R(n)&&!Y(n.mapTo)?n.mapTo:"translateY",m=vs(e.container,this);this.containerArray=P(m)?m:null,this.$container=m&&!this.containerArray?Ft(m)[0]:i.body,this.useWin=this.$container===i.body,this.$scrollContainer=this.useWin?s:this.$container,this.$target=R(t)?new ys(t):Ft(t)[0],this.$trigger=Ft(o||t)[0],this.fixed="fixed"===ts(this.$target,"position"),this.isFinePointer=!0,this.containerPadding=[0,0,0,0],this.containerFriction=0,this.releaseContainerFriction=0,this.snapX=0,this.snapY=0,this.scrollSpeed=0,this.scrollThreshold=0,this.dragSpeed=0,this.maxVelocity=0,this.minVelocity=0,this.velocityMultiplier=0,this.cursor=!1,this.releaseXSpring=c?h:fs({mass:Xt(e.releaseMass,1),stiffness:Xt(e.releaseStiffness,80),damping:Xt(e.releaseDamping,20)}),this.releaseYSpring=c?h:fs({mass:Xt(e.releaseMass,1),stiffness:Xt(e.releaseStiffness,80),damping:Xt(e.releaseDamping,20)}),this.releaseEase=l||ve.outQuint,this.hasReleaseSpring=c,this.onGrab=e.onGrab||_,this.onDrag=e.onDrag||_,this.onRelease=e.onRelease||_,this.onUpdate=e.onUpdate||_,this.onSettle=e.onSettle||_,this.onSnap=e.onSnap||_,this.onResize=e.onResize||_,this.onAfterResize=e.onAfterResize||_,this.disabled=[0,0];const f={};if(a&&(f.modifier=a),Y(r)||!0===r)f[d]=0;else if(R(r)){const t=r,e={};t.modifier&&(e.modifier=t.modifier),t.composition&&(e.composition=t.composition),f[d]=e}else!1===r&&(f[d]=0,this.disabled[0]=1);if(Y(n)||!0===n)f[p]=0;else if(R(n)){const t=n,e={};t.modifier&&(e.modifier=t.modifier),t.composition&&(e.composition=t.composition),f[p]=e}else!1===n&&(f[p]=0,this.disabled[1]=1);this.animate=new us(this.$target,f),this.xProp=d,this.yProp=p,this.destX=0,this.destY=0,this.deltaX=0,this.deltaY=0,this.scroll={x:0,y:0},this.coords=[this.x,this.y,0,0],this.snapped=[0,0],this.pointer=[0,0,0,0,0,0,0,0],this.scrollView=[0,0],this.dragArea=[0,0,0,0],this.containerBounds=[-1e12,u,u,-1e12],this.scrollBounds=[0,0,0,0],this.targetBounds=[0,0,0,0],this.window=[0,0],this.velocityStack=[0,0,0],this.velocityStackIndex=0,this.velocityTime=O(),this.velocity=0,this.angle=0,this.cursorStyles=null,this.triggerStyles=null,this.bodyStyles=null,this.targetStyles=null,this.touchActionStyles=null,this.transforms=new _s(this.$target),this.overshootCoords={x:0,y:0},this.overshootTicker=new oe({autoplay:!1,onUpdate:()=>{this.updated=!0,this.manual=!0,this.disabled[0]||this.animate[this.xProp](this.overshootCoords.x,1),this.disabled[1]||this.animate[this.yProp](this.overshootCoords.y,1)},onComplete:()=>{this.manual=!1,this.disabled[0]||this.animate[this.xProp](this.overshootCoords.x,0),this.disabled[1]||this.animate[this.yProp](this.overshootCoords.y,0)}},null,0).init(),this.updateTicker=new oe({autoplay:!1,onUpdate:()=>this.update()},null,0).init(),this.contained=!Y(m),this.manual=!1,this.grabbed=!1,this.dragged=!1,this.updated=!1,this.released=!1,this.canScroll=!1,this.enabled=!1,this.initialized=!1,this.activeProp=this.disabled[1]?d:p,this.animate.callbacks.onRender=()=>{const t=this.updated,e=!(this.grabbed&&t)&&this.released,s=this.x,i=this.y,r=s-this.coords[2],n=i-this.coords[3];this.deltaX=r,this.deltaY=n,this.coords[2]=s,this.coords[3]=i,t&&(r||n)&&this.onUpdate(this),e?(this.computeVelocity(r,n),this.angle=nt(n,r)):this.updated=!1},this.animate.callbacks.onComplete=()=>{!this.grabbed&&this.released&&(this.released=!1),this.manual||(this.deltaX=0,this.deltaY=0,this.velocity=0,this.velocityStack[0]=0,this.velocityStack[1]=0,this.velocityStack[2]=0,this.velocityStackIndex=0,this.onSettle(this))},this.resizeTicker=new oe({autoplay:!1,duration:150*D.timeScale,onComplete:()=>{this.onResize(this),this.refresh(),this.onAfterResize(this)}}).init(),this.parameters=e,this.resizeObserver=new ResizeObserver((()=>{this.initialized?this.resizeTicker.restart():this.initialized=!0})),this.enable(),this.refresh(),this.resizeObserver.observe(this.$container),R(t)||this.resizeObserver.observe(this.$target)}computeVelocity(t,e){const s=this.velocityTime,i=O(),r=i-s;if(r<17)return this.velocity;this.velocityTime=i;const n=this.velocityStack,o=this.velocityMultiplier,a=this.minVelocity,h=this.maxVelocity,l=this.velocityStackIndex;n[l]=ct(ht(G(t*t+e*e)/r*o,a,h),5);const c=rt(n[0],n[1],n[2]);return this.velocity=c,this.velocityStackIndex=(l+1)%3,c}setX(t,e=!1){if(this.disabled[0])return;const s=ct(t,5);return this.overshootTicker.pause(),this.manual=!0,this.updated=!e,this.destX=s,this.snapped[0]=dt(s,this.snapX),this.animate[this.xProp](s,0),this.manual=!1,this}setY(t,e=!1){if(this.disabled[1])return;const s=ct(t,5);return this.overshootTicker.pause(),this.manual=!0,this.updated=!e,this.destY=s,this.snapped[1]=dt(s,this.snapY),this.animate[this.yProp](s,0),this.manual=!1,this}get x(){return ct(this.animate[this.xProp](),D.precision)}set x(t){this.setX(t,!1)}get y(){return ct(this.animate[this.yProp](),D.precision)}set y(t){this.setY(t,!1)}get progressX(){return rs(this.x,this.containerBounds[3],this.containerBounds[1],0,1)}set progressX(t){this.setX(rs(t,0,1,this.containerBounds[3],this.containerBounds[1]),!1)}get progressY(){return rs(this.y,this.containerBounds[0],this.containerBounds[2],0,1)}set progressY(t){this.setY(rs(t,0,1,this.containerBounds[0],this.containerBounds[2]),!1)}updateScrollCoords(){const t=ct(this.useWin?s.scrollX:this.$container.scrollLeft,0),e=ct(this.useWin?s.scrollY:this.$container.scrollTop,0),[i,r,n,o]=this.containerPadding,a=this.scrollThreshold;this.scroll.x=t,this.scroll.y=e,this.scrollBounds[0]=e-this.targetBounds[0]+i-a,this.scrollBounds[1]=t-this.targetBounds[1]-r+a,this.scrollBounds[2]=e-this.targetBounds[2]-n+a,this.scrollBounds[3]=t-this.targetBounds[3]+o-a}updateBoundingValues(){const t=this.$container;if(!t)return;const e=this.x,r=this.y,n=this.coords[2],o=this.coords[3];this.coords[2]=0,this.coords[3]=0,this.setX(0,!0),this.setY(0,!0),this.transforms.remove();const a=this.window[0]=s.innerWidth,h=this.window[1]=s.innerHeight,l=this.useWin,c=t.scrollWidth,d=t.scrollHeight,u=this.fixed,p=t.getBoundingClientRect(),[m,f,g,y]=this.containerPadding;this.dragArea[0]=l?0:p.left,this.dragArea[1]=l?0:p.top,this.scrollView[0]=l?ht(c,a,c):c,this.scrollView[1]=l?ht(d,h,d):d,this.updateScrollCoords();const{width:_,height:v,left:b,top:T,right:w,bottom:S}=t.getBoundingClientRect();this.dragArea[2]=ct(l?ht(_,a,a):_,0),this.dragArea[3]=ct(l?ht(v,h,h):v,0);const x=ts(t,"overflow"),k="visible"===x,$="hidden"===x;if(this.canScroll=!u&&this.contained&&(t===i.body&&k||!$&&!k)&&(c>this.dragArea[2]+y-f||d>this.dragArea[3]+m-g)&&(!this.containerArray||this.containerArray&&!P(this.containerArray)),this.contained){const e=this.scroll.x,s=this.scroll.y,i=this.canScroll,r=this.$target.getBoundingClientRect(),n=i?l?0:t.scrollLeft:0,o=i?l?0:t.scrollTop:0,c=i?this.scrollView[0]-n-_:0,d=i?this.scrollView[1]-o-v:0;this.targetBounds[0]=ct(r.top+s-(l?0:T),0),this.targetBounds[1]=ct(r.right+e-(l?a:w),0),this.targetBounds[2]=ct(r.bottom+s-(l?h:S),0),this.targetBounds[3]=ct(r.left+e-(l?0:b),0),this.containerArray?(this.containerBounds[0]=this.containerArray[0]+m,this.containerBounds[1]=this.containerArray[1]-f,this.containerBounds[2]=this.containerArray[2]-g,this.containerBounds[3]=this.containerArray[3]+y):(this.containerBounds[0]=-ct(r.top-(u?ht(T,0,h):T)+o-m,0),this.containerBounds[1]=-ct(r.right-(u?ht(w,0,a):w)-c+f,0),this.containerBounds[2]=-ct(r.bottom-(u?ht(S,0,h):S)-d+g,0),this.containerBounds[3]=-ct(r.left-(u?ht(b,0,a):b)+n-y,0))}this.transforms.revert(),this.coords[2]=n,this.coords[3]=o,this.setX(e,!0),this.setY(r,!0)}isOutOfBounds(t,e,s){if(!this.contained)return 0;const[i,r,n,o]=t,[a,h]=this.disabled,l=!a&&e<o||!a&&e>r,c=!h&&s<i||!h&&s>n;return l&&!c?1:!l&&c?2:l&&c?3:0}refresh(){const t=this.parameters,e=t.x,r=t.y,n=vs(t.container,this),o=vs(t.containerPadding,this)||0,a=P(o)?o:[o,o,o,o],h=this.x,l=this.y,c=vs(t.cursor,this),d={onHover:"grab",onGrab:"grabbing"};if(c){const{onHover:t,onGrab:e}=c;t&&(d.onHover=t),e&&(d.onGrab=e)}this.containerArray=P(n)?n:null,this.$container=n&&!this.containerArray?Ft(n)[0]:i.body,this.useWin=this.$container===i.body,this.$scrollContainer=this.useWin?s:this.$container,this.isFinePointer=matchMedia("(pointer:fine)").matches,this.containerPadding=Xt(a,[0,0,0,0]),this.containerFriction=ht(Xt(vs(t.containerFriction,this),.8),0,1),this.releaseContainerFriction=ht(Xt(vs(t.releaseContainerFriction,this),this.containerFriction),0,1),this.snapX=vs(R(e)&&!Y(e.snap)?e.snap:t.snap,this),this.snapY=vs(R(r)&&!Y(r.snap)?r.snap:t.snap,this),this.scrollSpeed=Xt(vs(t.scrollSpeed,this),1.5),this.scrollThreshold=Xt(vs(t.scrollThreshold,this),20),this.dragSpeed=Xt(vs(t.dragSpeed,this),1),this.minVelocity=Xt(vs(t.minVelocity,this),0),this.maxVelocity=Xt(vs(t.maxVelocity,this),50),this.velocityMultiplier=Xt(vs(t.velocityMultiplier,this),1),this.cursor=!1!==c&&d,this.updateBoundingValues();const[u,p,m,f]=this.containerBounds;this.setX(ht(h,f,p),!0),this.setY(ht(l,u,m),!0)}update(){if(this.updateScrollCoords(),this.canScroll){const[t,e,s,i]=this.containerPadding,[r,n]=this.scrollView,o=this.dragArea[2],a=this.dragArea[3],h=this.scroll.x,l=this.scroll.y,c=this.$container.scrollWidth,d=this.$container.scrollHeight,u=this.useWin?ht(c,this.window[0],c):c,p=this.useWin?ht(d,this.window[1],d):d,m=r-u,f=n-p;this.dragged&&m>0&&(this.coords[0]-=m,this.scrollView[0]=u),this.dragged&&f>0&&(this.coords[1]-=f,this.scrollView[1]=p);const g=10*this.scrollSpeed,y=this.scrollThreshold,[_,v]=this.coords,[b,T,w,S]=this.scrollBounds,x=ct(ht((v-b+t)/y,-1,0)*g,0),k=ct(ht((_-T-e)/y,0,1)*g,0),$=ct(ht((v-w-s)/y,0,1)*g,0),C=ct(ht((_-S+i)/y,-1,0)*g,0);if(x||$||C||k){const[t,e]=this.disabled;let s=h,i=l;t||(s=ct(ht(h+(C||k),0,r-o),0),this.coords[0]-=h-s),e||(i=ct(ht(l+(x||$),0,n-a),0),this.coords[1]-=l-i),this.useWin?this.$scrollContainer.scrollBy(-(h-s),-(l-i)):this.$scrollContainer.scrollTo(s,i)}}const[t,e,s,i]=this.containerBounds,[r,n,o,a,h,l]=this.pointer;this.coords[0]+=(r-h)*this.dragSpeed,this.coords[1]+=(n-l)*this.dragSpeed,this.pointer[4]=r,this.pointer[5]=n;const[c,d]=this.coords,[u,p]=this.snapped,m=(1-this.containerFriction)*this.dragSpeed;this.setX(c>e?e+(c-e)*m:c<i?i+(c-i)*m:c,!1),this.setY(d>s?s+(d-s)*m:d<t?t+(d-t)*m:d,!1),this.computeVelocity(r-h,n-l),this.angle=nt(n-a,r-o);const[f,g]=this.snapped;(f!==u&&this.snapX||g!==p&&this.snapY)&&this.onSnap(this)}stop(){this.updateTicker.pause(),this.overshootTicker.pause();for(let t in this.animate.animations)this.animate.animations[t].pause();return is(this,null,"x"),is(this,null,"y"),is(this,null,"progressX"),is(this,null,"progressY"),is(this.scroll),is(this.overshootCoords),this}scrollInView(t,e=0,s=ve.inOutQuad){this.updateScrollCoords();const i=this.destX,r=this.destY,n=this.scroll,o=this.scrollBounds,a=this.canScroll;if(!this.containerArray&&this.isOutOfBounds(o,i,r)){const[h,l,c,d]=o,p=ct(ht(r-h,-1e12,0),0),m=ct(ht(i-l,0,u),0),f=ct(ht(r-c,0,u),0),g=ct(ht(i-d,-1e12,0),0);new Re(n,{x:ct(n.x+(g?g-e:m?m+e:0),0),y:ct(n.y+(p?p-e:f?f+e:0),0),duration:Y(t)?350*D.timeScale:t,ease:s,onUpdate:()=>{this.canScroll=!1,this.$scrollContainer.scrollTo(n.x,n.y)}}).init().then((()=>{this.canScroll=a}))}return this}handleHover(){this.isFinePointer&&this.cursor&&!this.cursorStyles&&(this.cursorStyles=es(this.$trigger,{cursor:this.cursor.onHover}))}animateInView(t,e=0,s=ve.inOutQuad){this.stop(),this.updateBoundingValues();const i=this.x,r=this.y,[n,o,a,h]=this.containerPadding,l=this.scroll.y-this.targetBounds[0]+n+e,c=this.scroll.x-this.targetBounds[1]-o-e,d=this.scroll.y-this.targetBounds[2]-a-e,u=this.scroll.x-this.targetBounds[3]+h+e,p=this.isOutOfBounds([l,c,d,u],i,r);if(p){const[e,n]=this.disabled,o=ht(dt(i,this.snapX),u,c),a=ht(dt(r,this.snapY),l,d),h=Y(t)?350*D.timeScale:t;e||1!==p&&3!==p||this.animate[this.xProp](o,h,s),n||2!==p&&3!==p||this.animate[this.yProp](a,h,s)}return this}handleDown(t){const e=t.target;if(this.grabbed||"range"===e.type)return;t.stopPropagation(),this.grabbed=!0,this.released=!1,this.stop(),this.updateBoundingValues();const s=t.changedTouches,r=s?s[0].clientX:t.clientX,n=s?s[0].clientY:t.clientY,{x:o,y:a}=this.transforms.normalizePoint(r,n),[h,l,c,d]=this.containerBounds,u=(1-this.containerFriction)*this.dragSpeed,p=this.x,m=this.y;this.coords[0]=this.coords[2]=u?p>l?l+(p-l)/u:p<d?d+(p-d)/u:p:p,this.coords[1]=this.coords[3]=u?m>c?c+(m-c)/u:m<h?h+(m-h)/u:m:m,this.pointer[0]=o,this.pointer[1]=a,this.pointer[2]=o,this.pointer[3]=a,this.pointer[4]=o,this.pointer[5]=a,this.pointer[6]=o,this.pointer[7]=a,this.deltaX=0,this.deltaY=0,this.velocity=0,this.velocityStack[0]=0,this.velocityStack[1]=0,this.velocityStack[2]=0,this.velocityStackIndex=0,this.angle=0,this.targetStyles&&(this.targetStyles.revert(),this.targetStyles=null);const f=ts(this.$target,"zIndex",!1);bs=(f>bs?f:bs)+1,this.targetStyles=es(this.$target,{zIndex:bs}),this.triggerStyles&&(this.triggerStyles.revert(),this.triggerStyles=null),this.cursorStyles&&(this.cursorStyles.revert(),this.cursorStyles=null),this.isFinePointer&&this.cursor&&(this.bodyStyles=es(i.body,{cursor:this.cursor.onGrab})),this.scrollInView(100,0,ve.out(3)),this.onGrab(this),i.addEventListener("touchmove",this),i.addEventListener("touchend",this),i.addEventListener("touchcancel",this),i.addEventListener("mousemove",this),i.addEventListener("mouseup",this),i.addEventListener("selectstart",this)}handleMove(t){if(!this.grabbed)return;const e=t.changedTouches,s=e?e[0].clientX:t.clientX,i=e?e[0].clientY:t.clientY,{x:r,y:n}=this.transforms.normalizePoint(s,i),o=r-this.pointer[6],a=n-this.pointer[7];let h=t.target,l=!1,c=!1,d=!1;for(;e&&h&&h!==this.$trigger;){const t=ts(h,"overflow-y");if("hidden"!==t&&"visible"!==t){const{scrollTop:t,scrollHeight:e,clientHeight:s}=h;if(e>s){d=!0,l=t<=3,c=t>=e-s-3;break}}h=h.parentNode}d&&(!l&&!c||l&&a<0||c&&a>0)?(this.pointer[0]=r,this.pointer[1]=n,this.pointer[2]=r,this.pointer[3]=n,this.pointer[4]=r,this.pointer[5]=n,this.pointer[6]=r,this.pointer[7]=n):(gs(t),this.triggerStyles||(this.triggerStyles=es(this.$trigger,{pointerEvents:"none"})),this.$trigger.addEventListener("touchstart",gs,{passive:!1}),this.$trigger.addEventListener("touchmove",gs,{passive:!1}),this.$trigger.addEventListener("touchend",gs),(!this.disabled[0]&&K(o)>3||!this.disabled[1]&&K(a)>3)&&(this.updateTicker.resume(),this.pointer[2]=this.pointer[0],this.pointer[3]=this.pointer[1],this.pointer[0]=r,this.pointer[1]=n,this.dragged=!0,this.released=!1,this.onDrag(this)))}handleUp(){if(!this.grabbed)return;this.updateTicker.pause(),this.triggerStyles&&(this.triggerStyles.revert(),this.triggerStyles=null),this.bodyStyles&&(this.bodyStyles.revert(),this.bodyStyles=null);const[t,e]=this.disabled,[s,n,o,a,h,l]=this.pointer,[c,d,u,p]=this.containerBounds,[m,f]=this.snapped,g=this.releaseXSpring,y=this.releaseYSpring,_=this.releaseEase,v=this.hasReleaseSpring,b=this.overshootCoords,T=this.x,w=this.y,S=this.computeVelocity(s-h,n-l),x=this.angle=nt(n-a,s-o),k=150*S,$=(1-this.releaseContainerFriction)*this.dragSpeed,C=T+J(x)*k,E=w+Z(x)*k,B=C>d?d+(C-d)*$:C<p?p+(C-p)*$:C,L=E>u?u+(E-u)*$:E<c?c+(E-c)*$:E,A=this.destX=ht(ct(dt(B,this.snapX),5),p,d),N=this.destY=ht(ct(dt(L,this.snapY),5),c,u),F=this.isOutOfBounds(this.containerBounds,C,E);let O=0,P=0,R=_,M=_,I=0;if(b.x=T,b.y=w,!t){const t=A===d?T>d?-1:1:T<p?-1:1,s=ct(T-A,0);g.velocity=e&&v?s?k*t/K(s):0:S;const{ease:i,duration:r,restDuration:n}=g;O=T===A?0:v?r:r-n*D.timeScale,v&&(R=i),O>I&&(I=O)}if(!e){const e=N===u?w>u?-1:1:w<c?-1:1,s=ct(w-N,0);y.velocity=t&&v?s?k*e/K(s):0:S;const{ease:i,duration:r,restDuration:n}=y;P=w===N?0:v?r:r-n*D.timeScale,v&&(M=i),P>I&&(I=P)}if(!v&&F&&$&&(O||P)){const t=r.blend;new Re(b,{x:{to:B,duration:.65*O},y:{to:L,duration:.65*P},ease:_,composition:t}).init(),new Re(b,{x:{to:A,duration:O},y:{to:N,duration:P},ease:_,composition:t}).init(),this.overshootTicker.stretch(rt(O,P)).restart()}else t||this.animate[this.xProp](A,O,R),e||this.animate[this.yProp](N,P,M);this.scrollInView(I,this.scrollThreshold,_);let z=!1;A!==m&&(this.snapped[0]=A,this.snapX&&(z=!0)),N!==f&&this.snapY&&(this.snapped[1]=N,this.snapY&&(z=!0)),z&&this.onSnap(this),this.grabbed=!1,this.dragged=!1,this.updated=!0,this.released=!0,this.onRelease(this),this.$trigger.removeEventListener("touchstart",gs),this.$trigger.removeEventListener("touchmove",gs),this.$trigger.removeEventListener("touchend",gs),i.removeEventListener("touchmove",this),i.removeEventListener("touchend",this),i.removeEventListener("touchcancel",this),i.removeEventListener("mousemove",this),i.removeEventListener("mouseup",this),i.removeEventListener("selectstart",this)}reset(){return this.stop(),this.resizeTicker.pause(),this.grabbed=!1,this.dragged=!1,this.updated=!1,this.released=!1,this.canScroll=!1,this.setX(0,!0),this.setY(0,!0),this.coords[0]=0,this.coords[1]=0,this.pointer[0]=0,this.pointer[1]=0,this.pointer[2]=0,this.pointer[3]=0,this.pointer[4]=0,this.pointer[5]=0,this.pointer[6]=0,this.pointer[7]=0,this.velocity=0,this.velocityStack[0]=0,this.velocityStack[1]=0,this.velocityStack[2]=0,this.velocityStackIndex=0,this.angle=0,this}enable(){return this.enabled||(this.enabled=!0,this.$target.classList.remove("is-disabled"),this.touchActionStyles=es(this.$trigger,{touchAction:this.disabled[0]?"pan-x":this.disabled[1]?"pan-y":"none"}),this.$trigger.addEventListener("touchstart",this,{passive:!0}),this.$trigger.addEventListener("mousedown",this,{passive:!0}),this.$trigger.addEventListener("mouseenter",this)),this}disable(){return this.enabled=!1,this.grabbed=!1,this.dragged=!1,this.updated=!1,this.released=!1,this.canScroll=!1,this.touchActionStyles.revert(),this.cursorStyles&&(this.cursorStyles.revert(),this.cursorStyles=null),this.triggerStyles&&(this.triggerStyles.revert(),this.triggerStyles=null),this.bodyStyles&&(this.bodyStyles.revert(),this.bodyStyles=null),this.targetStyles&&(this.targetStyles.revert(),this.targetStyles=null),this.$target.classList.add("is-disabled"),this.$trigger.removeEventListener("touchstart",this),this.$trigger.removeEventListener("mousedown",this),this.$trigger.removeEventListener("mouseenter",this),i.removeEventListener("touchmove",this),i.removeEventListener("touchend",this),i.removeEventListener("touchcancel",this),i.removeEventListener("mousemove",this),i.removeEventListener("mouseup",this),i.removeEventListener("selectstart",this),this}revert(){return this.reset(),this.disable(),this.$target.classList.remove("is-disabled"),this.updateTicker.revert(),this.overshootTicker.revert(),this.resizeTicker.revert(),this.animate.revert(),this.resizeObserver.disconnect(),this}handleEvent(t){switch(t.type){case"mousedown":case"touchstart":this.handleDown(t);break;case"mousemove":case"touchmove":this.handleMove(t);break;case"mouseup":case"touchend":case"touchcancel":this.handleUp();break;case"mouseenter":this.handleHover();break;case"selectstart":gs(t)}}}class ws{constructor(t={}){L.current&&L.current.register(this);const e=t.root;let r=i;e&&(r=e.current||e.nativeElement||Ft(e)[0]||i);const n=t.defaults,o=D.defaults,a=t.mediaQueries;if(this.defaults=n?_t(n,o):o,this.root=r,this.constructors=[],this.revertConstructors=[],this.revertibles=[],this.constructorsOnce=[],this.revertConstructorsOnce=[],this.revertiblesOnce=[],this.once=!1,this.onceIndex=0,this.methods={},this.matches={},this.mediaQueryLists={},this.data={},a)for(let t in a){const e=s.matchMedia(a[t]);this.mediaQueryLists[t]=e,e.addEventListener("change",this)}}register(t){(this.once?this.revertiblesOnce:this.revertibles).push(t)}execute(t){let e=L.current,s=L.root,i=D.defaults;L.current=this,L.root=this.root,D.defaults=this.defaults;const r=this.mediaQueryLists;for(let t in r)this.matches[t]=r[t].matches;const n=t(this);return L.current=e,L.root=s,D.defaults=i,n}refresh(){return this.onceIndex=0,this.execute((()=>{let t=this.revertibles.length,e=this.revertConstructors.length;for(;t--;)this.revertibles[t].revert();for(;e--;)this.revertConstructors[e](this);this.revertibles.length=0,this.revertConstructors.length=0,this.constructors.forEach((t=>{const e=t(this);z(e)&&this.revertConstructors.push(e)}))})),this}add(t,e){if(this.once=!1,z(t)){const e=t;this.constructors.push(e),this.execute((()=>{const t=e(this);z(t)&&this.revertConstructors.push(t)}))}else this.methods[t]=(...t)=>this.execute((()=>e(...t)));return this}addOnce(t){if(this.once=!0,z(t)){const e=this.onceIndex++;if(this.constructorsOnce[e])return this;const s=t;this.constructorsOnce[e]=s,this.execute((()=>{const t=s(this);z(t)&&this.revertConstructorsOnce.push(t)}))}return this}keepTime(t){this.once=!0;const e=this.onceIndex++,s=this.constructorsOnce[e];if(z(s))return s(this);const i=wt(t);let r;return this.constructorsOnce[e]=i,this.execute((()=>{r=i(this)})),r}handleEvent(t){"change"===t.type&&this.refresh()}revert(){const t=this.revertibles,e=this.revertConstructors,s=this.revertiblesOnce,i=this.revertConstructorsOnce,r=this.mediaQueryLists;let n=t.length,o=e.length,a=s.length,h=i.length;for(;n--;)t[n].revert();for(;o--;)e[o](this);for(;a--;)s[a].revert();for(;h--;)i[h](this);for(let t in r)r[t].removeEventListener("change",this);t.length=0,e.length=0,this.constructors.length=0,s.length=0,i.length=0,this.constructorsOnce.length=0,this.onceIndex=0,this.matches={},this.methods={},this.mediaQueryLists={},this.data={}}}const Ss=(t,e)=>t&&z(t)?t(e):t,xs=new Map;class ks{constructor(t){this.element=t,this.useWin=this.element===i.body,this.winWidth=0,this.winHeight=0,this.width=0,this.height=0,this.left=0,this.top=0,this.zIndex=0,this.scrollX=0,this.scrollY=0,this.prevScrollX=0,this.prevScrollY=0,this.scrollWidth=0,this.scrollHeight=0,this.velocity=0,this.backwardX=!1,this.backwardY=!1,this.scrollTicker=new oe({autoplay:!1,onBegin:()=>this.dataTimer.resume(),onUpdate:()=>{const t=this.backwardX||this.backwardY;vt(this,(t=>t.handleScroll()),t)},onComplete:()=>this.dataTimer.pause()}).init(),this.dataTimer=new oe({autoplay:!1,frameRate:30,onUpdate:t=>{const e=t.deltaTime,s=this.prevScrollX,i=this.prevScrollY,r=this.scrollX,n=this.scrollY,o=s-r,a=i-n;this.prevScrollX=r,this.prevScrollY=n,o&&(this.backwardX=s>r),a&&(this.backwardY=i>n),this.velocity=ct(e>0?Math.sqrt(o*o+a*a)/e:0,5)}}).init(),this.resizeTicker=new oe({autoplay:!1,duration:250*D.timeScale,onComplete:()=>{this.updateWindowBounds(),this.refreshScrollObservers(),this.handleScroll()}}).init(),this.wakeTicker=new oe({autoplay:!1,duration:500*D.timeScale,onBegin:()=>{this.scrollTicker.resume()},onComplete:()=>{this.scrollTicker.pause()}}).init(),this._head=null,this._tail=null,this.updateScrollCoords(),this.updateWindowBounds(),this.updateBounds(),this.refreshScrollObservers(),this.handleScroll(),this.resizeObserver=new ResizeObserver((()=>this.resizeTicker.restart())),this.resizeObserver.observe(this.element),(this.useWin?s:this.element).addEventListener("scroll",this,!1)}updateScrollCoords(){const t=this.useWin,e=this.element;this.scrollX=ct(t?s.scrollX:e.scrollLeft,0),this.scrollY=ct(t?s.scrollY:e.scrollTop,0)}updateWindowBounds(){this.winWidth=s.innerWidth,this.winHeight=(()=>{const t=i.createElement("div");i.body.appendChild(t),t.style.height="100lvh";const e=t.offsetHeight;return i.body.removeChild(t),e})()}updateBounds(){const t=getComputedStyle(this.element),e=this.element;let s,i;if(this.scrollWidth=e.scrollWidth+parseFloat(t.marginLeft)+parseFloat(t.marginRight),this.scrollHeight=e.scrollHeight+parseFloat(t.marginTop)+parseFloat(t.marginBottom),this.updateWindowBounds(),this.useWin)s=this.winWidth,i=this.winHeight;else{const t=e.getBoundingClientRect();s=e.clientWidth,i=e.clientHeight,this.top=t.top,this.left=t.left}this.width=s,this.height=i}refreshScrollObservers(){vt(this,(t=>{t._debug&&t.removeDebug()})),this.updateBounds(),vt(this,(t=>{t.refresh(),t._debug&&t.debug()}))}refresh(){this.updateWindowBounds(),this.updateBounds(),this.refreshScrollObservers(),this.handleScroll()}handleScroll(){this.updateScrollCoords(),this.wakeTicker.restart()}handleEvent(t){"scroll"===t.type&&this.handleScroll()}revert(){this.scrollTicker.cancel(),this.dataTimer.cancel(),this.resizeTicker.cancel(),this.wakeTicker.cancel(),this.resizeObserver.disconnect(),(this.useWin?s:this.element).removeEventListener("scroll",this),xs.delete(this.element)}}const $s=(t,e,s,i,r)=>{const n="min"===e,o="max"===e,a="top"===e||"left"===e||"start"===e||n?0:"bottom"===e||"right"===e||"end"===e||o?"100%":"center"===e?"50%":e,{n:h,u:l}=Qt(a,Gt);let c=h;return"%"===l?c=h/100*s:l&&(c=$e(t,Gt,"px",!0).n),o&&i<0&&(c+=i),n&&r>0&&(c+=r),c},Cs=(t,e,s,i,r)=>{let n;if(I(e)){const o=E.exec(e);if(o){const a=o[0],h=a[0],l=e.split(a),c="min"===l[0],d="max"===l[0],u=$s(t,l[0],s,i,r),p=$s(t,l[1],s,i,r);if(c){const e=qt($s(t,"min",s),p,h);n=e<u?u:e}else if(d){const e=qt($s(t,"max",s),p,h);n=e>u?u:e}else n=qt(u,p,h)}else n=$s(t,e,s,i,r)}else n=e;return ct(n,0)},Es=t=>{let e;const s=t.targets;for(let t=0,i=s.length;t<i;t++){const i=s[t];if(i[o]){e=i;break}}return e};let Bs=0;const Ls=["#FF4B4B","#FF971B","#FFC730","#F9F640","#7AFF5A","#18FF74","#17E09B","#3CFFEC","#05DBE9","#33B3F1","#638CF9","#C563FE","#FF4FCF","#F93F8A"];class Ds{constructor(t={}){L.current&&L.current.register(this);const e=Xt(t.sync,"play pause"),s=e?Te(e):null,r=e&&("linear"===e||e===ae),n=e&&!(s===ae&&!r),o=e&&(M(e)||!0===e||r),a=e&&I(e)&&!n&&!o,h=a?e.split(" ").map((t=>()=>{const e=this.linked;return e&&e[t]?e[t]():null})):null,l=a&&h.length>2;this.index=Bs++,this.id=Y(t.id)?this.index:t.id,this.container=(t=>{const e=t&&Ft(t)[0]||i.body;let s=xs.get(e);return s||(s=new ks(e),xs.set(e,s)),s})(t.container),this.target=null,this.linked=null,this.repeat=null,this.horizontal=null,this.enter=null,this.leave=null,this.sync=n||o||!!h,this.syncEase=n?s:null,this.syncSmooth=o?!0===e||r?1:e:null,this.onSyncEnter=h&&!l&&h[0]?h[0]:_,this.onSyncLeave=h&&!l&&h[1]?h[1]:_,this.onSyncEnterForward=h&&l&&h[0]?h[0]:_,this.onSyncLeaveForward=h&&l&&h[1]?h[1]:_,this.onSyncEnterBackward=h&&l&&h[2]?h[2]:_,this.onSyncLeaveBackward=h&&l&&h[3]?h[3]:_,this.onEnter=t.onEnter||_,this.onLeave=t.onLeave||_,this.onEnterForward=t.onEnterForward||_,this.onLeaveForward=t.onLeaveForward||_,this.onEnterBackward=t.onEnterBackward||_,this.onLeaveBackward=t.onLeaveBackward||_,this.onUpdate=t.onUpdate||_,this.onSyncComplete=t.onSyncComplete||_,this.reverted=!1,this.completed=!1,this.began=!1,this.isInView=!1,this.forceEnter=!1,this.hasEntered=!1,this.offset=0,this.offsetStart=0,this.offsetEnd=0,this.distance=0,this.prevProgress=0,this.thresholds=["start","end","end","start"],this.coords=[0,0,0,0],this.debugStyles=null,this.$debug=null,this._params=t,this._debug=Xt(t.debug,!1),this._next=null,this._prev=null,Tt(this.container,this),Ke((()=>{if(!this.reverted){if(!this.target){const e=Ft(t.target)[0];this.target=e||i.body,this.refresh()}this._debug&&this.debug()}}))}link(t){if(t&&(t.pause(),this.linked=t,!this._params.target)){let e;Y(t.targets)?vt(t,(t=>{t.targets&&!e&&(e=Es(t))})):e=Es(t),this.target=e||i.body,this.refresh()}return this}get velocity(){return this.container.velocity}get backward(){return this.horizontal?this.container.backwardX:this.container.backwardY}get scroll(){return this.horizontal?this.container.scrollX:this.container.scrollY}get progress(){const t=(this.scroll-this.offsetStart)/this.distance;return t===1/0||isNaN(t)?0:ct(ht(t,0,1),6)}refresh(){this.reverted=!1;const t=this._params;return this.repeat=Xt(Ss(t.repeat,this),!0),this.horizontal="x"===Xt(Ss(t.axis,this),"y"),this.enter=Xt(Ss(t.enter,this),"end start"),this.leave=Xt(Ss(t.leave,this),"start end"),this.updateBounds(),this.handleScroll(),this}removeDebug(){return this.$debug&&(this.$debug.parentNode.removeChild(this.$debug),this.$debug=null),this.debugStyles&&(this.debugStyles.revert(),this.$debug=null),this}debug(){this.removeDebug();const t=this.container,e=this.horizontal,s=t.element.querySelector(":scope > .animejs-onscroll-debug"),r=i.createElement("div"),n=i.createElement("div"),o=i.createElement("div"),a=Ls[this.index%Ls.length],h=t.useWin,l=h?t.winWidth:t.width,c=h?t.winHeight:t.height,d=t.scrollWidth,u=t.scrollHeight,p=this.container.width>360?320:260,m=e?0:10,f=e?10:0,g=e?24:p/2,y=e?g:15,_=e?60:g,v=e?_:y,b=e?"repeat-x":"repeat-y",T=t=>e?"0px "+t+"px":t+"px 2px",w=t=>`linear-gradient(${e?90:0}deg, ${t} 2px, transparent 1px)`,S=(t,e,s,i,r)=>`position:${t};left:${e}px;top:${s}px;width:${i}px;height:${r}px;`;r.style.cssText=`${S("absolute",m,f,e?d:p,e?p:u)}\n      pointer-events: none;\n      z-index: ${this.container.zIndex++};\n      display: flex;\n      flex-direction: ${e?"column":"row"};\n      filter: drop-shadow(0px 1px 0px rgba(0,0,0,.75));\n    `,n.style.cssText=`${S("sticky",0,0,e?l:g,e?g:c)}`,s||(n.style.cssText+=`background:\n        ${w("#FFFF")}${T(g-10)} / 100px 100px ${b},\n        ${w("#FFF8")}${T(g-10)} / 10px 10px ${b};\n      `),o.style.cssText=`${S("relative",0,0,e?d:g,e?g:u)}`,s||(o.style.cssText+=`background:\n        ${w("#FFFF")}${T(0)} / ${e?"100px 10px":"10px 100px"} ${b},\n        ${w("#FFF8")}${T(0)} / ${e?"10px 0px":"0px 10px"} ${b};\n      `);const x=[" enter: "," leave: "];this.coords.forEach(((t,s)=>{const r=s>1,h=(r?0:this.offset)+t,m=s%2,f=h<v,g=h>(r?e?l:c:e?d:u)-v,b=(r?m&&!f:!m&&!f)||g,T=i.createElement("div"),w=i.createElement("div"),k=e?b?"right":"left":b?"bottom":"top",$=b?(e?_:y)+(r?e?-1:g?0:-2:e?-1:-2):e?1:0;w.innerHTML=`${this.id}${x[m]}${this.thresholds[s]}`,T.style.cssText=`${S("absolute",0,0,_,y)}\n        display: flex;\n        flex-direction: ${e?"column":"row"};\n        justify-content: flex-${r?"start":"end"};\n        align-items: flex-${b?"end":"start"};\n        border-${k}: 2px solid ${a};\n      `,w.style.cssText=`\n        overflow: hidden;\n        max-width: ${p/2-10}px;\n        height: ${y};\n        margin-${e?b?"right":"left":b?"bottom":"top"}: -2px;\n        padding: 1px;\n        font-family: ui-monospace, monospace;\n        font-size: 10px;\n        letter-spacing: -.025em;\n        line-height: 9px;\n        font-weight: 600;\n        text-align: ${e&&b||!e&&!r?"right":"left"};\n        white-space: pre;\n        text-overflow: ellipsis;\n        color: ${m?a:"rgba(0,0,0,.75)"};\n        background-color: ${m?"rgba(0,0,0,.65)":a};\n        border: 2px solid ${m?a:"transparent"};\n        border-${e?b?"top-left":"top-right":b?"top-left":"bottom-left"}-radius: 5px;\n        border-${e?b?"bottom-left":"bottom-right":b?"top-right":"bottom-right"}-radius: 5px;\n      `,T.appendChild(w);let C=h-$+(e?1:0);T.style[e?"left":"top"]=`${C}px`,(r?n:o).appendChild(T)})),r.appendChild(n),r.appendChild(o),t.element.appendChild(r),s||r.classList.add("animejs-onscroll-debug"),this.$debug=r,"static"===ts(t.element,"position")&&(this.debugStyles=es(t.element,{position:"relative "}))}updateBounds(){let t;this._debug&&this.removeDebug();const e=this.target,s=this.container,r=this.horizontal,n=this.linked;let o,a=e;for(n&&(o=n.currentTime,n.seek(0,!0)),a.parentElement;a&&a!==s.element&&a!==i.body;){const e="sticky"===ts(a,"position")&&es(a,{position:"static"});a=a.parentElement,e&&(t||(t=[]),t.push(e))}const h=e.getBoundingClientRect(),l=r?h.left+s.scrollX-s.left:h.top+s.scrollY-s.top,c=r?h.width:h.height,d=r?s.width:s.height,u=(r?s.scrollWidth:s.scrollHeight)-d,p=this.enter,m=this.leave;let f="start",g="end",y="end",_="start";if(I(p)){const t=p.split(" ");y=t[0],f=t.length>1?t[1]:f}else if(R(p)){const t=p;Y(t.container)||(y=t.container),Y(t.target)||(f=t.target)}else M(p)&&(y=p);if(I(m)){const t=m.split(" ");_=t[0],g=t.length>1?t[1]:g}else if(R(m)){const t=m;Y(t.container)||(_=t.container),Y(t.target)||(g=t.target)}else M(m)&&(_=m);const v=Cs(e,f,c),b=Cs(e,g,c),T=v+l-d,w=b+l-u,S=Cs(e,y,d,T,w),x=Cs(e,_,d,T,w),k=v+l-S,$=b+l-x,C=$-k;this.offset=l,this.offsetStart=k,this.offsetEnd=$,this.distance=C<=0?0:C,this.thresholds=[f,g,y,_],this.coords=[v,b,S,x],t&&t.forEach((t=>t.revert())),n&&n.seek(o,!0),this._debug&&this.debug()}handleScroll(){const t=this.linked,e=this.sync,s=this.syncEase,i=this.syncSmooth,r=t&&(s||i),n=this.horizontal,o=this.container,a=this.scroll,h=a<=this.offsetStart,l=a>=this.offsetEnd,c=!h&&!l,d=a===this.offsetStart||a===this.offsetEnd,u=!this.hasEntered&&d,p=this._debug&&this.$debug;let m=!1,f=!1,g=this.progress;if(h&&this.began&&(this.began=!1),g>0&&!this.began&&(this.began=!0),r){const e=t.progress;if(i&&M(i)){if(i<1){const t=e<g&&1===g?1e-4:e>g&&!g?-1e-4:0;g=ct(ns(e,g,ut(.01,.2,i),!1)+t,6)}}else s&&(g=s(g));m=g!==this.prevProgress,f=1===e,m&&!f&&i&&e&&o.wakeTicker.restart()}if(p){const t=n?o.scrollY:o.scrollX;p.style[n?"top":"left"]=t+10+"px"}(c&&!this.isInView||u&&!this.forceEnter&&!this.hasEntered)&&(c&&(this.isInView=!0),this.forceEnter&&this.hasEntered?c&&(this.forceEnter=!1):(p&&c&&(p.style.zIndex=""+this.container.zIndex++),this.onSyncEnter(this),this.onEnter(this),this.backward?(this.onSyncEnterBackward(this),this.onEnterBackward(this)):(this.onSyncEnterForward(this),this.onEnterForward(this)),this.hasEntered=!0,u&&(this.forceEnter=!0))),(c||!c&&this.isInView)&&(m=!0),m&&(r&&t.seek(t.duration*g),this.onUpdate(this)),!c&&this.isInView&&(this.isInView=!1,this.onSyncLeave(this),this.onLeave(this),this.backward?(this.onSyncLeaveBackward(this),this.onLeaveBackward(this)):(this.onSyncLeaveForward(this),this.onLeaveForward(this)),e&&!i&&(f=!0)),g>=1&&this.began&&!this.completed&&(e&&f||!e)&&(e&&this.onSyncComplete(this),this.completed=!0,(!this.repeat&&!t||!this.repeat&&t&&t.completed)&&this.revert()),g<1&&this.completed&&(this.completed=!1),this.prevProgress=g}revert(){if(this.reverted)return;const t=this.container;return bt(t,this),t._head||t.revert(),this._debug&&this.removeDebug(),this.reverted=!0,this}}const As="undefined"!=typeof Intl&&Intl.Segmenter,Ns=/\{value\}/g,Fs=/\{i\}/g,Os=/(\s+)/,Ps=/^\s+$/,Rs="line",Ms="word",Is="char",zs="data-line";let Ys=null,Xs=null,Ws=null;const Vs=t=>t.isWordLike||" "===t.segment||M(+t.segment),Hs=t=>t.setAttribute("aria-hidden","true"),Us=(t,e)=>[...t.querySelectorAll(`[data-${e}]:not([data-${e}] [data-${e}])`)],qs={line:"#00D672",word:"#FF4B4B",char:"#5A87FF"},Qs=t=>{if(!t.childElementCount&&!t.textContent.trim()){const e=t.parentElement;t.remove(),e&&Qs(e)}},js=(t,e,s)=>{const i=t.getAttribute(zs);(null!==i&&+i!==e||"BR"===t.tagName)&&s.add(t);let r=t.childElementCount;for(;r--;)js(t.children[r],e,s);return s},Gs=(t,e={})=>{let s="";const i=I(e.class)?` class="${e.class}"`:"",r=Xt(e.clone,!1),n=Xt(e.wrap,!1),o=n?!0===n?"clip":n:!!r&&"clip";return n&&(s+=`<span${o?` style="overflow:${o};"`:""}>`),s+=`<span${i}${r?' style="position:relative;"':""} data-${t}="{i}">`,r?(s+="<span>{value}</span>",s+=`<span inert style="position:absolute;top:${"top"===r?"-100%":"bottom"===r?"100%":"0"};left:${"left"===r?"-100%":"right"===r?"100%":"0"};white-space:nowrap;">{value}</span>`):s+="{value}",s+="</span>",n&&(s+="</span>"),s},Zs=(t,e,s,i,r,n,o,a,h)=>{const l=r===Rs,c=r===Is,d=`_${r}_`,u=z(t)?t(s):t,p=l?"block":"inline-block";Ws.innerHTML=u.replace(Ns,`<i class="${d}"></i>`).replace(Fs,`${c?h:l?o:a}`);const m=Ws.content,f=m.firstElementChild,g=m.querySelector(`[data-${r}]`)||f,y=m.querySelectorAll(`i.${d}`),_=y.length;if(_){f.style.display=p,g.style.display=p,g.setAttribute(zs,`${o}`),l||(g.setAttribute("data-word",`${a}`),c&&g.setAttribute("data-char",`${h}`));let t=_;for(;t--;){const e=y[t],i=e.parentElement;i.style.display=p,l?i.innerHTML=s.innerHTML:i.replaceChild(s.cloneNode(!0),e)}e.push(g),i.appendChild(m)}else console.warn('The expression "{value}" is missing from the provided template.');return n&&(f.style.outline=`1px dotted ${qs[r]}`),f};class Js{constructor(t,s={}){Ys||(Ys=As?new As([],{granularity:Ms}):{segment:t=>{const e=[],s=t.split(Os);for(let t=0,i=s.length;t<i;t++){const i=s[t];e.push({segment:i,isWordLike:!Ps.test(i)})}return e}}),Xs||(Xs=As?new As([],{granularity:"grapheme"}):{segment:t=>[...t].map((t=>({segment:t})))}),!Ws&&e&&(Ws=i.createElement("template")),L.current&&L.current.register(this);const{words:r,chars:n,lines:o,accessible:a,includeSpaces:h,debug:l}=s,c=(t=P(t)?t[0]:t)&&t.nodeType?t:(Nt(t)||[])[0],d=!0===o?{}:o,u=!0===r||Y(r)?{}:r,p=!0===n?{}:n;this.debug=Xt(l,!1),this.includeSpaces=Xt(h,!1),this.accessible=Xt(a,!0),this.linesOnly=d&&!u&&!p,this.lineTemplate=R(d)?Gs(Rs,d):d,this.wordTemplate=R(u)||this.linesOnly?Gs(Ms,u):u,this.charTemplate=R(p)?Gs(Is,p):p,this.$target=c,this.html=c&&c.innerHTML,this.lines=[],this.words=[],this.chars=[],this.effects=[],this.effectsCleanups=[],this.cache=null,this.ready=!1,this.width=0,this.resizeTimeout=null;const m=()=>this.html&&(d||u||p)&&this.split();this.resizeObserver=new ResizeObserver((()=>{clearTimeout(this.resizeTimeout),this.resizeTimeout=setTimeout((()=>{const t=c.offsetWidth;t!==this.width&&(this.width=t,m())}),150)})),this.lineTemplate&&!this.ready?i.fonts.ready.then(m):m(),c?this.resizeObserver.observe(c):console.warn("No Text Splitter target found.")}addEffect(t){if(!z(t))return console.warn("Effect must return a function.");const e=wt(t);return this.effects.push(e),this.ready&&(this.effectsCleanups[this.effects.length-1]=e(this)),this}revert(){return clearTimeout(this.resizeTimeout),this.lines.length=this.words.length=this.chars.length=0,this.resizeObserver.disconnect(),this.effectsCleanups.forEach((t=>z(t)?t(this):t.revert&&t.revert())),this.$target.innerHTML=this.html,this}splitNode(t){const e=this.wordTemplate,s=this.charTemplate,r=this.includeSpaces,n=this.debug,o=t.nodeType;if(3===o){const o=t.nodeValue;if(o.trim()){const a=[],h=this.words,l=this.chars,c=Ys.segment(o),d=i.createDocumentFragment();let u=null;for(const t of c){const e=t.segment,s=Vs(t);if(!u||s&&u&&Vs(u))a.push(e);else{const t=a.length-1;a[t].includes(" ")||e.includes(" ")?a.push(e):a[t]+=e}u=t}for(let t=0,o=a.length;t<o;t++){const o=a[t];if(o.trim()){const c=a[t+1],u=r&&c&&!c.trim(),p=o,m=s?Xs.segment(p):null,f=s?i.createDocumentFragment():i.createTextNode(u?o+" ":o);if(s){const t=[...m];for(let e=0,r=t.length;e<r;e++){const o=t[e],a=e===r-1&&u?o.segment+" ":o.segment,c=i.createTextNode(a);Zs(s,l,c,f,Is,n,-1,h.length,l.length)}}e?Zs(e,h,f,d,Ms,n,-1,h.length,l.length):s?d.appendChild(f):d.appendChild(i.createTextNode(o)),u&&t++}else{if(t&&r)continue;d.appendChild(i.createTextNode(o))}}t.parentNode.replaceChild(d,t)}}else if(1===o){const e=[...t.childNodes];for(let t=0,s=e.length;t<s;t++)this.splitNode(e[t])}}split(t=!1){const e=this.$target,s=!!this.cache&&!t,r=this.lineTemplate,n=this.wordTemplate,o=this.charTemplate,a="loading"!==i.fonts.status,h=r&&a;this.ready=!r||a,(h||t)&&this.effectsCleanups.forEach((t=>z(t)&&t(this))),s||(t&&(e.innerHTML=this.html,this.words.length=this.chars.length=0),this.splitNode(e),this.cache=e.innerHTML),h&&(s&&(e.innerHTML=this.cache),this.lines.length=0,n&&(this.words=Us(e,Ms))),o&&(h||n)&&(this.chars=Us(e,Is));const l=this.words.length?this.words:this.chars;let c,d=0;for(let t=0,e=l.length;t<e;t++){const e=l[t],{top:s,height:i}=e.getBoundingClientRect();c&&s-c>.5*i&&d++,e.setAttribute(zs,`${d}`);const r=e.querySelectorAll(`[${zs}]`);let n=r.length;for(;n--;)r[n].setAttribute(zs,`${d}`);c=s}if(h){const t=i.createDocumentFragment(),s=new Set,a=[];for(let t=0;t<d+1;t++){const i=e.cloneNode(!0);js(i,t,new Set).forEach((t=>{const e=t.parentElement;e&&s.add(e),t.remove()})),a.push(i)}s.forEach(Qs);for(let e=0,s=a.length;e<s;e++)Zs(r,this.lines,a[e],t,Rs,this.debug,e);e.innerHTML="",e.appendChild(t),n&&(this.words=Us(e,Ms)),o&&(this.chars=Us(e,Is))}if(this.linesOnly){const t=this.words;let e=t.length;for(;e--;){const s=t[e];s.replaceWith(s.textContent)}t.length=0}if(this.accessible&&(h||!s)){const t=i.createElement("span");t.style.cssText="position:absolute;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);width:1px;height:1px;white-space:nowrap;",t.innerHTML=this.html,e.insertBefore(t,e.firstChild),this.lines.forEach(Hs),this.words.forEach(Hs),this.chars.forEach(Hs)}return this.width=e.offsetWidth,(h||t)&&this.effects.forEach(((t,e)=>this.effectsCleanups[e]=t(this))),this}refresh(){this.split(!0)}}const Ks={split:(t,e)=>new Js(t,e)};return t.Animatable=us,t.Draggable=Ts,t.JSAnimation=Re,t.Scope=ws,t.ScrollObserver=Ds,t.Spring=ms,t.TextSplitter=Js,t.Timeline=ds,t.Timer=oe,t.WAAPIAnimation=Ze,t.animate=(t,e)=>new Re(t,e,null,0,!1).init(),t.createAnimatable=(t,e)=>new us(t,e),t.createDraggable=(t,e)=>new Ts(t,e),t.createScope=t=>new ws(t),t.createSpring=fs,t.createTimeline=t=>new ds(t).init(),t.createTimer=t=>new oe(t,null,0).init(),t.eases=ve,t.engine=Lt,t.onScroll=(t={})=>new Ds(t),t.scrollContainers=xs,t.stagger=(t,e={})=>{let s=[],i=0;const r=e.from,n=e.reversed,o=e.ease,a=!Y(o),h=a&&!Y(o.ease)?o.ease:a?Te(o):null,l=e.grid,c=e.axis,d=e.total,u=Y(r)||0===r||"first"===r,p="center"===r,f="last"===r,g="random"===r,y=P(t),_=e.use,v=Q(y?t[0]:t),b=y?Q(t[1]):0,T=k.exec((y?t[1]:t)+m),w=e.start||0+(y?v:0);let S=u?0:M(r)?r:0;return(t,r,o,a)=>{const[u]=Ot(t),m=Y(d)?o:d,x=!Y(_)&&(z(_)?_(u,r,m):Ut(u,_)),k=M(x)||I(x)&&M(+x)?+x:r;if(p&&(S=(m-1)/2),f&&(S=m-1),!s.length){for(let t=0;t<m;t++){if(l){const e=p?(l[0]-1)/2:S%l[0],i=p?(l[1]-1)/2:st(S/l[0]),r=e-t%l[0],n=i-st(t/l[0]);let o=G(r*r+n*n);"x"===c&&(o=-r),"y"===c&&(o=-n),s.push(o)}else s.push(K(S-t));i=rt(...s)}h&&(s=s.map((t=>h(t/i)*i))),n&&(s=s.map((t=>c?t<0?-1*t:-t:K(i-t)))),g&&(s=mt(s))}const $=y?(b-v)/i:v;let C=(a?ls(a,Y(e.start)?a.iterationDuration:w):w)+($*ct(s[k],2)||0);return e.modifier&&(C=e.modifier(C)),T&&(C=`${C}${T[2]}`),C}},t.svg=zt,t.text=Ks,t.utils=hs,t.waapi=Je,t}({});
 /*!
     Atropos
     Version: 2.0.2
@@ -489,9 +488,9 @@ var Atropos = (function () {
 })(); 
 /*!
     Bootstrap
-    Version: 5.3.2
+    Version: v5.3.7
     Plugin URL: https://getbootstrap.com/
-    License: Copyright 2011-2024 The Bootstrap Authors | Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+    License: Copyright 2011-2025 The Bootstrap Authors | Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
 !*/
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -695,12 +694,11 @@ var Atropos = (function () {
    * @param {HTMLElement} element
    * @return void
    *
-   * @see https://www.charistheo.io/blog/2021/02/restart-a-css-animation-with-javascript/#restarting-a-css-animation
+   * @see https://www.harrytheo.com/blog/2021/02/restart-a-css-animation-with-javascript/#restarting-a-css-animation
    */
   const reflow = element => {
     element.offsetHeight; // eslint-disable-line no-unused-expressions
   };
-
   const getjQuery = () => {
     if (window.jQuery && !document.body.hasAttribute('data-bs-no-jquery')) {
       return window.jQuery;
@@ -741,7 +739,7 @@ var Atropos = (function () {
     });
   };
   const execute = (possibleCallback, args = [], defaultValue = possibleCallback) => {
-    return typeof possibleCallback === 'function' ? possibleCallback(...args) : defaultValue;
+    return typeof possibleCallback === 'function' ? possibleCallback.call(...args) : defaultValue;
   };
   const executeAfterTransition = (callback, transitionElement, waitForTransition = true) => {
     if (!waitForTransition) {
@@ -1063,7 +1061,7 @@ var Atropos = (function () {
       const bsKeys = Object.keys(element.dataset).filter(key => key.startsWith('bs') && !key.startsWith('bsConfig'));
       for (const key of bsKeys) {
         let pureKey = key.replace(/^bs/, '');
-        pureKey = pureKey.charAt(0).toLowerCase() + pureKey.slice(1, pureKey.length);
+        pureKey = pureKey.charAt(0).toLowerCase() + pureKey.slice(1);
         attributes[pureKey] = normalizeData(element.dataset[key]);
       }
       return attributes;
@@ -1138,7 +1136,7 @@ var Atropos = (function () {
    * Constants
    */
 
-  const VERSION = '5.3.2';
+  const VERSION = '5.3.7';
 
   /**
    * Class definition
@@ -1164,6 +1162,8 @@ var Atropos = (function () {
         this[propertyName] = null;
       }
     }
+
+    // Private
     _queueCallback(callback, element, isAnimated = true) {
       executeAfterTransition(callback, element, isAnimated);
     }
@@ -1219,9 +1219,9 @@ var Atropos = (function () {
       if (hrefAttribute.includes('#') && !hrefAttribute.startsWith('#')) {
         hrefAttribute = `#${hrefAttribute.split('#')[1]}`;
       }
-      selector = hrefAttribute && hrefAttribute !== '#' ? parseSelector(hrefAttribute.trim()) : null;
+      selector = hrefAttribute && hrefAttribute !== '#' ? hrefAttribute.trim() : null;
     }
-    return selector;
+    return selector ? selector.split(',').map(sel => parseSelector(sel)).join(',') : null;
   };
   const SelectorEngine = {
     find(selector, element = document.documentElement) {
@@ -2095,11 +2095,11 @@ var Atropos = (function () {
       this._element.style[dimension] = '';
       this._queueCallback(complete, this._element, true);
     }
+
+    // Private
     _isShown(element = this._element) {
       return element.classList.contains(CLASS_NAME_SHOW$7);
     }
-
-    // Private
     _configAfterMerge(config) {
       config.toggle = Boolean(config.toggle); // Coerce string values
       config.parent = getElement(config.parent);
@@ -3157,7 +3157,6 @@ var Atropos = (function () {
     var popperOffsets = computeOffsets({
       reference: referenceClientRect,
       element: popperRect,
-      strategy: 'absolute',
       placement: placement
     });
     var popperClientRect = rectToClientRect(Object.assign({}, popperRect, popperOffsets));
@@ -3485,7 +3484,6 @@ var Atropos = (function () {
     state.modifiersData[name] = computeOffsets({
       reference: state.rects.reference,
       element: state.rects.popper,
-      strategy: 'absolute',
       placement: state.placement
     });
   } // eslint-disable-next-line import/no-unused-modules
@@ -4181,6 +4179,9 @@ var Atropos = (function () {
       this._element.setAttribute('aria-expanded', 'false');
       Manipulator.removeDataAttribute(this._menu, 'popper');
       EventHandler.trigger(this._element, EVENT_HIDDEN$5, relatedTarget);
+
+      // Explicitly return focus to the trigger element
+      this._element.focus();
     }
     _getConfig(config) {
       config = super._getConfig(config);
@@ -4192,7 +4193,7 @@ var Atropos = (function () {
     }
     _createPopper() {
       if (typeof Popper === 'undefined') {
-        throw new TypeError('Bootstrap\'s dropdowns require Popper (https://popper.js.org)');
+        throw new TypeError('Bootstrap\'s dropdowns require Popper (https://popper.js.org/docs/v2/)');
       }
       let referenceElement = this._element;
       if (this._config.reference === 'parent') {
@@ -4271,7 +4272,7 @@ var Atropos = (function () {
       }
       return {
         ...defaultBsPopperConfig,
-        ...execute(this._config.popperConfig, [defaultBsPopperConfig])
+        ...execute(this._config.popperConfig, [undefined, defaultBsPopperConfig])
       };
     }
     _selectMenuItem({
@@ -4406,7 +4407,6 @@ var Atropos = (function () {
     // if false, we use the backdrop helper without adding any element to the dom
     rootElement: 'body' // give the choice to place backdrop under different elements
   };
-
   const DefaultType$8 = {
     className: 'string',
     clickCallback: '(function|null)',
@@ -4531,7 +4531,6 @@ var Atropos = (function () {
     autofocus: true,
     trapElement: null // The element to trap focus inside of
   };
-
   const DefaultType$7 = {
     autofocus: 'boolean',
     trapElement: 'element'
@@ -5258,7 +5257,10 @@ var Atropos = (function () {
     br: [],
     col: [],
     code: [],
+    dd: [],
     div: [],
+    dl: [],
+    dt: [],
     em: [],
     hr: [],
     h1: [],
@@ -5292,7 +5294,6 @@ var Atropos = (function () {
    *
    * Shout-out to Angular https://github.com/angular/angular/blob/15.2.8/packages/core/src/sanitization/url_sanitizer.ts#L38
    */
-  // eslint-disable-next-line unicorn/better-regex
   const SAFE_URL_PATTERN = /^(?!javascript:)(?:[a-z0-9+.-]+:|[^&:/?#]*(?:[/?#]|$))/i;
   const allowedAttribute = (attribute, allowedAttributeList) => {
     const attributeName = attribute.nodeName.toLowerCase();
@@ -5457,7 +5458,7 @@ var Atropos = (function () {
       return this._config.sanitize ? sanitizeHtml(arg, this._config.allowList, this._config.sanitizeFn) : arg;
     }
     _resolvePossibleFunction(arg) {
-      return execute(arg, [this]);
+      return execute(arg, [undefined, this]);
     }
     _putElementInTemplate(element, templateElement) {
       if (this._config.html) {
@@ -5556,7 +5557,7 @@ var Atropos = (function () {
   class Tooltip extends BaseComponent {
     constructor(element, config) {
       if (typeof Popper === 'undefined') {
-        throw new TypeError('Bootstrap\'s tooltips require Popper (https://popper.js.org)');
+        throw new TypeError('Bootstrap\'s tooltips require Popper (https://popper.js.org/docs/v2/)');
       }
       super(element, config);
 
@@ -5602,7 +5603,6 @@ var Atropos = (function () {
       if (!this._isEnabled) {
         return;
       }
-      this._activeTrigger.click = !this._activeTrigger.click;
       if (this._isShown()) {
         this._leave();
         return;
@@ -5790,7 +5790,7 @@ var Atropos = (function () {
       return offset;
     }
     _resolvePossibleFunction(arg) {
-      return execute(arg, [this._element]);
+      return execute(arg, [this._element, this._element]);
     }
     _getPopperConfig(attachment) {
       const defaultBsPopperConfig = {
@@ -5828,7 +5828,7 @@ var Atropos = (function () {
       };
       return {
         ...defaultBsPopperConfig,
-        ...execute(this._config.popperConfig, [defaultBsPopperConfig])
+        ...execute(this._config.popperConfig, [undefined, defaultBsPopperConfig])
       };
     }
     _setListeners() {
@@ -5837,6 +5837,7 @@ var Atropos = (function () {
         if (trigger === 'click') {
           EventHandler.on(this._element, this.constructor.eventName(EVENT_CLICK$1), this._config.selector, event => {
             const context = this._initializeOnDelegatedTarget(event);
+            context._activeTrigger[TRIGGER_CLICK] = !(context._isShown() && context._activeTrigger[TRIGGER_CLICK]);
             context.toggle();
           });
         } else if (trigger !== TRIGGER_MANUAL) {
@@ -6702,7 +6703,6 @@ var Atropos = (function () {
     }
 
     // Private
-
     _maybeScheduleHide() {
       if (!this._config.autohide) {
         return;
@@ -6805,9 +6805,9 @@ var Atropos = (function () {
 
   /*!
     GSAP
-    Version: 3.12.4
+    Version: 3.13.0
     Plugin URL: https://gsap.com
-    License: Copyright 2024, GreenSock. All rights reserved. | Subject to the terms at https://gsap.com/standard-license or for Club GreenSock members, the agreement issued with that membership. | author: Jack Doyle, jack@greensock.com
+    License: Copyright 2025, GreenSock. All rights reserved. | Subject to the terms at https://gsap.com/standard-license or for Club GreenSock members, the agreement issued with that membership. | author: Jack Doyle, jack@greensock.com
 !*/
 
 (function (global, factory) {
@@ -6830,6 +6830,14 @@ var Atropos = (function () {
     return self;
   }
 
+  /*!
+   * GSAP 3.13.0
+   * https://gsap.com
+   *
+   * @license Copyright 2008-2025, GreenSock. All rights reserved.
+   * Subject to the terms at https://gsap.com/standard-license
+   * @author: Jack Doyle, jack@greensock.com
+  */
   var _config = {
     autoSleep: 120,
     force3D: "auto",
@@ -6995,9 +7003,12 @@ var Atropos = (function () {
       tween && tween._lazy && (tween.render(tween._lazy[0], tween._lazy[1], true)._lazy = 0);
     }
   },
+      _isRevertWorthy = function _isRevertWorthy(animation) {
+    return !!(animation._initted || animation._startAt || animation.add);
+  },
       _lazySafeRender = function _lazySafeRender(animation, time, suppressEvents, force) {
     _lazyTweens.length && !_reverting && _lazyRender();
-    animation.render(time, suppressEvents, force || _reverting && time < 0 && (animation._initted || animation._startAt));
+    animation.render(time, suppressEvents, force || !!(_reverting && time < 0 && _isRevertWorthy(animation)));
     _lazyTweens.length && !_reverting && _lazyRender();
   },
       _numericIfPossible = function _numericIfPossible(value) {
@@ -7167,7 +7178,7 @@ var Atropos = (function () {
     return animation._repeat ? _animationCycle(animation._tTime, animation = animation.duration() + animation._rDelay) * animation : 0;
   },
       _animationCycle = function _animationCycle(tTime, cycleDuration) {
-    var whole = Math.floor(tTime /= cycleDuration);
+    var whole = Math.floor(tTime = _roundPrecise(tTime / cycleDuration));
     return tTime && whole === tTime ? whole - 1 : whole;
   },
       _parentToChildTotalTime = function _parentToChildTotalTime(parentTime, child) {
@@ -7767,9 +7778,10 @@ var Atropos = (function () {
       _quickTween,
       _registerPluginQueue = [],
       _createPlugin = function _createPlugin(config) {
-    if (_windowExists() && config) {
-      config = !config.name && config["default"] || config;
+    if (!config) return;
+    config = !config.name && config["default"] || config;
 
+    if (_windowExists() || config.headless) {
       var name = config.name,
           isFunc = _isFunction(config),
           Plugin = name && !isFunc && config.init ? function () {
@@ -7817,7 +7829,7 @@ var Atropos = (function () {
 
       config.register && config.register(gsap, Plugin, PropTween);
     } else {
-      config && _registerPluginQueue.push(config);
+      _registerPluginQueue.push(config);
     }
   },
       _255 = 255,
@@ -8033,7 +8045,7 @@ var Atropos = (function () {
           time,
           frame;
 
-      elapsed > _lagThreshold && (_startTime += elapsed - _adjustedLag);
+      (elapsed > _lagThreshold || elapsed < 0) && (_startTime += elapsed - _adjustedLag);
       _lastUpdate += elapsed;
       time = _lastUpdate - _startTime;
       overlap = time - _nextTime;
@@ -8074,11 +8086,10 @@ var Atropos = (function () {
 
             _install(_installScope || _win.GreenSockGlobals || !_win.gsap && _win || {});
 
-            _raf = _win.requestAnimationFrame;
-
             _registerPluginQueue.forEach(_createPlugin);
           }
 
+          _raf = typeof requestAnimationFrame !== "undefined" && requestAnimationFrame;
           _id && _self.sleep();
 
           _req = _raf || function (f) {
@@ -8091,7 +8102,7 @@ var Atropos = (function () {
         }
       },
       sleep: function sleep() {
-        (_raf ? _win.cancelAnimationFrame : clearTimeout)(_id);
+        (_raf ? cancelAnimationFrame : clearTimeout)(_id);
         _tickerActive = 0;
         _req = _emptyFunc;
       },
@@ -8297,7 +8308,7 @@ var Atropos = (function () {
   })(7.5625, 2.75);
 
   _insertEase("Expo", function (p) {
-    return p ? Math.pow(2, 10 * (p - 1)) : 0;
+    return Math.pow(2, 10 * (p - 1)) * p + p * p * p * p * p * p * (1 - p);
   });
 
   _insertEase("Circ", function (p) {
@@ -8430,7 +8441,7 @@ var Atropos = (function () {
     };
 
     _proto.totalProgress = function totalProgress(value, suppressEvents) {
-      return arguments.length ? this.totalTime(this.totalDuration() * value, suppressEvents) : this.totalDuration() ? Math.min(1, this._tTime / this._tDur) : this.rawTime() > 0 ? 1 : 0;
+      return arguments.length ? this.totalTime(this.totalDuration() * value, suppressEvents) : this.totalDuration() ? Math.min(1, this._tTime / this._tDur) : this.rawTime() >= 0 && this._initted ? 1 : 0;
     };
 
     _proto.progress = function progress(value, suppressEvents) {
@@ -8455,7 +8466,7 @@ var Atropos = (function () {
       var tTime = this.parent && this._ts ? _parentToChildTotalTime(this.parent._time, this) : this._tTime;
       this._rts = +value || 0;
       this._ts = this._ps || value === -_tinyNum ? 0 : this._rts;
-      this.totalTime(_clamp(-Math.abs(this._delay), this._tDur, tTime), suppressEvents !== false);
+      this.totalTime(_clamp(-Math.abs(this._delay), this.totalDuration(), tTime), suppressEvents !== false);
 
       _setEnd(this);
 
@@ -8512,7 +8523,7 @@ var Atropos = (function () {
       var prevIsReverting = _reverting;
       _reverting = config;
 
-      if (this._initted || this._startAt) {
+      if (_isRevertWorthy(this)) {
         this.timeline && this.timeline.revert(config);
         this.totalTime(-0.01, config.suppressEvents);
       }
@@ -8570,7 +8581,9 @@ var Atropos = (function () {
     };
 
     _proto.restart = function restart(includeDelay, suppressEvents) {
-      return this.play().totalTime(includeDelay ? -this._delay : 0, _isNotFalse(suppressEvents));
+      this.play().totalTime(includeDelay ? -this._delay : 0, _isNotFalse(suppressEvents));
+      this._dur || (this._zTime = -_tinyNum);
+      return this;
     };
 
     _proto.play = function play(from, suppressEvents) {
@@ -8807,9 +8820,10 @@ var Atropos = (function () {
             iteration = this._repeat;
             time = dur;
           } else {
-            iteration = ~~(tTime / cycleDuration);
+            prevIteration = _roundPrecise(tTime / cycleDuration);
+            iteration = ~~prevIteration;
 
-            if (iteration && iteration === tTime / cycleDuration) {
+            if (iteration && iteration === prevIteration) {
               time = dur;
               iteration--;
             }
@@ -8879,7 +8893,7 @@ var Atropos = (function () {
           prevTime = 0;
         }
 
-        if (!prevTime && time && !suppressEvents && !iteration) {
+        if (!prevTime && tTime && !suppressEvents && !prevIteration) {
           _callback(this, "onStart");
 
           if (this._tTime !== tTime) {
@@ -8921,7 +8935,7 @@ var Atropos = (function () {
                 return this.render(totalTime, suppressEvents, force);
               }
 
-              child.render(child._ts > 0 ? (adjustedTime - child._start) * child._ts : (child._dirty ? child.totalDuration() : child._tDur) + (adjustedTime - child._start) * child._ts, suppressEvents, force || _reverting && (child._initted || child._startAt));
+              child.render(child._ts > 0 ? (adjustedTime - child._start) * child._ts : (child._dirty ? child.totalDuration() : child._tDur) + (adjustedTime - child._start) * child._ts, suppressEvents, force || _reverting && _isRevertWorthy(child));
 
               if (time !== this._time || !this._ts && !prevPaused) {
                 pauseTween = 0;
@@ -9045,7 +9059,7 @@ var Atropos = (function () {
         return this.killTweensOf(child);
       }
 
-      _removeLinkedListItem(this, child);
+      child.parent === this && _removeLinkedListItem(this, child);
 
       if (child === this._recent) {
         this._recent = this._last;
@@ -9919,7 +9933,7 @@ var Atropos = (function () {
 
       if (!dur) {
         _renderZeroDurationTween(this, totalTime, suppressEvents, force);
-      } else if (tTime !== this._tTime || !totalTime || force || !this._initted && this._tTime || this._startAt && this._zTime < 0 !== isNegative) {
+      } else if (tTime !== this._tTime || !totalTime || force || !this._initted && this._tTime || this._startAt && this._zTime < 0 !== isNegative || this._lazy) {
         time = tTime;
         timeline = this.timeline;
 
@@ -9936,14 +9950,15 @@ var Atropos = (function () {
             iteration = this._repeat;
             time = dur;
           } else {
-            iteration = ~~(tTime / cycleDuration);
+            prevIteration = _roundPrecise(tTime / cycleDuration);
+            iteration = ~~prevIteration;
 
-            if (iteration && iteration === _roundPrecise(tTime / cycleDuration)) {
+            if (iteration && iteration === prevIteration) {
               time = dur;
               iteration--;
+            } else if (time > dur) {
+              time = dur;
             }
-
-            time > dur && (time = dur);
           }
 
           isYoyo = this._yoyo && iteration & 1;
@@ -9963,7 +9978,7 @@ var Atropos = (function () {
           if (iteration !== prevIteration) {
             timeline && this._yEase && _propagateYoyoEase(timeline, isYoyo);
 
-            if (this.vars.repeatRefresh && !isYoyo && !this._lock && this._time !== dur && this._initted) {
+            if (this.vars.repeatRefresh && !isYoyo && !this._lock && time !== cycleDuration && this._initted) {
               this._lock = force = 1;
               this.render(_roundPrecise(cycleDuration * iteration), true).invalidate()._lock = 0;
             }
@@ -9999,7 +10014,7 @@ var Atropos = (function () {
           this.ratio = ratio = 1 - ratio;
         }
 
-        if (time && !prevTime && !suppressEvents && !iteration) {
+        if (!prevTime && tTime && !suppressEvents && !prevIteration) {
           _callback(this, "onStart");
 
           if (this._tTime !== tTime) {
@@ -10014,7 +10029,7 @@ var Atropos = (function () {
           pt = pt._next;
         }
 
-        timeline && timeline.render(totalTime < 0 ? totalTime : !time && isYoyo ? -_tinyNum : timeline._dur * timeline._ease(time / this._dur), suppressEvents, force) || this._startAt && (this._zTime = totalTime);
+        timeline && timeline.render(totalTime < 0 ? totalTime : timeline._dur * timeline._ease(time / this._dur), suppressEvents, force) || this._startAt && (this._zTime = totalTime);
 
         if (this._onUpdate && !suppressEvents) {
           isNegative && _rewindStartAt(this, totalTime, suppressEvents, force);
@@ -10076,7 +10091,8 @@ var Atropos = (function () {
 
       if (!targets && (!vars || vars === "all")) {
         this._lazy = this._pt = 0;
-        return this.parent ? _interrupt(this) : this;
+        this.parent ? _interrupt(this) : this.scrollTrigger && this.scrollTrigger.kill(!!_reverting);
+        return this;
       }
 
       if (this.timeline) {
@@ -10564,6 +10580,7 @@ var Atropos = (function () {
     function MatchMedia(scope) {
       this.contexts = [];
       this.scope = scope;
+      _context && _context.data.push(this);
     }
 
     var _proto6 = MatchMedia.prototype;
@@ -10677,9 +10694,9 @@ var Atropos = (function () {
       };
     },
     quickTo: function quickTo(target, property, vars) {
-      var _merge2;
+      var _setDefaults2;
 
-      var tween = gsap.to(target, _merge((_merge2 = {}, _merge2[property] = "+=0.1", _merge2.paused = true, _merge2), vars || {})),
+      var tween = gsap.to(target, _setDefaults((_setDefaults2 = {}, _setDefaults2[property] = "+=0.1", _setDefaults2.paused = true, _setDefaults2.stagger = 0, _setDefaults2), vars || {})),
           func = function func(value, start, startIsRelative) {
         return tween.resetTo(property, value, start, startIsRelative);
       };
@@ -10881,6 +10898,7 @@ var Atropos = (function () {
       _buildModifierPlugin = function _buildModifierPlugin(name, modifier) {
     return {
       name: name,
+      headless: 1,
       rawVars: 1,
       init: function init(target, vars, tween) {
         tween._onInit = function (tween) {
@@ -10937,6 +10955,7 @@ var Atropos = (function () {
     }
   }, {
     name: "endArray",
+    headless: 1,
     init: function init(target, value) {
       var i = value.length;
 
@@ -10945,7 +10964,7 @@ var Atropos = (function () {
       }
     }
   }, _buildModifierPlugin("roundProps", _roundModifier), _buildModifierPlugin("modifiers"), _buildModifierPlugin("snap", snap)) || _gsap;
-  Tween.version = Timeline.version = gsap.version = "3.12.4";
+  Tween.version = Timeline.version = gsap.version = "3.13.0";
   _coreReady = 1;
   _windowExists() && _wake();
   var Power0 = _easeMap.Power0,
@@ -11086,7 +11105,13 @@ var Atropos = (function () {
         p;
 
     for (i = 0; i < props.length; i += 3) {
-      props[i + 1] ? target[props[i]] = props[i + 2] : props[i + 2] ? style[props[i]] = props[i + 2] : style.removeProperty(props[i].substr(0, 2) === "--" ? props[i] : props[i].replace(_capsExp, "-$1").toLowerCase());
+      if (!props[i + 1]) {
+        props[i + 2] ? style[props[i]] = props[i + 2] : style.removeProperty(props[i].substr(0, 2) === "--" ? props[i] : props[i].replace(_capsExp, "-$1").toLowerCase());
+      } else if (props[i + 1] === 2) {
+        target[props[i]](props[i + 2]);
+      } else {
+        target[props[i]] = props[i + 2];
+      }
     }
 
     if (this.tfm) {
@@ -11122,7 +11147,7 @@ var Atropos = (function () {
       save: _saveStyle
     };
     target._gsap || gsap.core.getCache(target);
-    properties && properties.split(",").forEach(function (p) {
+    properties && target.style && target.nodeType && properties.split(",").forEach(function (p) {
       return saver.save(p);
     });
     return saver;
@@ -11169,39 +11194,25 @@ var Atropos = (function () {
       _pluginInitted = 1;
     }
   },
-      _getBBoxHack = function _getBBoxHack(swapIfPossible) {
-    var svg = _createElement("svg", this.ownerSVGElement && this.ownerSVGElement.getAttribute("xmlns") || "http://www.w3.org/2000/svg"),
-        oldParent = this.parentNode,
-        oldSibling = this.nextSibling,
-        oldCSS = this.style.cssText,
+      _getReparentedCloneBBox = function _getReparentedCloneBBox(target) {
+    var owner = target.ownerSVGElement,
+        svg = _createElement("svg", owner && owner.getAttribute("xmlns") || "http://www.w3.org/2000/svg"),
+        clone = target.cloneNode(true),
         bbox;
+
+    clone.style.display = "block";
+    svg.appendChild(clone);
 
     _docElement.appendChild(svg);
 
-    svg.appendChild(this);
-    this.style.display = "block";
+    try {
+      bbox = clone.getBBox();
+    } catch (e) {}
 
-    if (swapIfPossible) {
-      try {
-        bbox = this.getBBox();
-        this._gsapBBox = this.getBBox;
-        this.getBBox = _getBBoxHack;
-      } catch (e) {}
-    } else if (this._gsapBBox) {
-      bbox = this._gsapBBox();
-    }
-
-    if (oldParent) {
-      if (oldSibling) {
-        oldParent.insertBefore(this, oldSibling);
-      } else {
-        oldParent.appendChild(this);
-      }
-    }
+    svg.removeChild(clone);
 
     _docElement.removeChild(svg);
 
-    this.style.cssText = oldCSS;
     return bbox;
   },
       _getAttributeFallbacks = function _getAttributeFallbacks(target, attributesArray) {
@@ -11214,15 +11225,16 @@ var Atropos = (function () {
     }
   },
       _getBBox = function _getBBox(target) {
-    var bounds;
+    var bounds, cloned;
 
     try {
       bounds = target.getBBox();
     } catch (error) {
-      bounds = _getBBoxHack.call(target, true);
+      bounds = _getReparentedCloneBBox(target);
+      cloned = 1;
     }
 
-    bounds && (bounds.width || bounds.height) || target.getBBox === _getBBoxHack || (bounds = _getBBoxHack.call(target, true));
+    bounds && (bounds.width || bounds.height) || cloned || (bounds = _getReparentedCloneBBox(target));
     return bounds && !bounds.width && !bounds.x && !bounds.y ? {
       x: +_getAttributeFallbacks(target, ["x", "cx", "x1"]) || 0,
       y: +_getAttributeFallbacks(target, ["y", "cy", "y1"]) || 0,
@@ -11302,7 +11314,7 @@ var Atropos = (function () {
     }
 
     style[horizontal ? "width" : "height"] = amount + (toPixels ? curUnit : unit);
-    parent = ~property.indexOf("adius") || unit === "em" && target.appendChild && !isRootSVG ? target : target.parentNode;
+    parent = unit !== "rem" && ~property.indexOf("adius") || unit === "em" && target.appendChild && !isRootSVG ? target : target.parentNode;
 
     if (isSVG) {
       parent = (target.ownerSVGElement || {}).parentNode;
@@ -11397,6 +11409,10 @@ var Atropos = (function () {
     pt.e = end;
     start += "";
     end += "";
+
+    if (end.substring(0, 6) === "var(--") {
+      end = _getComputedProperty(target, end.substring(4, end.indexOf(")")));
+    }
 
     if (end === "auto") {
       startValue = target.style[prop];
@@ -11521,6 +11537,7 @@ var Atropos = (function () {
 
         if (cache) {
           cache.svg && target.removeAttribute("transform");
+          style.scale = style.rotate = style.translate = "none";
 
           _parseTransform(target, 1);
 
@@ -11573,7 +11590,7 @@ var Atropos = (function () {
       style.display = "block";
       parent = target.parentNode;
 
-      if (!parent || !target.offsetParent) {
+      if (!parent || !target.offsetParent && !target.getBoundingClientRect().width) {
         addedToDOM = 1;
         nextSibling = target.nextElementSibling;
 
@@ -12252,6 +12269,11 @@ var Atropos = (function () {
           if (isTransformRelated) {
             this.styles.save(p);
 
+            if (type === "string" && endValue.substring(0, 6) === "var(--") {
+              endValue = _getComputedProperty(target, endValue.substring(4, endValue.indexOf(")")));
+              endNum = parseFloat(endValue);
+            }
+
             if (!transformPropTween) {
               cache = target._gsap;
               cache.renderTransform && !vars.parseTransform || _parseTransform(target, vars.parseTransform);
@@ -12327,7 +12349,7 @@ var Atropos = (function () {
             _tweenComplexCSSString.call(this, target, p, startValue, relative ? relative + endValue : endValue);
           }
 
-          isTransformRelated || (p in style ? inlineProps.push(p, 0, style[p]) : inlineProps.push(p, 1, startValue || target[p]));
+          isTransformRelated || (p in style ? inlineProps.push(p, 0, style[p]) : typeof target[p] === "function" ? inlineProps.push(p, 2, target[p]()) : inlineProps.push(p, 1, startValue || target[p]));
           props.push(p);
         }
       }
@@ -12417,7 +12439,6 @@ var Atropos = (function () {
   if (typeof(window) === 'undefined' || window !== exports) {Object.defineProperty(exports, '__esModule', { value: true });} else {delete window.default;}
 
 })));
-
 /*!
     Images Loaded Packaged
     Version: v5.0.0
@@ -17872,12 +17893,11 @@ $.fn.easyPieChart = function(options) {
 })( window.jQuery || window.Zepto );
 /*!
     Magnific Popup
-    Version: 1.1.0 - 2016-02-20
+    Version: 1.2.0 - 2024-06-08
     Plugin URL: http://dimsemenov.com/plugins/magnific-popup/
-    License: Copyright (c) 2016 Dmitry Semenov
+    License: Copyright (c) 2024 Dmitry Semenov
  !*/
-
-(function (factory) { 
+;(function (factory) { 
 if (typeof define === 'function' && define.amd) { 
  // AMD. Register as an anonymous module. 
  define(['jquery'], factory); 
@@ -17959,7 +17979,7 @@ var _mfpOn = function(name, f) {
 			// converts "mfpEventName" to "eventName" callback and triggers it if it's present
 			e = e.charAt(0).toLowerCase() + e.slice(1);
 			if(mfp.st.callbacks[e]) {
-				mfp.st.callbacks[e].apply(mfp, $.isArray(data) ? data : [data]);
+				mfp.st.callbacks[e].apply(mfp, Array.isArray(data) ? data : [data]);
 			}
 		}
 	},
@@ -18051,7 +18071,7 @@ MagnificPopup.prototype = {
 				}
 			}
 		} else {
-			mfp.items = $.isArray(data.items) ? data.items : [data.items];
+			mfp.items = Array.isArray(data.items) ? data.items : [data.items];
 			mfp.index = data.index || 0;
 		}
 
@@ -18321,7 +18341,7 @@ MagnificPopup.prototype = {
 
 
 		if(mfp.st.autoFocusLast && mfp._lastFocusedEl) {
-			$(mfp._lastFocusedEl).focus(); // put tab focus back
+			$(mfp._lastFocusedEl).trigger('focus'); // put tab focus back
 		}
 		mfp.currItem = null;	
 		mfp.content = null;
@@ -18517,7 +18537,7 @@ MagnificPopup.prototype = {
 		var disableOn = options.disableOn !== undefined ? options.disableOn : $.magnificPopup.defaults.disableOn;
 
 		if(disableOn) {
-			if($.isFunction(disableOn)) {
+			if(typeof disableOn === "function") {
 				if( !disableOn.call(mfp) ) {
 					return true;
 				}
@@ -18569,7 +18589,11 @@ MagnificPopup.prototype = {
 			status = data.status;
 			text = data.text;
 
-			mfp.preloader.html(text);
+			if (mfp.st.allowHTMLInStatusIndicator) {
+				mfp.preloader.html(text);
+			} else {
+				mfp.preloader.text(text);
+			}
 
 			mfp.preloader.find('a').on('click', function(e) {
 				e.stopImmediatePropagation();
@@ -18588,7 +18612,7 @@ MagnificPopup.prototype = {
 	// "target" is an element that was clicked
 	_checkIfClose: function(target) {
 
-		if($(target).hasClass(PREVENT_CLOSE_CLASS)) {
+		if($(target).closest('.' + PREVENT_CLOSE_CLASS).length) {
 			return;
 		}
 
@@ -18600,7 +18624,7 @@ MagnificPopup.prototype = {
 		} else {
 
 			// We close the popup if click is on close button or on preloader. Or if there is no content.
-			if(!mfp.content || $(target).hasClass('mfp-close') || (mfp.preloader && target === mfp.preloader[0]) ) {
+			if(!mfp.content || $(target).closest('.mfp-close').length || (mfp.preloader && target === mfp.preloader[0]) ) {
 				return true;
 			}
 
@@ -18631,7 +18655,7 @@ MagnificPopup.prototype = {
 		return (  (mfp.isIE7 ? _document.height() : document.body.scrollHeight) > (winHeight || _window.height()) );
 	},
 	_setFocus: function() {
-		(mfp.st.focus ? mfp.content.find(mfp.st.focus).eq(0) : mfp.wrap).focus();
+		(mfp.st.focus ? mfp.content.find(mfp.st.focus).eq(0) : mfp.wrap).trigger('focus');
 	},
 	_onFocusIn: function(e) {
 		if( e.target !== mfp.wrap[0] && !$.contains(mfp.wrap[0], e.target) ) {
@@ -18672,7 +18696,11 @@ MagnificPopup.prototype = {
 				}
 
 			} else {
-				template.find(EVENT_NS + '-'+key).html(value);
+				if (mfp.st.allowHTMLInTemplate) {
+					template.find(EVENT_NS + '-'+key).html(value);
+				} else {
+					template.find(EVENT_NS + '-'+key).text(value);
+				}
 			}
 		});
 	},
@@ -18775,7 +18803,11 @@ $.magnificPopup = {
 
 		tLoading: 'Loading...',
 
-		autoFocusLast: true
+		autoFocusLast: true,
+
+		allowHTMLInStatusIndicator: false,
+
+		allowHTMLInTemplate: false
 
 	}
 };
@@ -18923,7 +18955,7 @@ $.magnificPopup.registerModule(AJAX_NS, {
 	options: {
 		settings: null,
 		cursor: 'mfp-ajax-cur',
-		tError: '<a href="%url%">The content</a> could not be loaded.'
+		tError: 'The content could not be loaded.'
 	},
 
 	proto: {
@@ -18993,7 +19025,7 @@ var _imgInterval,
 		var src = mfp.st.image.titleSrc;
 
 		if(src) {
-			if($.isFunction(src)) {
+			if(typeof src === "function") {
 				return src.call(mfp, item);
 			} else if(item.el) {
 				return item.el.attr(src) || '';
@@ -19020,7 +19052,7 @@ $.magnificPopup.registerModule('image', {
 		cursor: 'mfp-zoom-out-cur',
 		titleSrc: 'title',
 		verticalFit: true,
-		tError: '<a href="%url%">The image</a> could not be loaded.'
+		tError: 'The image could not be loaded.'
 	},
 
 	proto: {
@@ -19125,6 +19157,23 @@ $.magnificPopup.registerModule('image', {
 
 			var guard = 0,
 
+				imgSt = mfp.st.image,
+
+				// image error handler
+				onLoadError = function() {
+					if(item) {
+						item.img.off('.mfploader');
+						if(item === mfp.currItem){
+							mfp._onImageHasSize(item);
+							mfp.updateStatus('error', imgSt.tError.replace('%url%', item.src) );
+						}
+
+						item.hasSize = true;
+						item.loaded = true;
+						item.loadError = true;
+					}
+				},
+
 				// image load complete handler
 				onLoadComplete = function() {
 					if(item) {
@@ -19153,23 +19202,8 @@ $.magnificPopup.registerModule('image', {
 							}
 						}
 					}
-				},
-
-				// image error handler
-				onLoadError = function() {
-					if(item) {
-						item.img.off('.mfploader');
-						if(item === mfp.currItem){
-							mfp._onImageHasSize(item);
-							mfp.updateStatus('error', imgSt.tError.replace('%url%', item.src) );
-						}
-
-						item.hasSize = true;
-						item.loaded = true;
-						item.loadError = true;
-					}
-				},
-				imgSt = mfp.st.image;
+				};
+				
 
 
 			var el = template.find('.mfp-img');
@@ -19514,6 +19548,7 @@ $.magnificPopup.registerModule(IFRAME_NS, {
 			if(iframeSt.srcAction) {
 				dataObj[iframeSt.srcAction] = embedSrc;
 			}
+
 			mfp._parseMarkup(template, dataObj, item);
 
 			mfp.updateStatus('ready');
@@ -19555,7 +19590,10 @@ $.magnificPopup.registerModule('gallery', {
 
 		tPrev: 'Previous (Left arrow key)',
 		tNext: 'Next (Right arrow key)',
-		tCounter: '%curr% of %total%'
+		tCounter: '%curr% of %total%',
+		
+		langDir: null,
+		loop: true,
 	},
 
 	proto: {
@@ -19567,6 +19605,10 @@ $.magnificPopup.registerModule('gallery', {
 			mfp.direction = true; // true - next, false - prev
 
 			if(!gSt || !gSt.enabled ) return false;
+			
+			if (!gSt.langDir) {
+				gSt.langDir = document.dir || 'ltr';
+			}
 
 			_wrapClasses += ' mfp-gallery';
 
@@ -19583,11 +19625,20 @@ $.magnificPopup.registerModule('gallery', {
 
 				_document.on('keydown'+ns, function(e) {
 					if (e.keyCode === 37) {
-						mfp.prev();
+						if (gSt.langDir === 'rtl') mfp.next();
+						else mfp.prev();
 					} else if (e.keyCode === 39) {
-						mfp.next();
+						if (gSt.langDir === 'rtl') mfp.prev();
+						else mfp.next();
 					}
 				});
+
+				mfp.updateGalleryButtons();
+
+			});
+
+			_mfpOn('UpdateStatus'+ns, function(/*e, data*/) {
+				mfp.updateGalleryButtons();
 			});
 
 			_mfpOn('UpdateStatus'+ns, function(e, data) {
@@ -19603,18 +19654,44 @@ $.magnificPopup.registerModule('gallery', {
 
 			_mfpOn('BuildControls' + ns, function() {
 				if(mfp.items.length > 1 && gSt.arrows && !mfp.arrowLeft) {
-					var markup = gSt.arrowMarkup,
-						arrowLeft = mfp.arrowLeft = $( markup.replace(/%title%/gi, gSt.tPrev).replace(/%dir%/gi, 'left') ).addClass(PREVENT_CLOSE_CLASS),
-						arrowRight = mfp.arrowRight = $( markup.replace(/%title%/gi, gSt.tNext).replace(/%dir%/gi, 'right') ).addClass(PREVENT_CLOSE_CLASS);
 
-					arrowLeft.click(function() {
-						mfp.prev();
+					var arrowLeftDesc, arrowRightDesc, arrowLeftAction, arrowRightAction;
+
+					if (gSt.langDir === 'rtl') {
+						arrowLeftDesc = gSt.tNext;
+						arrowRightDesc = gSt.tPrev;
+						arrowLeftAction = 'next';
+						arrowRightAction = 'prev';
+					} else {
+						arrowLeftDesc = gSt.tPrev;
+						arrowRightDesc = gSt.tNext;
+						arrowLeftAction = 'prev';
+						arrowRightAction = 'next';
+					}
+
+					var markup     = gSt.arrowMarkup,
+					    arrowLeft  = mfp.arrowLeft = $( markup.replace(/%title%/gi, arrowLeftDesc).replace(/%action%/gi, arrowLeftAction).replace(/%dir%/gi, 'left') ).addClass(PREVENT_CLOSE_CLASS),
+					    arrowRight = mfp.arrowRight = $( markup.replace(/%title%/gi, arrowRightDesc).replace(/%action%/gi, arrowRightAction).replace(/%dir%/gi, 'right') ).addClass(PREVENT_CLOSE_CLASS);
+
+					if (gSt.langDir === 'rtl') {
+						mfp.arrowNext = arrowLeft;
+						mfp.arrowPrev = arrowRight;
+					} else {
+						mfp.arrowNext = arrowRight;
+						mfp.arrowPrev = arrowLeft;
+					}
+
+					arrowLeft.on('click', function() {
+						if (gSt.langDir === 'rtl') mfp.next();
+						else mfp.prev();
 					});
-					arrowRight.click(function() {
-						mfp.next();
+					arrowRight.on('click', function() {
+						if (gSt.langDir === 'rtl') mfp.prev();
+						else mfp.next();
 					});
 
 					mfp.container.append(arrowLeft.add(arrowRight));
+
 				}
 			});
 
@@ -19636,13 +19713,17 @@ $.magnificPopup.registerModule('gallery', {
 
 		},
 		next: function() {
+			var newIndex = _getLoopedId(mfp.index + 1);
+			if (!mfp.st.gallery.loop && newIndex === 0 ) return false;
 			mfp.direction = true;
-			mfp.index = _getLoopedId(mfp.index + 1);
+			mfp.index = newIndex;
 			mfp.updateItemHTML();
 		},
 		prev: function() {
+			var newIndex = mfp.index - 1;
+			if (!mfp.st.gallery.loop && newIndex < 0) return false;
 			mfp.direction = false;
-			mfp.index = _getLoopedId(mfp.index - 1);
+			mfp.index = _getLoopedId(newIndex);
 			mfp.updateItemHTML();
 		},
 		goTo: function(newIndex) {
@@ -19689,9 +19770,30 @@ $.magnificPopup.registerModule('gallery', {
 
 
 			item.preloaded = true;
-		}
+		},
+
+		/**
+		 * Show/hide the gallery prev/next buttons if we're at the start/end, if looping is turned off
+		 * Added by Joloco for Veg
+		 */
+		updateGalleryButtons: function() {
+
+			if ( !mfp.st.gallery.loop && typeof mfp.arrowPrev === 'object' && mfp.arrowPrev !== null) {
+
+				if (mfp.index === 0) mfp.arrowPrev.hide();
+				else mfp.arrowPrev.show();
+
+				if (mfp.index === (mfp.items.length - 1)) mfp.arrowNext.hide();
+				else mfp.arrowNext.show();
+
+			}
+
+		},
+
 	}
+
 });
+
 
 /*>>gallery*/
 
@@ -22119,6 +22221,7 @@ const Aubergine = [
         var scaleFraction = scaleFraction ? scaleFraction : 0.001;
         var lastScrollPos = 0;
         var scrollDir = '';
+        const { animate } = anime;
         function u() {
             var e = t.scrollTop();
             
@@ -22147,13 +22250,13 @@ const Aubergine = [
                     if (t.attr('data-parallax-scale')) {
                         u + l(t) < e || u > e + o || (
                             n(window).width() > 1050 
-                                ? (anime({targets: r[0], translateY: i / 6 * (u - e) + "px", scale: canScale ? scale : 1}))
+                                ? (animate(r[0],{translateY: i / 6 * (u - e) + "px", scale: canScale ? scale : 1}))
                                 : r.css("transform", "translateY(0px)")
                         )
                     } else {
                         u + l(t) < e || u > e + o || (
                             n(window).width() > 1050 
-                                ? (anime({targets: r[0], translateY: i / 20 * -(u - e) + "px", scale: canScale ? scale : 1}))
+                                ? (animate(r[0],{translateY: i / 20 * -(u - e) + "px", scale: canScale ? scale : 1}))
                                 : r.css("transform", "translateY(0px)")
                         )
                     }
@@ -22161,13 +22264,13 @@ const Aubergine = [
                     if (t.attr('data-parallax-scale')) {
                         u + l(t) < e || u > e + o || (
                             n(window).width() > 1050 
-                                ? (anime({targets: r[0], translateY: i / 6 * -(u - e) + "px", scale: canScale ? scale : 1}))
+                                ? (animate(r[0],{ translateY: i / 6 * -(u - e) + "px", scale: canScale ? scale : 1}))
                                 : r.css("transform", "translateY(0px)")
                         )
                     } else {
                         u + l(t) < e || u > e + o || (
                             n(window).width() > 1050 
-                                ? (anime({targets: r[0], translateY: i / 20 * (u - e) + "px", scale: canScale ? scale : 1}))
+                                ? (animate(r[0],{translateY: i / 20 * (u - e) + "px", scale: canScale ? scale : 1}))
                                 : r.css("transform", "translateY(0px)")
                         )
                     }
@@ -26681,24 +26784,24 @@ return Splitting;
 }).call(this);
 /*!
     Swiper
-    Version: 11.0.5
+    Version: 11.2.10
     Plugin URL: https://swiperjs.com
-    License: Copyright 2014-2023 Vladimir Kharlampidi | Released under the MIT License 
+    License: Copyright 2014-2025 Vladimir Kharlampidi | Released under the MIT License 
 !*/
 
 var Swiper = (function () {
   'use strict';
 
   /**
-   * SSR Window 4.0.2
+   * SSR Window 5.0.1
    * Better handling for window object in SSR environment
    * https://github.com/nolimits4web/ssr-window
    *
-   * Copyright 2021, Vladimir Kharlampidi
+   * Copyright 2025, Vladimir Kharlampidi
    *
    * Licensed under MIT
    *
-   * Released on: December 13, 2021
+   * Released on: June 27, 2025
    */
   /* eslint-disable no-param-reassign */
   function isObject$1(obj) {
@@ -26711,7 +26814,8 @@ var Swiper = (function () {
     if (src === void 0) {
       src = {};
     }
-    Object.keys(src).forEach(key => {
+    const noExtend = ['__proto__', 'constructor', 'prototype'];
+    Object.keys(src).filter(key => noExtend.indexOf(key) < 0).forEach(key => {
       if (typeof target[key] === 'undefined') target[key] = src[key];else if (isObject$1(src[key]) && isObject$1(target[key]) && Object.keys(src[key]).length > 0) {
         extend$1(target[key], src[key]);
       }
@@ -27017,7 +27121,38 @@ var Swiper = (function () {
     if (selector === void 0) {
       selector = '';
     }
-    return [...element.children].filter(el => el.matches(selector));
+    const window = getWindow();
+    const children = [...element.children];
+    if (window.HTMLSlotElement && element instanceof HTMLSlotElement) {
+      children.push(...element.assignedElements());
+    }
+    if (!selector) {
+      return children;
+    }
+    return children.filter(el => el.matches(selector));
+  }
+  function elementIsChildOfSlot(el, slot) {
+    // Breadth-first search through all parent's children and assigned elements
+    const elementsQueue = [slot];
+    while (elementsQueue.length > 0) {
+      const elementToCheck = elementsQueue.shift();
+      if (el === elementToCheck) {
+        return true;
+      }
+      elementsQueue.push(...elementToCheck.children, ...(elementToCheck.shadowRoot ? elementToCheck.shadowRoot.children : []), ...(elementToCheck.assignedElements ? elementToCheck.assignedElements() : []));
+    }
+  }
+  function elementIsChildOf(el, parent) {
+    const window = getWindow();
+    let isChild = parent.contains(el);
+    if (!isChild && window.HTMLSlotElement && parent instanceof HTMLSlotElement) {
+      const children = [...parent.assignedElements()];
+      isChild = children.includes(el);
+      if (!isChild) {
+        isChild = elementIsChildOfSlot(el, parent);
+      }
+    }
+    return isChild;
   }
   function showWarning(text) {
     try {
@@ -27118,6 +27253,29 @@ var Swiper = (function () {
     }
     return el.offsetWidth;
   }
+  function makeElementsArray(el) {
+    return (Array.isArray(el) ? el : [el]).filter(e => !!e);
+  }
+  function getRotateFix(swiper) {
+    return v => {
+      if (Math.abs(v) > 0 && swiper.browser && swiper.browser.need3dFix && Math.abs(v) % 90 === 0) {
+        return v + 0.001;
+      }
+      return v;
+    };
+  }
+  function setInnerHTML(el, html) {
+    if (html === void 0) {
+      html = '';
+    }
+    if (typeof trustedTypes !== 'undefined') {
+      el.innerHTML = trustedTypes.createPolicy('html', {
+        createHTML: s => s
+      }).createHTML(html);
+    } else {
+      el.innerHTML = html;
+    }
+  }
 
   let support;
   function calcSupport() {
@@ -27191,6 +27349,7 @@ var Swiper = (function () {
   let browser;
   function calcBrowser() {
     const window = getWindow();
+    const device = getDevice();
     let needPerspectiveFix = false;
     function isSafari() {
       const ua = window.navigator.userAgent.toLowerCase();
@@ -27203,10 +27362,14 @@ var Swiper = (function () {
         needPerspectiveFix = major < 16 || major === 16 && minor < 2;
       }
     }
+    const isWebView = /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(window.navigator.userAgent);
+    const isSafariBrowser = isSafari();
+    const need3dFix = isSafariBrowser || isWebView && device.ios;
     return {
-      isSafari: needPerspectiveFix || isSafari(),
+      isSafari: needPerspectiveFix || isSafariBrowser,
       needPerspectiveFix,
-      isWebView: /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(window.navigator.userAgent)
+      need3dFix,
+      isWebView
     };
   }
   function getBrowser() {
@@ -27319,7 +27482,7 @@ var Swiper = (function () {
       });
       observer.observe(target, {
         attributes: typeof options.attributes === 'undefined' ? true : options.attributes,
-        childList: typeof options.childList === 'undefined' ? true : options.childList,
+        childList: swiper.isElement || (typeof options.childList === 'undefined' ? true : options).childList,
         characterData: typeof options.characterData === 'undefined' ? true : options.characterData
       });
       observers.push(observer);
@@ -27705,7 +27868,7 @@ var Swiper = (function () {
         allSlidesSize += slideSizeValue + (spaceBetween || 0);
       });
       allSlidesSize -= spaceBetween;
-      const maxSnap = allSlidesSize - swiperSize;
+      const maxSnap = allSlidesSize > swiperSize ? allSlidesSize - swiperSize : 0;
       snapGrid = snapGrid.map(snap => {
         if (snap <= 0) return -offsetBefore;
         if (snap > maxSnap) return maxSnap + offsetAfter;
@@ -27718,8 +27881,9 @@ var Swiper = (function () {
         allSlidesSize += slideSizeValue + (spaceBetween || 0);
       });
       allSlidesSize -= spaceBetween;
-      if (allSlidesSize < swiperSize) {
-        const allSlidesOffset = (swiperSize - allSlidesSize) / 2;
+      const offsetSize = (params.slidesOffsetBefore || 0) + (params.slidesOffsetAfter || 0);
+      if (allSlidesSize + offsetSize < swiperSize) {
+        const allSlidesOffset = (swiperSize - allSlidesSize - offsetSize) / 2;
         snapGrid.forEach((snap, snapIndex) => {
           snapGrid[snapIndex] = snap - allSlidesOffset;
         });
@@ -27823,6 +27987,13 @@ var Swiper = (function () {
     }
   }
 
+  const toggleSlideClasses$1 = (slideEl, condition, className) => {
+    if (condition && !slideEl.classList.contains(className)) {
+      slideEl.classList.add(className);
+    } else if (!condition && slideEl.classList.contains(className)) {
+      slideEl.classList.remove(className);
+    }
+  };
   function updateSlidesProgress(translate) {
     if (translate === void 0) {
       translate = this && this.translate || 0;
@@ -27838,11 +28009,6 @@ var Swiper = (function () {
     if (typeof slides[0].swiperSlideOffset === 'undefined') swiper.updateSlidesOffset();
     let offsetCenter = -translate;
     if (rtl) offsetCenter = translate;
-
-    // Visible Slides
-    slides.forEach(slideEl => {
-      slideEl.classList.remove(params.slideVisibleClass, params.slideFullyVisibleClass);
-    });
     swiper.visibleSlidesIndexes = [];
     swiper.visibleSlides = [];
     let spaceBetween = params.spaceBetween;
@@ -27866,11 +28032,9 @@ var Swiper = (function () {
       if (isVisible) {
         swiper.visibleSlides.push(slide);
         swiper.visibleSlidesIndexes.push(i);
-        slides[i].classList.add(params.slideVisibleClass);
       }
-      if (isFullyVisible) {
-        slides[i].classList.add(params.slideFullyVisibleClass);
-      }
+      toggleSlideClasses$1(slide, isVisible, params.slideVisibleClass);
+      toggleSlideClasses$1(slide, isFullyVisible, params.slideFullyVisibleClass);
       slide.progress = rtl ? -slideProgress : slideProgress;
       slide.originalProgress = rtl ? -originalSlideProgress : originalSlideProgress;
     }
@@ -27939,6 +28103,13 @@ var Swiper = (function () {
     swiper.emit('progress', progress);
   }
 
+  const toggleSlideClasses = (slideEl, condition, className) => {
+    if (condition && !slideEl.classList.contains(className)) {
+      slideEl.classList.add(className);
+    } else if (!condition && slideEl.classList.contains(className)) {
+      slideEl.classList.remove(className);
+    }
+  };
   function updateSlidesClasses() {
     const swiper = this;
     const {
@@ -27952,9 +28123,6 @@ var Swiper = (function () {
     const getFilteredSlide = selector => {
       return elementChildren(slidesEl, `.${params.slideClass}${selector}, swiper-slide${selector}`)[0];
     };
-    slides.forEach(slideEl => {
-      slideEl.classList.remove(params.slideActiveClass, params.slideNextClass, params.slidePrevClass);
-    });
     let activeSlide;
     let prevSlide;
     let nextSlide;
@@ -27969,31 +28137,19 @@ var Swiper = (function () {
       }
     } else {
       if (gridEnabled) {
-        activeSlide = slides.filter(slideEl => slideEl.column === activeIndex)[0];
-        nextSlide = slides.filter(slideEl => slideEl.column === activeIndex + 1)[0];
-        prevSlide = slides.filter(slideEl => slideEl.column === activeIndex - 1)[0];
+        activeSlide = slides.find(slideEl => slideEl.column === activeIndex);
+        nextSlide = slides.find(slideEl => slideEl.column === activeIndex + 1);
+        prevSlide = slides.find(slideEl => slideEl.column === activeIndex - 1);
       } else {
         activeSlide = slides[activeIndex];
       }
     }
     if (activeSlide) {
-      // Active classes
-      activeSlide.classList.add(params.slideActiveClass);
-      if (gridEnabled) {
-        if (nextSlide) {
-          nextSlide.classList.add(params.slideNextClass);
-        }
-        if (prevSlide) {
-          prevSlide.classList.add(params.slidePrevClass);
-        }
-      } else {
+      if (!gridEnabled) {
         // Next Slide
         nextSlide = elementNextAll(activeSlide, `.${params.slideClass}, swiper-slide`)[0];
         if (params.loop && !nextSlide) {
           nextSlide = slides[0];
-        }
-        if (nextSlide) {
-          nextSlide.classList.add(params.slideNextClass);
         }
 
         // Prev Slide
@@ -28001,11 +28157,13 @@ var Swiper = (function () {
         if (params.loop && !prevSlide === 0) {
           prevSlide = slides[slides.length - 1];
         }
-        if (prevSlide) {
-          prevSlide.classList.add(params.slidePrevClass);
-        }
       }
     }
+    slides.forEach(slideEl => {
+      toggleSlideClasses(slideEl, slideEl === activeSlide, params.slideActiveClass);
+      toggleSlideClasses(slideEl, slideEl === nextSlide, params.slideNextClass);
+      toggleSlideClasses(slideEl, slideEl === prevSlide, params.slidePrevClass);
+    });
     swiper.emitSlidesClasses();
   }
 
@@ -28146,7 +28304,7 @@ var Swiper = (function () {
     if (swiper.virtual && params.virtual.enabled && params.loop) {
       realIndex = getVirtualRealIndex(activeIndex);
     } else if (gridEnabled) {
-      const firstSlideInColumn = swiper.slides.filter(slideEl => slideEl.column === activeIndex)[0];
+      const firstSlideInColumn = swiper.slides.find(slideEl => slideEl.column === activeIndex);
       let activeSlideIndex = parseInt(firstSlideInColumn.getAttribute('data-swiper-slide-index'), 10);
       if (Number.isNaN(activeSlideIndex)) {
         activeSlideIndex = Math.max(swiper.slides.indexOf(firstSlideInColumn), 0);
@@ -28383,6 +28541,7 @@ var Swiper = (function () {
             swiper.wrapperEl.removeEventListener('transitionend', swiper.onTranslateToWrapperTransitionEnd);
             swiper.onTranslateToWrapperTransitionEnd = null;
             delete swiper.onTranslateToWrapperTransitionEnd;
+            swiper.animating = false;
             if (runCallbacks) {
               swiper.emit('transitionEnd');
             }
@@ -28427,11 +28586,9 @@ var Swiper = (function () {
       if (activeIndex > previousIndex) dir = 'next';else if (activeIndex < previousIndex) dir = 'prev';else dir = 'reset';
     }
     swiper.emit(`transition${step}`);
-    if (runCallbacks && activeIndex !== previousIndex) {
-      if (dir === 'reset') {
-        swiper.emit(`slideResetTransition${step}`);
-        return;
-      }
+    if (runCallbacks && dir === 'reset') {
+      swiper.emit(`slideResetTransition${step}`);
+    } else if (runCallbacks && activeIndex !== previousIndex) {
       swiper.emit(`slideChangeTransition${step}`);
       if (dir === 'next') {
         swiper.emit(`slideNextTransition${step}`);
@@ -28490,9 +28647,6 @@ var Swiper = (function () {
     if (index === void 0) {
       index = 0;
     }
-    if (speed === void 0) {
-      speed = this.params.speed;
-    }
     if (runCallbacks === void 0) {
       runCallbacks = true;
     }
@@ -28512,8 +28666,11 @@ var Swiper = (function () {
       wrapperEl,
       enabled
     } = swiper;
-    if (swiper.animating && params.preventInteractionOnTransition || !enabled && !internal && !initial) {
+    if (!enabled && !internal && !initial || swiper.destroyed || swiper.animating && params.preventInteractionOnTransition) {
       return false;
+    }
+    if (typeof speed === 'undefined') {
+      speed = swiper.params.speed;
     }
     const skip = Math.min(swiper.params.slidesPerGroupSkip, slideIndex);
     let snapIndex = skip + Math.floor((slideIndex - skip) / swiper.params.slidesPerGroup);
@@ -28556,8 +28713,11 @@ var Swiper = (function () {
     let direction;
     if (slideIndex > activeIndex) direction = 'next';else if (slideIndex < activeIndex) direction = 'prev';else direction = 'reset';
 
+    // initial virtual
+    const isVirtual = swiper.virtual && swiper.params.virtual.enabled;
+    const isInitialVirtual = isVirtual && initial;
     // Update Index
-    if (rtl && -translate === swiper.translate || !rtl && translate === swiper.translate) {
+    if (!isInitialVirtual && (rtl && -translate === swiper.translate || !rtl && translate === swiper.translate)) {
       swiper.updateActiveIndex(slideIndex);
       // Update Height
       if (params.autoHeight) {
@@ -28577,7 +28737,6 @@ var Swiper = (function () {
       const isH = swiper.isHorizontal();
       const t = rtl ? translate : -translate;
       if (speed === 0) {
-        const isVirtual = swiper.virtual && swiper.params.virtual.enabled;
         if (isVirtual) {
           swiper.wrapperEl.style.scrollSnapType = 'none';
           swiper._immediateVirtual = true;
@@ -28612,6 +28771,11 @@ var Swiper = (function () {
       }
       return true;
     }
+    const browser = getBrowser();
+    const isSafari = browser.isSafari;
+    if (isVirtual && !initial && isSafari && swiper.isElement) {
+      swiper.virtual.update(false, false, slideIndex);
+    }
     swiper.setTransition(speed);
     swiper.setTranslate(translate);
     swiper.updateActiveIndex(slideIndex);
@@ -28641,9 +28805,6 @@ var Swiper = (function () {
     if (index === void 0) {
       index = 0;
     }
-    if (speed === void 0) {
-      speed = this.params.speed;
-    }
     if (runCallbacks === void 0) {
       runCallbacks = true;
     }
@@ -28652,6 +28813,10 @@ var Swiper = (function () {
       index = indexAsNumber;
     }
     const swiper = this;
+    if (swiper.destroyed) return;
+    if (typeof speed === 'undefined') {
+      speed = swiper.params.speed;
+    }
     const gridEnabled = swiper.grid && swiper.params.grid && swiper.params.grid.rows > 1;
     let newIndex = index;
     if (swiper.params.loop) {
@@ -28662,7 +28827,7 @@ var Swiper = (function () {
         let targetSlideIndex;
         if (gridEnabled) {
           const slideIndex = newIndex * swiper.params.grid.rows;
-          targetSlideIndex = swiper.slides.filter(slideEl => slideEl.getAttribute('data-swiper-slide-index') * 1 === slideIndex)[0].column;
+          targetSlideIndex = swiper.slides.find(slideEl => slideEl.getAttribute('data-swiper-slide-index') * 1 === slideIndex).column;
         } else {
           targetSlideIndex = swiper.getSlideIndexByData(newIndex);
         }
@@ -28683,6 +28848,9 @@ var Swiper = (function () {
         if (centeredSlides) {
           needLoopFix = needLoopFix || targetSlideIndex < Math.ceil(slidesPerView / 2);
         }
+        if (internal && centeredSlides && swiper.params.slidesPerView !== 'auto' && !gridEnabled) {
+          needLoopFix = false;
+        }
         if (needLoopFix) {
           const direction = centeredSlides ? targetSlideIndex < swiper.activeIndex ? 'prev' : 'next' : targetSlideIndex - swiper.activeIndex - 1 < swiper.params.slidesPerView ? 'next' : 'prev';
           swiper.loopFix({
@@ -28694,7 +28862,7 @@ var Swiper = (function () {
         }
         if (gridEnabled) {
           const slideIndex = newIndex * swiper.params.grid.rows;
-          newIndex = swiper.slides.filter(slideEl => slideEl.getAttribute('data-swiper-slide-index') * 1 === slideIndex)[0].column;
+          newIndex = swiper.slides.find(slideEl => slideEl.getAttribute('data-swiper-slide-index') * 1 === slideIndex).column;
         } else {
           newIndex = swiper.getSlideIndexByData(newIndex);
         }
@@ -28708,9 +28876,6 @@ var Swiper = (function () {
 
   /* eslint no-unused-vars: "off" */
   function slideNext(speed, runCallbacks, internal) {
-    if (speed === void 0) {
-      speed = this.params.speed;
-    }
     if (runCallbacks === void 0) {
       runCallbacks = true;
     }
@@ -28720,7 +28885,10 @@ var Swiper = (function () {
       params,
       animating
     } = swiper;
-    if (!enabled) return swiper;
+    if (!enabled || swiper.destroyed) return swiper;
+    if (typeof speed === 'undefined') {
+      speed = swiper.params.speed;
+    }
     let perGroup = params.slidesPerGroup;
     if (params.slidesPerView === 'auto' && params.slidesPerGroup === 1 && params.slidesPerGroupAuto) {
       perGroup = Math.max(swiper.slidesPerViewDynamic('current', true), 1);
@@ -28749,9 +28917,6 @@ var Swiper = (function () {
 
   /* eslint no-unused-vars: "off" */
   function slidePrev(speed, runCallbacks, internal) {
-    if (speed === void 0) {
-      speed = this.params.speed;
-    }
     if (runCallbacks === void 0) {
       runCallbacks = true;
     }
@@ -28764,7 +28929,10 @@ var Swiper = (function () {
       enabled,
       animating
     } = swiper;
-    if (!enabled) return swiper;
+    if (!enabled || swiper.destroyed) return swiper;
+    if (typeof speed === 'undefined') {
+      speed = swiper.params.speed;
+    }
     const isVirtual = swiper.virtual && params.virtual.enabled;
     if (params.loop) {
       if (animating && !isVirtual && params.loopPreventsSliding) return false;
@@ -28781,8 +28949,9 @@ var Swiper = (function () {
     }
     const normalizedTranslate = normalize(translate);
     const normalizedSnapGrid = snapGrid.map(val => normalize(val));
+    const isFreeMode = params.freeMode && params.freeMode.enabled;
     let prevSnap = snapGrid[normalizedSnapGrid.indexOf(normalizedTranslate) - 1];
-    if (typeof prevSnap === 'undefined' && params.cssMode) {
+    if (typeof prevSnap === 'undefined' && (params.cssMode || isFreeMode)) {
       let prevSnapIndex;
       snapGrid.forEach((snap, snapIndex) => {
         if (normalizedTranslate >= snap) {
@@ -28791,7 +28960,7 @@ var Swiper = (function () {
         }
       });
       if (typeof prevSnapIndex !== 'undefined') {
-        prevSnap = snapGrid[prevSnapIndex > 0 ? prevSnapIndex - 1 : prevSnapIndex];
+        prevSnap = isFreeMode ? snapGrid[prevSnapIndex] : snapGrid[prevSnapIndex > 0 ? prevSnapIndex - 1 : prevSnapIndex];
       }
     }
     let prevIndex = 0;
@@ -28817,21 +28986,19 @@ var Swiper = (function () {
 
   /* eslint no-unused-vars: "off" */
   function slideReset(speed, runCallbacks, internal) {
-    if (speed === void 0) {
-      speed = this.params.speed;
-    }
     if (runCallbacks === void 0) {
       runCallbacks = true;
     }
     const swiper = this;
+    if (swiper.destroyed) return;
+    if (typeof speed === 'undefined') {
+      speed = swiper.params.speed;
+    }
     return swiper.slideTo(swiper.activeIndex, speed, runCallbacks, internal);
   }
 
   /* eslint no-unused-vars: "off" */
   function slideToClosest(speed, runCallbacks, internal, threshold) {
-    if (speed === void 0) {
-      speed = this.params.speed;
-    }
     if (runCallbacks === void 0) {
       runCallbacks = true;
     }
@@ -28839,6 +29006,10 @@ var Swiper = (function () {
       threshold = 0.5;
     }
     const swiper = this;
+    if (swiper.destroyed) return;
+    if (typeof speed === 'undefined') {
+      speed = swiper.params.speed;
+    }
     let index = swiper.activeIndex;
     const skip = Math.min(swiper.params.slidesPerGroupSkip, index);
     const snapIndex = skip + Math.floor((index - skip) / swiper.params.slidesPerGroup);
@@ -28867,28 +29038,22 @@ var Swiper = (function () {
 
   function slideToClickedSlide() {
     const swiper = this;
+    if (swiper.destroyed) return;
     const {
       params,
       slidesEl
     } = swiper;
     const slidesPerView = params.slidesPerView === 'auto' ? swiper.slidesPerViewDynamic() : params.slidesPerView;
-    let slideToIndex = swiper.clickedIndex;
+    let slideToIndex = swiper.getSlideIndexWhenGrid(swiper.clickedIndex);
     let realIndex;
     const slideSelector = swiper.isElement ? `swiper-slide` : `.${params.slideClass}`;
+    const isGrid = swiper.grid && swiper.params.grid && swiper.params.grid.rows > 1;
     if (params.loop) {
       if (swiper.animating) return;
       realIndex = parseInt(swiper.clickedSlide.getAttribute('data-swiper-slide-index'), 10);
       if (params.centeredSlides) {
-        if (slideToIndex < swiper.loopedSlides - slidesPerView / 2 || slideToIndex > swiper.slides.length - swiper.loopedSlides + slidesPerView / 2) {
-          swiper.loopFix();
-          slideToIndex = swiper.getSlideIndex(elementChildren(slidesEl, `${slideSelector}[data-swiper-slide-index="${realIndex}"]`)[0]);
-          nextTick(() => {
-            swiper.slideTo(slideToIndex);
-          });
-        } else {
-          swiper.slideTo(slideToIndex);
-        }
-      } else if (slideToIndex > swiper.slides.length - slidesPerView) {
+        swiper.slideToLoop(realIndex);
+      } else if (slideToIndex > (isGrid ? (swiper.slides.length - slidesPerView) / 2 - (swiper.params.grid.rows - 1) : swiper.slides.length - slidesPerView)) {
         swiper.loopFix();
         slideToIndex = swiper.getSlideIndex(elementChildren(slidesEl, `${slideSelector}[data-swiper-slide-index="${realIndex}"]`)[0]);
         nextTick(() => {
@@ -28912,7 +29077,7 @@ var Swiper = (function () {
     slideToClickedSlide
   };
 
-  function loopCreate(slideRealIndex) {
+  function loopCreate(slideRealIndex, initial) {
     const swiper = this;
     const {
       params,
@@ -28925,7 +29090,20 @@ var Swiper = (function () {
         el.setAttribute('data-swiper-slide-index', index);
       });
     };
+    const clearBlankSlides = () => {
+      const slides = elementChildren(slidesEl, `.${params.slideBlankClass}`);
+      slides.forEach(el => {
+        el.remove();
+      });
+      if (slides.length > 0) {
+        swiper.recalcSlides();
+        swiper.updateSlides();
+      }
+    };
     const gridEnabled = swiper.grid && params.grid && params.grid.rows > 1;
+    if (params.loopAddBlankSlides && (params.slidesPerGroup > 1 || gridEnabled)) {
+      clearBlankSlides();
+    }
     const slidesPerGroup = params.slidesPerGroup * (gridEnabled ? params.grid.rows : 1);
     const shouldFillGroup = swiper.slides.length % slidesPerGroup !== 0;
     const shouldFillGrid = gridEnabled && swiper.slides.length % params.grid.rows !== 0;
@@ -28960,7 +29138,8 @@ var Swiper = (function () {
     }
     swiper.loopFix({
       slideRealIndex,
-      direction: params.centeredSlides ? undefined : 'next'
+      direction: params.centeredSlides ? undefined : 'next',
+      initial
     });
   }
 
@@ -28971,6 +29150,7 @@ var Swiper = (function () {
       direction,
       setTranslate,
       activeSlideIndex,
+      initial,
       byController,
       byMousewheel
     } = _temp === void 0 ? {} : _temp;
@@ -28985,7 +29165,8 @@ var Swiper = (function () {
       params
     } = swiper;
     const {
-      centeredSlides
+      centeredSlides,
+      initialSlide
     } = params;
     swiper.allowSlidePrev = true;
     swiper.allowSlideNext = true;
@@ -29014,23 +29195,25 @@ var Swiper = (function () {
       }
     }
     const slidesPerGroup = params.slidesPerGroupAuto ? slidesPerView : params.slidesPerGroup;
-    let loopedSlides = slidesPerGroup;
+    let loopedSlides = centeredSlides ? Math.max(slidesPerGroup, Math.ceil(slidesPerView / 2)) : slidesPerGroup;
     if (loopedSlides % slidesPerGroup !== 0) {
       loopedSlides += slidesPerGroup - loopedSlides % slidesPerGroup;
     }
     loopedSlides += params.loopAdditionalSlides;
     swiper.loopedSlides = loopedSlides;
     const gridEnabled = swiper.grid && params.grid && params.grid.rows > 1;
-    if (slides.length < slidesPerView + loopedSlides) {
-      showWarning('Swiper Loop Warning: The number of slides is not enough for loop mode, it will be disabled and not function properly. You need to add more slides (or make duplicates) or lower the values of slidesPerView and slidesPerGroup parameters');
+    if (slides.length < slidesPerView + loopedSlides || swiper.params.effect === 'cards' && slides.length < slidesPerView + loopedSlides * 2) {
+      showWarning('Swiper Loop Warning: The number of slides is not enough for loop mode, it will be disabled or not function properly. You need to add more slides (or make duplicates) or lower the values of slidesPerView and slidesPerGroup parameters');
     } else if (gridEnabled && params.grid.fill === 'row') {
       showWarning('Swiper Loop Warning: Loop mode is not compatible with grid.fill = `row`');
     }
     const prependSlidesIndexes = [];
     const appendSlidesIndexes = [];
-    let activeIndex = swiper.activeIndex;
+    const cols = gridEnabled ? Math.ceil(slides.length / params.grid.rows) : slides.length;
+    const isInitialOverflow = initial && cols - initialSlide < slidesPerView && !centeredSlides;
+    let activeIndex = isInitialOverflow ? initialSlide : swiper.activeIndex;
     if (typeof activeSlideIndex === 'undefined') {
-      activeSlideIndex = swiper.getSlideIndex(slides.filter(el => el.classList.contains(params.slideActiveClass))[0]);
+      activeSlideIndex = swiper.getSlideIndex(slides.find(el => el.classList.contains(params.slideActiveClass)));
     } else {
       activeIndex = activeSlideIndex;
     }
@@ -29038,7 +29221,6 @@ var Swiper = (function () {
     const isPrev = direction === 'prev' || !direction;
     let slidesPrepended = 0;
     let slidesAppended = 0;
-    const cols = gridEnabled ? Math.ceil(slides.length / params.grid.rows) : slides.length;
     const activeColIndex = gridEnabled ? slides[activeSlideIndex].column : activeSlideIndex;
     const activeColIndexWithShift = activeColIndex + (centeredSlides && typeof setTranslate === 'undefined' ? -slidesPerView / 2 + 0.5 : 0);
     // prepend last slides before start
@@ -29060,6 +29242,9 @@ var Swiper = (function () {
       }
     } else if (activeColIndexWithShift + slidesPerView > cols - loopedSlides) {
       slidesAppended = Math.max(activeColIndexWithShift - (cols - loopedSlides * 2), slidesPerGroup);
+      if (isInitialOverflow) {
+        slidesAppended = Math.max(slidesAppended, slidesPerView - cols + initialSlide + 1);
+      }
       for (let i = 0; i < slidesAppended; i += 1) {
         const index = i - Math.floor(i / cols) * cols;
         if (gridEnabled) {
@@ -29075,6 +29260,14 @@ var Swiper = (function () {
     requestAnimationFrame(() => {
       swiper.__preventObserver__ = false;
     });
+    if (swiper.params.effect === 'cards' && slides.length < slidesPerView + loopedSlides * 2) {
+      if (appendSlidesIndexes.includes(activeSlideIndex)) {
+        appendSlidesIndexes.splice(appendSlidesIndexes.indexOf(activeSlideIndex), 1);
+      }
+      if (prependSlidesIndexes.includes(activeSlideIndex)) {
+        prependSlidesIndexes.splice(prependSlidesIndexes.indexOf(activeSlideIndex), 1);
+      }
+    }
     if (isPrev) {
       prependSlidesIndexes.forEach(index => {
         slides[index].swiperLoopMoveDOM = true;
@@ -29109,7 +29302,7 @@ var Swiper = (function () {
           if (byMousewheel) {
             swiper.setTranslate(swiper.translate - diff);
           } else {
-            swiper.slideTo(activeIndex + slidesPrepended, 0, false, true);
+            swiper.slideTo(activeIndex + Math.ceil(slidesPrepended), 0, false, true);
             if (setTranslate) {
               swiper.touchEventsData.startTranslate = swiper.touchEventsData.startTranslate - diff;
               swiper.touchEventsData.currentTranslate = swiper.touchEventsData.currentTranslate - diff;
@@ -29175,7 +29368,7 @@ var Swiper = (function () {
       params,
       slidesEl
     } = swiper;
-    if (!params.loop || swiper.virtual && swiper.params.virtual.enabled) return;
+    if (!params.loop || !slidesEl || swiper.virtual && swiper.params.virtual.enabled) return;
     swiper.recalcSlides();
     const newSlidesOrder = [];
     swiper.slides.forEach(slideEl => {
@@ -29301,7 +29494,7 @@ var Swiper = (function () {
     }
     let targetEl = e.target;
     if (params.touchEventsTarget === 'wrapper') {
-      if (!swiper.wrapperEl.contains(targetEl)) return;
+      if (!elementIsChildOf(targetEl, swiper.wrapperEl)) return;
     }
     if ('which' in e && e.which === 3) return;
     if ('button' in e && e.button > 0) return;
@@ -29356,7 +29549,7 @@ var Swiper = (function () {
         data.isTouched = false;
       }
     }
-    if (document.activeElement && document.activeElement.matches(data.focusableElements) && document.activeElement !== targetEl) {
+    if (document.activeElement && document.activeElement.matches(data.focusableElements) && document.activeElement !== targetEl && (e.pointerType === 'mouse' || e.pointerType !== 'mouse' && !targetEl.matches(data.focusableElements))) {
       document.activeElement.blur();
     }
     const shouldPreventDefault = preventDefault && swiper.allowTouchMove && params.touchStartPreventDefault;
@@ -29390,7 +29583,7 @@ var Swiper = (function () {
     }
     let targetTouch;
     if (e.type === 'touchmove') {
-      targetTouch = [...e.changedTouches].filter(t => t.identifier === data.touchId)[0];
+      targetTouch = [...e.changedTouches].find(t => t.identifier === data.touchId);
       if (!targetTouch || targetTouch.identifier !== data.touchId) return;
     } else {
       targetTouch = e;
@@ -29431,9 +29624,14 @@ var Swiper = (function () {
           data.isMoved = false;
           return;
         }
-      } else if (pageX < touches.startX && swiper.translate <= swiper.maxTranslate() || pageX > touches.startX && swiper.translate >= swiper.minTranslate()) {
+      } else if (rtl && (pageX > touches.startX && -swiper.translate <= swiper.maxTranslate() || pageX < touches.startX && -swiper.translate >= swiper.minTranslate())) {
+        return;
+      } else if (!rtl && (pageX < touches.startX && swiper.translate <= swiper.maxTranslate() || pageX > touches.startX && swiper.translate >= swiper.minTranslate())) {
         return;
       }
+    }
+    if (document.activeElement && document.activeElement.matches(data.focusableElements) && document.activeElement !== e.target && e.pointerType !== 'mouse') {
+      document.activeElement.blur();
     }
     if (document.activeElement) {
       if (e.target === document.activeElement && e.target.matches(data.focusableElements)) {
@@ -29472,7 +29670,7 @@ var Swiper = (function () {
         data.startMoving = true;
       }
     }
-    if (data.isScrolling) {
+    if (data.isScrolling || e.type === 'touchmove' && data.preventTouchMoveFromPointerMove) {
       data.isTouched = false;
       return;
     }
@@ -29514,7 +29712,10 @@ var Swiper = (function () {
       if (swiper.animating) {
         const evt = new window.CustomEvent('transitionend', {
           bubbles: true,
-          cancelable: true
+          cancelable: true,
+          detail: {
+            bySwiperTouchMove: true
+          }
         });
         swiper.wrapperEl.dispatchEvent(evt);
       }
@@ -29527,7 +29728,7 @@ var Swiper = (function () {
     }
     let loopFixed;
     new Date().getTime();
-    if (data.isMoved && data.allowThresholdMove && prevTouchesDirection !== swiper.touchesDirection && isLoop && allowLoopFix && Math.abs(diff) >= 1) {
+    if (params._loopSwapReset !== false && data.isMoved && data.allowThresholdMove && prevTouchesDirection !== swiper.touchesDirection && isLoop && allowLoopFix && Math.abs(diff) >= 1) {
       Object.assign(touches, {
         startX: pageX,
         startY: pageY,
@@ -29548,7 +29749,7 @@ var Swiper = (function () {
       resistanceRatio = 0;
     }
     if (diff > 0) {
-      if (isLoop && allowLoopFix && !loopFixed && data.allowThresholdMove && data.currentTranslate > (params.centeredSlides ? swiper.minTranslate() - swiper.slidesSizesGrid[swiper.activeIndex + 1] : swiper.minTranslate())) {
+      if (isLoop && allowLoopFix && !loopFixed && data.allowThresholdMove && data.currentTranslate > (params.centeredSlides ? swiper.minTranslate() - swiper.slidesSizesGrid[swiper.activeIndex + 1] - (params.slidesPerView !== 'auto' && swiper.slides.length - params.slidesPerView >= 2 ? swiper.slidesSizesGrid[swiper.activeIndex + 1] + swiper.params.spaceBetween : 0) - swiper.params.spaceBetween : swiper.minTranslate())) {
         swiper.loopFix({
           direction: 'prev',
           setTranslate: true,
@@ -29562,7 +29763,7 @@ var Swiper = (function () {
         }
       }
     } else if (diff < 0) {
-      if (isLoop && allowLoopFix && !loopFixed && data.allowThresholdMove && data.currentTranslate < (params.centeredSlides ? swiper.maxTranslate() + swiper.slidesSizesGrid[swiper.slidesSizesGrid.length - 1] : swiper.maxTranslate())) {
+      if (isLoop && allowLoopFix && !loopFixed && data.allowThresholdMove && data.currentTranslate < (params.centeredSlides ? swiper.maxTranslate() + swiper.slidesSizesGrid[swiper.slidesSizesGrid.length - 1] + swiper.params.spaceBetween + (params.slidesPerView !== 'auto' && swiper.slides.length - params.slidesPerView >= 2 ? swiper.slidesSizesGrid[swiper.slidesSizesGrid.length - 1] + swiper.params.spaceBetween : 0) : swiper.maxTranslate())) {
         swiper.loopFix({
           direction: 'next',
           setTranslate: true,
@@ -29635,7 +29836,7 @@ var Swiper = (function () {
       if (e.pointerId !== data.pointerId) return;
       targetTouch = e;
     } else {
-      targetTouch = [...e.changedTouches].filter(t => t.identifier === data.touchId)[0];
+      targetTouch = [...e.changedTouches].find(t => t.identifier === data.touchId);
       if (!targetTouch || targetTouch.identifier !== data.touchId) return;
     }
     if (['pointercancel', 'pointerout', 'pointerleave', 'contextmenu'].includes(e.type)) {
@@ -29908,6 +30109,7 @@ var Swiper = (function () {
     const capture = !!params.nested;
     const domMethod = method === 'on' ? 'addEventListener' : 'removeEventListener';
     const swiperMethod = method;
+    if (!el || typeof el === 'string') return;
 
     // Touch Events
     document[domMethod]('touchstart', swiper.onDocumentTouchStart, {
@@ -30008,14 +30210,19 @@ var Swiper = (function () {
     } = swiper;
     const breakpoints = params.breakpoints;
     if (!breakpoints || breakpoints && Object.keys(breakpoints).length === 0) return;
+    const document = getDocument();
 
-    // Get breakpoint for window width and update parameters
-    const breakpoint = swiper.getBreakpoint(breakpoints, swiper.params.breakpointsBase, swiper.el);
+    // Get breakpoint for window/container width and update parameters
+    const breakpointsBase = params.breakpointsBase === 'window' || !params.breakpointsBase ? params.breakpointsBase : 'container';
+    const breakpointContainer = ['window', 'container'].includes(params.breakpointsBase) || !params.breakpointsBase ? swiper.el : document.querySelector(params.breakpointsBase);
+    const breakpoint = swiper.getBreakpoint(breakpoints, breakpointsBase, breakpointContainer);
     if (!breakpoint || swiper.currentBreakpoint === breakpoint) return;
     const breakpointOnlyParams = breakpoint in breakpoints ? breakpoints[breakpoint] : undefined;
     const breakpointParams = breakpointOnlyParams || swiper.originalParams;
     const wasMultiRow = isGridEnabled(swiper, params);
     const isMultiRow = isGridEnabled(swiper, breakpointParams);
+    const wasGrabCursor = swiper.params.grabCursor;
+    const isGrabCursor = breakpointParams.grabCursor;
     const wasEnabled = params.enabled;
     if (wasMultiRow && !isMultiRow) {
       el.classList.remove(`${params.containerModifierClass}grid`, `${params.containerModifierClass}grid-column`);
@@ -30026,6 +30233,11 @@ var Swiper = (function () {
         el.classList.add(`${params.containerModifierClass}grid-column`);
       }
       swiper.emitContainerClasses();
+    }
+    if (wasGrabCursor && !isGrabCursor) {
+      swiper.unsetGrabCursor();
+    } else if (!wasGrabCursor && isGrabCursor) {
+      swiper.setGrabCursor();
     }
 
     // Toggle navigation, pagination, scrollbar
@@ -30177,6 +30389,7 @@ var Swiper = (function () {
       el,
       classNames
     } = swiper;
+    if (!el || typeof el === 'string') return;
     el.classList.remove(...classNames);
     swiper.emitContainerClasses();
   }
@@ -30223,6 +30436,7 @@ var Swiper = (function () {
     init: true,
     direction: 'horizontal',
     oneWayMovement: false,
+    swiperElementNodeName: 'SWIPER-CONTAINER',
     touchEventsTarget: 'wrapper',
     initialSlide: 0,
     speed: 300,
@@ -30577,7 +30791,17 @@ var Swiper = (function () {
       return elementIndex(slideEl) - firstSlideIndex;
     }
     getSlideIndexByData(index) {
-      return this.getSlideIndex(this.slides.filter(slideEl => slideEl.getAttribute('data-swiper-slide-index') * 1 === index)[0]);
+      return this.getSlideIndex(this.slides.find(slideEl => slideEl.getAttribute('data-swiper-slide-index') * 1 === index));
+    }
+    getSlideIndexWhenGrid(index) {
+      if (this.grid && this.params.grid && this.params.grid.rows > 1) {
+        if (this.params.grid.fill === 'column') {
+          index = Math.floor(index / this.params.grid.rows);
+        } else if (this.params.grid.fill === 'row') {
+          index = index % Math.ceil(this.slides.length / this.params.grid.rows);
+        }
+      }
+      return index;
     }
     recalcSlides() {
       const swiper = this;
@@ -30663,11 +30887,11 @@ var Swiper = (function () {
       let spv = 1;
       if (typeof params.slidesPerView === 'number') return params.slidesPerView;
       if (params.centeredSlides) {
-        let slideSize = slides[activeIndex] ? slides[activeIndex].swiperSlideSize : 0;
+        let slideSize = slides[activeIndex] ? Math.ceil(slides[activeIndex].swiperSlideSize) : 0;
         let breakLoop;
         for (let i = activeIndex + 1; i < slides.length; i += 1) {
           if (slides[i] && !breakLoop) {
-            slideSize += slides[i].swiperSlideSize;
+            slideSize += Math.ceil(slides[i].swiperSlideSize);
             spv += 1;
             if (slideSize > swiperSize) breakLoop = true;
           }
@@ -30804,7 +31028,7 @@ var Swiper = (function () {
         return false;
       }
       el.swiper = swiper;
-      if (el.parentNode && el.parentNode.host && el.parentNode.host.nodeName === 'SWIPER-CONTAINER') {
+      if (el.parentNode && el.parentNode.host && el.parentNode.host.nodeName === swiper.params.swiperElementNodeName.toUpperCase()) {
         swiper.isElement = true;
       }
       const getWrapperSelector = () => {
@@ -30878,7 +31102,7 @@ var Swiper = (function () {
 
       // Create loop
       if (swiper.params.loop) {
-        swiper.loopCreate();
+        swiper.loopCreate(undefined, true);
       }
 
       // Attach events
@@ -30940,8 +31164,12 @@ var Swiper = (function () {
       // Cleanup styles
       if (cleanStyles) {
         swiper.removeClasses();
-        el.removeAttribute('style');
-        wrapperEl.removeAttribute('style');
+        if (el && typeof el !== 'string') {
+          el.removeAttribute('style');
+        }
+        if (wrapperEl) {
+          wrapperEl.removeAttribute('style');
+        }
         if (slides && slides.length) {
           slides.forEach(slideEl => {
             slideEl.classList.remove(params.slideVisibleClass, params.slideFullyVisibleClass, params.slideActiveClass, params.slideNextClass, params.slidePrevClass);
@@ -30957,7 +31185,9 @@ var Swiper = (function () {
         swiper.off(eventName);
       });
       if (deleteInstance !== false) {
-        swiper.el.swiper = null;
+        if (swiper.el && typeof swiper.el !== 'string') {
+          swiper.el.swiper = null;
+        }
         deleteProps(swiper);
       }
       swiper.destroyed = true;
@@ -31035,7 +31265,7 @@ var Swiper = (function () {
       if (params.renderSlide) {
         slideEl = params.renderSlide.call(swiper, slide, index);
         if (typeof slideEl === 'string') {
-          tempDOM.innerHTML = slideEl;
+          setInnerHTML(tempDOM, slideEl);
           slideEl = tempDOM.children[0];
         }
       } else if (swiper.isElement) {
@@ -31045,20 +31275,24 @@ var Swiper = (function () {
       }
       slideEl.setAttribute('data-swiper-slide-index', index);
       if (!params.renderSlide) {
-        slideEl.innerHTML = slide;
+        setInnerHTML(slideEl, slide);
       }
       if (params.cache) {
         swiper.virtual.cache[index] = slideEl;
       }
       return slideEl;
     }
-    function update(force) {
+    function update(force, beforeInit, forceActiveIndex) {
       const {
         slidesPerView,
         slidesPerGroup,
         centeredSlides,
-        loop: isLoop
+        loop: isLoop,
+        initialSlide
       } = swiper.params;
+      if (beforeInit && !isLoop && initialSlide > 0) {
+        return;
+      }
       const {
         addSlidesBefore,
         addSlidesAfter
@@ -31073,7 +31307,7 @@ var Swiper = (function () {
       if (!swiper.params.cssMode) {
         swiper.updateActiveIndex();
       }
-      const activeIndex = swiper.activeIndex || 0;
+      const activeIndex = typeof forceActiveIndex === 'undefined' ? swiper.activeIndex || 0 : forceActiveIndex;
       let offsetProp;
       if (swiper.rtlTranslate) offsetProp = 'right';else offsetProp = swiper.isHorizontal() ? 'left' : 'top';
       let slidesAfter;
@@ -31308,7 +31542,7 @@ var Swiper = (function () {
       swiper.classNames.push(`${swiper.params.containerModifierClass}virtual`);
       swiper.params.watchSlidesProgress = true;
       swiper.originalParams.watchSlidesProgress = true;
-      update();
+      update(false, true);
     });
     on('setTranslate', () => {
       if (!swiper.params.virtual.enabled) return;
@@ -31381,7 +31615,7 @@ var Swiper = (function () {
       if (e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) {
         return undefined;
       }
-      if (document.activeElement && document.activeElement.nodeName && (document.activeElement.nodeName.toLowerCase() === 'input' || document.activeElement.nodeName.toLowerCase() === 'textarea')) {
+      if (document.activeElement && (document.activeElement.isContentEditable || document.activeElement.nodeName && (document.activeElement.nodeName.toLowerCase() === 'input' || document.activeElement.nodeName.toLowerCase() === 'textarea'))) {
         return undefined;
       }
       if (swiper.params.keyboard.onlyInViewport && (isPageUp || isPageDown || isArrowLeft || isArrowRight || isArrowUp || isArrowDown)) {
@@ -31760,6 +31994,7 @@ var Swiper = (function () {
               lastEventBeforeSnap = newEvent;
               recentWheelEvents.splice(0);
               timeout = nextTick(() => {
+                if (swiper.destroyed || !swiper.params) return;
                 swiper.slideToClosest(swiper.params.speed, true, undefined, snapToThreshold);
               }, 0); // no delay; move on next tick
             }
@@ -31769,6 +32004,7 @@ var Swiper = (function () {
               // we'll consider a scroll "complete" when there haven't been any wheel events
               // for 500ms.
               timeout = nextTick(() => {
+                if (swiper.destroyed || !swiper.params) return;
                 const snapToThreshold = 0.5;
                 lastEventBeforeSnap = newEvent;
                 recentWheelEvents.splice(0);
@@ -31781,7 +32017,7 @@ var Swiper = (function () {
           if (!ignoreWheelEvents) emit('scroll', e);
 
           // Stop autoplay
-          if (swiper.params.autoplay && swiper.params.autoplayDisableOnInteraction) swiper.autoplay.stop();
+          if (swiper.params.autoplay && swiper.params.autoplay.disableOnInteraction) swiper.autoplay.stop();
           // Return page scroll on edge positions
           if (params.releaseOnEdges && (position === swiper.minTranslate() || position === swiper.maxTranslate())) {
             return true;
@@ -31878,17 +32114,18 @@ var Swiper = (function () {
       nextEl: null,
       prevEl: null
     };
-    const makeElementsArray = el => (Array.isArray(el) ? el : [el]).filter(e => !!e);
     function getEl(el) {
       let res;
       if (el && typeof el === 'string' && swiper.isElement) {
-        res = swiper.el.querySelector(el);
+        res = swiper.el.querySelector(el) || swiper.hostEl.querySelector(el);
         if (res) return res;
       }
       if (el) {
         if (typeof el === 'string') res = [...document.querySelectorAll(el)];
-        if (swiper.params.uniqueNavElements && typeof el === 'string' && res.length > 1 && swiper.el.querySelectorAll(el).length === 1) {
+        if (swiper.params.uniqueNavElements && typeof el === 'string' && res && res.length > 1 && swiper.el.querySelectorAll(el).length === 1) {
           res = swiper.el.querySelector(el);
+        } else if (res && res.length === 1) {
+          res = res[0];
         }
       }
       if (el && !res) return el;
@@ -32010,7 +32247,14 @@ var Swiper = (function () {
       nextEl = makeElementsArray(nextEl);
       prevEl = makeElementsArray(prevEl);
       const targetEl = e.target;
-      if (swiper.params.navigation.hideOnClick && !prevEl.includes(targetEl) && !nextEl.includes(targetEl)) {
+      let targetIsButton = prevEl.includes(targetEl) || nextEl.includes(targetEl);
+      if (swiper.isElement && !targetIsButton) {
+        const path = e.path || e.composedPath && e.composedPath();
+        if (path) {
+          targetIsButton = path.find(pathEl => nextEl.includes(pathEl) || prevEl.includes(pathEl));
+        }
+      }
+      if (swiper.params.navigation.hideOnClick && !targetIsButton) {
         if (swiper.pagination && swiper.params.pagination && swiper.params.pagination.clickable && (swiper.pagination.el === targetEl || swiper.pagination.el.contains(targetEl))) return;
         let isHidden;
         if (nextEl.length) {
@@ -32048,7 +32292,7 @@ var Swiper = (function () {
     if (classes === void 0) {
       classes = '';
     }
-    return `.${classes.trim().replace(/([\.:!+\/])/g, '\\$1') // eslint-disable-line
+    return `.${classes.trim().replace(/([\.:!+\/()[\]])/g, '\\$1') // eslint-disable-line
   .replace(/ /g, '.')}`;
   }
 
@@ -32098,7 +32342,6 @@ var Swiper = (function () {
     };
     let bulletSize;
     let dynamicBulletIndex = 0;
-    const makeElementsArray = el => (Array.isArray(el) ? el : [el]).filter(e => !!e);
     function isPaginationDisabled() {
       return !swiper.params.pagination.el || !swiper.pagination.el || Array.isArray(swiper.pagination.el) && swiper.pagination.el.length === 0;
     }
@@ -32116,6 +32359,16 @@ var Swiper = (function () {
         }
       }
     }
+    function getMoveDirection(prevIndex, nextIndex, length) {
+      prevIndex = prevIndex % length;
+      nextIndex = nextIndex % length;
+      if (nextIndex === prevIndex + 1) {
+        return 'next';
+      } else if (nextIndex === prevIndex - 1) {
+        return 'previous';
+      }
+      return;
+    }
     function onBulletClick(e) {
       const bulletEl = e.target.closest(classesToSelector(swiper.params.pagination.bulletClass));
       if (!bulletEl) {
@@ -32125,7 +32378,14 @@ var Swiper = (function () {
       const index = elementIndex(bulletEl) * swiper.params.slidesPerGroup;
       if (swiper.params.loop) {
         if (swiper.realIndex === index) return;
-        swiper.slideToLoop(index);
+        const moveDirection = getMoveDirection(swiper.realIndex, index, swiper.slides.length);
+        if (moveDirection === 'next') {
+          swiper.slideNext();
+        } else if (moveDirection === 'previous') {
+          swiper.slidePrev();
+        } else {
+          swiper.slideToLoop(index);
+        }
       } else {
         swiper.slideTo(index);
       }
@@ -32260,7 +32520,7 @@ var Swiper = (function () {
           });
         }
         if (params.type === 'custom' && params.renderCustom) {
-          subEl.innerHTML = params.renderCustom(swiper, current + 1, total);
+          setInnerHTML(subEl, params.renderCustom(swiper, current + 1, total));
           if (subElIndex === 0) emit('paginationRender', subEl);
         } else {
           if (subElIndex === 0) emit('paginationRender', subEl);
@@ -32310,7 +32570,7 @@ var Swiper = (function () {
       swiper.pagination.bullets = [];
       el.forEach(subEl => {
         if (params.type !== 'custom') {
-          subEl.innerHTML = paginationHTML || '';
+          setInnerHTML(subEl, paginationHTML || '');
         }
         if (params.type === 'bullets') {
           swiper.pagination.bullets.push(...subEl.querySelectorAll(classesToSelector(params.bulletClass)));
@@ -32341,10 +32601,10 @@ var Swiper = (function () {
         el = [...swiper.el.querySelectorAll(params.el)];
         // check if it belongs to another nested Swiper
         if (el.length > 1) {
-          el = el.filter(subEl => {
+          el = el.find(subEl => {
             if (elementParents(subEl, '.swiper')[0] !== swiper.el) return false;
             return true;
-          })[0];
+          });
         }
       }
       if (Array.isArray(el) && el.length === 1) el = el[0];
@@ -32667,7 +32927,7 @@ var Swiper = (function () {
         dragEl
       } = scrollbar;
       if (!isTouched) return;
-      if (e.preventDefault) e.preventDefault();else e.returnValue = false;
+      if (e.preventDefault && e.cancelable) e.preventDefault();else e.returnValue = false;
       setDragPosition(e);
       wrapperEl.style.transitionDuration = '0ms';
       el.style.transitionDuration = '0ms';
@@ -32783,6 +33043,18 @@ var Swiper = (function () {
       }
       disableDraggable();
     }
+    on('changeDirection', () => {
+      if (!swiper.scrollbar || !swiper.scrollbar.el) return;
+      const params = swiper.params.scrollbar;
+      let {
+        el
+      } = swiper.scrollbar;
+      el = makeElementsArray(el);
+      el.forEach(subEl => {
+        subEl.classList.remove(params.horizontalClass, params.verticalClass);
+        subEl.classList.add(swiper.isHorizontal() ? params.horizontalClass : params.verticalClass);
+      });
+    });
     on('init', () => {
       if (swiper.params.scrollbar.enabled === false) {
         // eslint-disable-next-line
@@ -32793,7 +33065,7 @@ var Swiper = (function () {
         setTranslate();
       }
     });
-    on('update resize observerUpdate lock unlock', () => {
+    on('update resize observerUpdate lock unlock changeDirection', () => {
       updateSize();
     });
     on('setTranslate', () => {
@@ -32971,8 +33243,10 @@ var Swiper = (function () {
     extendParams({
       zoom: {
         enabled: false,
+        limitToOriginalSize: false,
         maxRatio: 3,
         minRatio: 1,
+        panOnMouseMove: false,
         toggle: true,
         containerClass: 'swiper-zoom-container',
         zoomedSlideClass: 'swiper-slide-zoomed'
@@ -32983,6 +33257,12 @@ var Swiper = (function () {
     };
     let currentScale = 1;
     let isScaling = false;
+    let isPanningWithMouse = false;
+    let mousePanStart = {
+      x: 0,
+      y: 0
+    };
+    const mousePanSensitivity = -3; // Negative to invert pan direction
     let fakeGestureTouched;
     let fakeGestureMoved;
     const evCache = [];
@@ -33042,6 +33322,15 @@ var Swiper = (function () {
       const distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
       return distance;
     }
+    function getMaxRatio() {
+      const params = swiper.params.zoom;
+      const maxRatio = gesture.imageWrapEl.getAttribute('data-swiper-zoom') || params.maxRatio;
+      if (params.limitToOriginalSize && gesture.imageEl && gesture.imageEl.naturalWidth) {
+        const imageMaxRatio = gesture.imageEl.naturalWidth / gesture.imageEl.offsetWidth;
+        return Math.min(imageMaxRatio, maxRatio);
+      }
+      return maxRatio;
+    }
     function getScaleOrigin() {
       if (evCache.length < 2) return {
         x: null,
@@ -33098,7 +33387,7 @@ var Swiper = (function () {
           gesture.imageEl = undefined;
           return;
         }
-        gesture.maxRatio = gesture.imageWrapEl.getAttribute('data-swiper-zoom') || params.maxRatio;
+        gesture.maxRatio = getMaxRatio();
       }
       if (gesture.imageEl) {
         const [originX, originY] = getScaleOrigin();
@@ -33160,6 +33449,18 @@ var Swiper = (function () {
         gesture.slideEl = undefined;
       }
     }
+    let allowTouchMoveTimeout;
+    function allowTouchMove() {
+      swiper.touchEventsData.preventTouchMoveFromPointerMove = false;
+    }
+    function preventTouchMove() {
+      clearTimeout(allowTouchMoveTimeout);
+      swiper.touchEventsData.preventTouchMoveFromPointerMove = true;
+      allowTouchMoveTimeout = setTimeout(() => {
+        if (swiper.destroyed) return;
+        allowTouchMove();
+      });
+    }
     function onTouchStart(e) {
       const device = swiper.device;
       if (!gesture.imageEl) return;
@@ -33171,13 +33472,26 @@ var Swiper = (function () {
       image.touchesStart.y = event.pageY;
     }
     function onTouchMove(e) {
-      if (!eventWithinSlide(e) || !eventWithinZoomContainer(e)) return;
+      const isMouseEvent = e.pointerType === 'mouse';
+      const isMousePan = isMouseEvent && swiper.params.zoom.panOnMouseMove;
+      if (!eventWithinSlide(e) || !eventWithinZoomContainer(e)) {
+        return;
+      }
       const zoom = swiper.zoom;
-      if (!gesture.imageEl) return;
-      if (!image.isTouched || !gesture.slideEl) return;
+      if (!gesture.imageEl) {
+        return;
+      }
+      if (!image.isTouched || !gesture.slideEl) {
+        if (isMousePan) onMouseMove(e);
+        return;
+      }
+      if (isMousePan) {
+        onMouseMove(e);
+        return;
+      }
       if (!image.isMoved) {
-        image.width = gesture.imageEl.offsetWidth;
-        image.height = gesture.imageEl.offsetHeight;
+        image.width = gesture.imageEl.offsetWidth || gesture.imageEl.clientWidth;
+        image.height = gesture.imageEl.offsetHeight || gesture.imageEl.clientHeight;
         image.startX = getTranslate(gesture.imageWrapEl, 'x') || 0;
         image.startY = getTranslate(gesture.imageWrapEl, 'y') || 0;
         gesture.slideWidth = gesture.slideEl.offsetWidth;
@@ -33187,7 +33501,6 @@ var Swiper = (function () {
       // Define if we need image drag
       const scaledWidth = image.width * zoom.scale;
       const scaledHeight = image.height * zoom.scale;
-      if (scaledWidth < gesture.slideWidth && scaledHeight < gesture.slideHeight) return;
       image.minX = Math.min(gesture.slideWidth / 2 - scaledWidth / 2, 0);
       image.maxX = -image.minX;
       image.minY = Math.min(gesture.slideHeight / 2 - scaledHeight / 2, 0);
@@ -33201,10 +33514,12 @@ var Swiper = (function () {
       if (!image.isMoved && !isScaling) {
         if (swiper.isHorizontal() && (Math.floor(image.minX) === Math.floor(image.startX) && image.touchesCurrent.x < image.touchesStart.x || Math.floor(image.maxX) === Math.floor(image.startX) && image.touchesCurrent.x > image.touchesStart.x)) {
           image.isTouched = false;
+          allowTouchMove();
           return;
         }
         if (!swiper.isHorizontal() && (Math.floor(image.minY) === Math.floor(image.startY) && image.touchesCurrent.y < image.touchesStart.y || Math.floor(image.maxY) === Math.floor(image.startY) && image.touchesCurrent.y > image.touchesStart.y)) {
           image.isTouched = false;
+          allowTouchMove();
           return;
         }
       }
@@ -33212,6 +33527,7 @@ var Swiper = (function () {
         e.preventDefault();
       }
       e.stopPropagation();
+      preventTouchMove();
       image.isMoved = true;
       const scaleRatio = (zoom.scale - currentScale) / (gesture.maxRatio - swiper.params.zoom.minRatio);
       const {
@@ -33248,6 +33564,7 @@ var Swiper = (function () {
     }
     function onTouchEnd() {
       const zoom = swiper.zoom;
+      evCache.length = 0;
       if (!gesture.imageEl) return;
       if (!image.isTouched || !image.isMoved) {
         image.isTouched = false;
@@ -33299,6 +33616,45 @@ var Swiper = (function () {
         gesture.originX = 0;
         gesture.originY = 0;
       }
+    }
+    function onMouseMove(e) {
+      // Only pan if zoomed in and mouse panning is enabled
+      if (currentScale <= 1 || !gesture.imageWrapEl) return;
+      if (!eventWithinSlide(e) || !eventWithinZoomContainer(e)) return;
+      const currentTransform = window.getComputedStyle(gesture.imageWrapEl).transform;
+      const matrix = new window.DOMMatrix(currentTransform);
+      if (!isPanningWithMouse) {
+        isPanningWithMouse = true;
+        mousePanStart.x = e.clientX;
+        mousePanStart.y = e.clientY;
+        image.startX = matrix.e;
+        image.startY = matrix.f;
+        image.width = gesture.imageEl.offsetWidth || gesture.imageEl.clientWidth;
+        image.height = gesture.imageEl.offsetHeight || gesture.imageEl.clientHeight;
+        gesture.slideWidth = gesture.slideEl.offsetWidth;
+        gesture.slideHeight = gesture.slideEl.offsetHeight;
+        return;
+      }
+      const deltaX = (e.clientX - mousePanStart.x) * mousePanSensitivity;
+      const deltaY = (e.clientY - mousePanStart.y) * mousePanSensitivity;
+      const scaledWidth = image.width * currentScale;
+      const scaledHeight = image.height * currentScale;
+      const slideWidth = gesture.slideWidth;
+      const slideHeight = gesture.slideHeight;
+      const minX = Math.min(slideWidth / 2 - scaledWidth / 2, 0);
+      const maxX = -minX;
+      const minY = Math.min(slideHeight / 2 - scaledHeight / 2, 0);
+      const maxY = -minY;
+      const newX = Math.max(Math.min(image.startX + deltaX, maxX), minX);
+      const newY = Math.max(Math.min(image.startY + deltaY, maxY), minY);
+      gesture.imageWrapEl.style.transitionDuration = '0ms';
+      gesture.imageWrapEl.style.transform = `translate3d(${newX}px, ${newY}px, 0)`;
+      mousePanStart.x = e.clientX;
+      mousePanStart.y = e.clientY;
+      image.startX = newX;
+      image.startY = newY;
+      image.currentX = newX;
+      image.currentY = newY;
     }
     function zoomIn(e) {
       const zoom = swiper.zoom;
@@ -33356,13 +33712,17 @@ var Swiper = (function () {
         touchX = image.touchesStart.x;
         touchY = image.touchesStart.y;
       }
+      const prevScale = currentScale;
       const forceZoomRatio = typeof e === 'number' ? e : null;
       if (currentScale === 1 && forceZoomRatio) {
         touchX = undefined;
         touchY = undefined;
+        image.touchesStart.x = undefined;
+        image.touchesStart.y = undefined;
       }
-      zoom.scale = forceZoomRatio || gesture.imageWrapEl.getAttribute('data-swiper-zoom') || params.maxRatio;
-      currentScale = forceZoomRatio || gesture.imageWrapEl.getAttribute('data-swiper-zoom') || params.maxRatio;
+      const maxRatio = getMaxRatio();
+      zoom.scale = forceZoomRatio || maxRatio;
+      currentScale = forceZoomRatio || maxRatio;
       if (e && !(currentScale === 1 && forceZoomRatio)) {
         slideWidth = gesture.slideEl.offsetWidth;
         slideHeight = gesture.slideEl.offsetHeight;
@@ -33370,16 +33730,21 @@ var Swiper = (function () {
         offsetY = elementOffset(gesture.slideEl).top + window.scrollY;
         diffX = offsetX + slideWidth / 2 - touchX;
         diffY = offsetY + slideHeight / 2 - touchY;
-        imageWidth = gesture.imageEl.offsetWidth;
-        imageHeight = gesture.imageEl.offsetHeight;
+        imageWidth = gesture.imageEl.offsetWidth || gesture.imageEl.clientWidth;
+        imageHeight = gesture.imageEl.offsetHeight || gesture.imageEl.clientHeight;
         scaledWidth = imageWidth * zoom.scale;
         scaledHeight = imageHeight * zoom.scale;
         translateMinX = Math.min(slideWidth / 2 - scaledWidth / 2, 0);
         translateMinY = Math.min(slideHeight / 2 - scaledHeight / 2, 0);
         translateMaxX = -translateMinX;
         translateMaxY = -translateMinY;
-        translateX = diffX * zoom.scale;
-        translateY = diffY * zoom.scale;
+        if (prevScale > 0 && forceZoomRatio && typeof image.currentX === 'number' && typeof image.currentY === 'number') {
+          translateX = image.currentX * zoom.scale / prevScale;
+          translateY = image.currentY * zoom.scale / prevScale;
+        } else {
+          translateX = diffX * zoom.scale;
+          translateY = diffY * zoom.scale;
+        }
         if (translateX < translateMinX) {
           translateX = translateMinX;
         }
@@ -33400,6 +33765,8 @@ var Swiper = (function () {
         gesture.originX = 0;
         gesture.originY = 0;
       }
+      image.currentX = translateX;
+      image.currentY = translateY;
       gesture.imageWrapEl.style.transitionDuration = '300ms';
       gesture.imageWrapEl.style.transform = `translate3d(${translateX}px, ${translateY}px,0)`;
       gesture.imageEl.style.transitionDuration = '300ms';
@@ -33432,6 +33799,10 @@ var Swiper = (function () {
       }
       zoom.scale = 1;
       currentScale = 1;
+      image.currentX = undefined;
+      image.currentY = undefined;
+      image.touchesStart.x = undefined;
+      image.touchesStart.y = undefined;
       gesture.imageWrapEl.style.transitionDuration = '300ms';
       gesture.imageWrapEl.style.transform = 'translate3d(0,0,0)';
       gesture.imageEl.style.transitionDuration = '300ms';
@@ -33440,6 +33811,17 @@ var Swiper = (function () {
       gesture.slideEl = undefined;
       gesture.originX = 0;
       gesture.originY = 0;
+      if (swiper.params.zoom.panOnMouseMove) {
+        mousePanStart = {
+          x: 0,
+          y: 0
+        };
+        if (isPanningWithMouse) {
+          isPanningWithMouse = false;
+          image.startX = 0;
+          image.startY = 0;
+        }
+      }
     }
 
     // Toggle Zoom
@@ -33693,17 +34075,21 @@ var Swiper = (function () {
       if (typeof window !== 'undefined' && (
       // eslint-disable-line
       typeof swiper.params.controller.control === 'string' || swiper.params.controller.control instanceof HTMLElement)) {
-        const controlElement = document.querySelector(swiper.params.controller.control);
-        if (controlElement && controlElement.swiper) {
-          swiper.controller.control = controlElement.swiper;
-        } else if (controlElement) {
-          const onControllerSwiper = e => {
-            swiper.controller.control = e.detail[0];
-            swiper.update();
-            controlElement.removeEventListener('init', onControllerSwiper);
-          };
-          controlElement.addEventListener('init', onControllerSwiper);
-        }
+        const controlElements = typeof swiper.params.controller.control === 'string' ? [...document.querySelectorAll(swiper.params.controller.control)] : [swiper.params.controller.control];
+        controlElements.forEach(controlElement => {
+          if (!swiper.controller.control) swiper.controller.control = [];
+          if (controlElement && controlElement.swiper) {
+            swiper.controller.control.push(controlElement.swiper);
+          } else if (controlElement) {
+            const eventName = `${swiper.params.eventsPrefix}init`;
+            const onControllerSwiper = e => {
+              swiper.controller.control.push(e.detail[0]);
+              swiper.update();
+              controlElement.removeEventListener(eventName, onControllerSwiper);
+            };
+            controlElement.addEventListener(eventName, onControllerSwiper);
+          }
+        });
         return;
       }
       swiper.controller.control = swiper.params.controller.control;
@@ -33749,22 +34135,25 @@ var Swiper = (function () {
         slideLabelMessage: '{{index}} / {{slidesLength}}',
         containerMessage: null,
         containerRoleDescriptionMessage: null,
+        containerRole: null,
         itemRoleDescriptionMessage: null,
         slideRole: 'group',
-        id: null
+        id: null,
+        scrollOnFocus: true
       }
     });
     swiper.a11y = {
       clicked: false
     };
     let liveRegion = null;
+    let preventFocusHandler;
+    let focusTargetSlideEl;
+    let visibilityChangedTimestamp = new Date().getTime();
     function notify(message) {
       const notification = liveRegion;
       if (notification.length === 0) return;
-      notification.innerHTML = '';
-      notification.innerHTML = message;
+      setInnerHTML(notification, message);
     }
-    const makeElementsArray = el => (Array.isArray(el) ? el : [el]).filter(e => !!e);
     function getRandomNumber(size) {
       if (size === void 0) {
         size = 16;
@@ -33839,24 +34228,28 @@ var Swiper = (function () {
       if (swiper.pagination && swiper.pagination.el && (targetEl === swiper.pagination.el || swiper.pagination.el.contains(e.target))) {
         if (!e.target.matches(classesToSelector(swiper.params.pagination.bulletClass))) return;
       }
-      if (swiper.navigation && swiper.navigation.nextEl && targetEl === swiper.navigation.nextEl) {
-        if (!(swiper.isEnd && !swiper.params.loop)) {
-          swiper.slideNext();
+      if (swiper.navigation && swiper.navigation.prevEl && swiper.navigation.nextEl) {
+        const prevEls = makeElementsArray(swiper.navigation.prevEl);
+        const nextEls = makeElementsArray(swiper.navigation.nextEl);
+        if (nextEls.includes(targetEl)) {
+          if (!(swiper.isEnd && !swiper.params.loop)) {
+            swiper.slideNext();
+          }
+          if (swiper.isEnd) {
+            notify(params.lastSlideMessage);
+          } else {
+            notify(params.nextSlideMessage);
+          }
         }
-        if (swiper.isEnd) {
-          notify(params.lastSlideMessage);
-        } else {
-          notify(params.nextSlideMessage);
-        }
-      }
-      if (swiper.navigation && swiper.navigation.prevEl && targetEl === swiper.navigation.prevEl) {
-        if (!(swiper.isBeginning && !swiper.params.loop)) {
-          swiper.slidePrev();
-        }
-        if (swiper.isBeginning) {
-          notify(params.firstSlideMessage);
-        } else {
-          notify(params.prevSlideMessage);
+        if (prevEls.includes(targetEl)) {
+          if (!(swiper.isBeginning && !swiper.params.loop)) {
+            swiper.slidePrev();
+          }
+          if (swiper.isBeginning) {
+            notify(params.firstSlideMessage);
+          } else {
+            notify(params.prevSlideMessage);
+          }
         }
       }
       if (swiper.pagination && targetEl.matches(classesToSelector(swiper.params.pagination.bulletClass))) {
@@ -33921,10 +34314,14 @@ var Swiper = (function () {
       addElLabel(el, message);
       addElControls(el, wrapperId);
     };
-    const handlePointerDown = () => {
+    const handlePointerDown = e => {
+      if (focusTargetSlideEl && focusTargetSlideEl !== e.target && !focusTargetSlideEl.contains(e.target)) {
+        preventFocusHandler = true;
+      }
       swiper.a11y.clicked = true;
     };
     const handlePointerUp = () => {
+      preventFocusHandler = false;
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           if (!swiper.destroyed) {
@@ -33933,10 +34330,15 @@ var Swiper = (function () {
         });
       });
     };
+    const onVisibilityChange = e => {
+      visibilityChangedTimestamp = new Date().getTime();
+    };
     const handleFocus = e => {
-      if (swiper.a11y.clicked) return;
+      if (swiper.a11y.clicked || !swiper.params.a11y.scrollOnFocus) return;
+      if (new Date().getTime() - visibilityChangedTimestamp < 100) return;
       const slideEl = e.target.closest(`.${swiper.params.slideClass}, swiper-slide`);
       if (!slideEl || !swiper.slides.includes(slideEl)) return;
+      focusTargetSlideEl = slideEl;
       const isActive = swiper.slides.indexOf(slideEl) === swiper.activeIndex;
       const isVisible = swiper.params.watchSlidesProgress && swiper.visibleSlides && swiper.visibleSlides.includes(slideEl);
       if (isActive || isVisible) return;
@@ -33946,7 +34348,15 @@ var Swiper = (function () {
       } else {
         swiper.el.scrollTop = 0;
       }
-      swiper.slideTo(swiper.slides.indexOf(slideEl), 0);
+      requestAnimationFrame(() => {
+        if (preventFocusHandler) return;
+        if (swiper.params.loop) {
+          swiper.slideToLoop(swiper.getSlideIndexWhenGrid(parseInt(slideEl.getAttribute('data-swiper-slide-index'))), 0);
+        } else {
+          swiper.slideTo(swiper.getSlideIndexWhenGrid(swiper.slides.indexOf(slideEl)), 0);
+        }
+        preventFocusHandler = false;
+      });
     };
     const initSlides = () => {
       const params = swiper.params.a11y;
@@ -33976,6 +34386,9 @@ var Swiper = (function () {
       }
       if (params.containerMessage) {
         addElLabel(containerEl, params.containerMessage);
+      }
+      if (params.containerRole) {
+        addElRole(containerEl, params.containerRole);
       }
 
       // Wrapper
@@ -34011,6 +34424,9 @@ var Swiper = (function () {
       }
 
       // Tab focus
+      const document = getDocument();
+      document.addEventListener('visibilitychange', onVisibilityChange);
+      swiper.el.addEventListener('focus', handleFocus, true);
       swiper.el.addEventListener('focus', handleFocus, true);
       swiper.el.addEventListener('pointerdown', handlePointerDown, true);
       swiper.el.addEventListener('pointerup', handlePointerUp, true);
@@ -34037,11 +34453,14 @@ var Swiper = (function () {
           el.removeEventListener('keydown', onEnterOrSpaceKey);
         });
       }
-
+      const document = getDocument();
+      document.removeEventListener('visibilitychange', onVisibilityChange);
       // Tab focus
-      swiper.el.removeEventListener('focus', handleFocus, true);
-      swiper.el.removeEventListener('pointerdown', handlePointerDown, true);
-      swiper.el.removeEventListener('pointerup', handlePointerUp, true);
+      if (swiper.el && typeof swiper.el !== 'string') {
+        swiper.el.removeEventListener('focus', handleFocus, true);
+        swiper.el.removeEventListener('pointerdown', handlePointerDown, true);
+        swiper.el.removeEventListener('pointerup', handlePointerUp, true);
+      }
     }
     on('beforeInit', () => {
       liveRegion = createElement('span', swiper.params.a11y.notificationClass);
@@ -34116,7 +34535,7 @@ var Swiper = (function () {
       } else {
         location = window.location;
       }
-      const slide = swiper.slides[index];
+      const slide = swiper.virtual && swiper.params.virtual.enabled ? swiper.slidesEl.querySelector(`[data-swiper-slide-index="${index}"]`) : swiper.slides[index];
       let value = slugify(slide.getAttribute('data-history'));
       if (swiper.params.history.root.length > 0) {
         let root = swiper.params.history.root;
@@ -34226,7 +34645,7 @@ var Swiper = (function () {
         watchState: false,
         getSlideIndex(_s, hash) {
           if (swiper.virtual && swiper.params.virtual.enabled) {
-            const slideWithHash = swiper.slides.filter(slideEl => slideEl.getAttribute('data-hash') === hash)[0];
+            const slideWithHash = swiper.slides.find(slideEl => slideEl.getAttribute('data-hash') === hash);
             if (!slideWithHash) return 0;
             const index = parseInt(slideWithHash.getAttribute('data-swiper-slide-index'), 10);
             return index;
@@ -34341,7 +34760,7 @@ var Swiper = (function () {
       if (!swiper || swiper.destroyed || !swiper.wrapperEl) return;
       if (e.target !== swiper.wrapperEl) return;
       swiper.wrapperEl.removeEventListener('transitionend', onTransitionEnd);
-      if (pausedByPointerEnter) {
+      if (pausedByPointerEnter || e.detail && e.detail.bySwiperTouchMove) {
         return;
       }
       resume();
@@ -34364,7 +34783,7 @@ var Swiper = (function () {
     const getSlideDelay = () => {
       let activeSlideEl;
       if (swiper.virtual && swiper.params.virtual.enabled) {
-        activeSlideEl = swiper.slides.filter(slideEl => slideEl.classList.contains('swiper-slide-active'))[0];
+        activeSlideEl = swiper.slides.find(slideEl => slideEl.classList.contains('swiper-slide-active'));
       } else {
         activeSlideEl = swiper.slides[swiper.activeIndex];
       }
@@ -34512,8 +34931,10 @@ var Swiper = (function () {
       }
     };
     const detachMouseEvents = () => {
-      swiper.el.removeEventListener('pointerenter', onPointerEnter);
-      swiper.el.removeEventListener('pointerleave', onPointerLeave);
+      if (swiper.el && typeof swiper.el !== 'string') {
+        swiper.el.removeEventListener('pointerenter', onPointerEnter);
+        swiper.el.removeEventListener('pointerleave', onPointerLeave);
+      }
     };
     const attachDocumentEvents = () => {
       const document = getDocument();
@@ -34644,6 +35065,10 @@ var Swiper = (function () {
       initialized = true;
       const SwiperClass = swiper.constructor;
       if (thumbsParams.swiper instanceof SwiperClass) {
+        if (thumbsParams.swiper.destroyed) {
+          initialized = false;
+          return false;
+        }
         swiper.thumbs.swiper = thumbsParams.swiper;
         Object.assign(swiper.thumbs.swiper.originalParams, {
           watchSlidesProgress: true,
@@ -34703,7 +35128,7 @@ var Swiper = (function () {
         let newThumbsIndex;
         let direction;
         if (thumbsSwiper.params.loop) {
-          const newThumbsSlide = thumbsSwiper.slides.filter(slideEl => slideEl.getAttribute('data-swiper-slide-index') === `${swiper.realIndex}`)[0];
+          const newThumbsSlide = thumbsSwiper.slides.find(slideEl => slideEl.getAttribute('data-swiper-slide-index') === `${swiper.realIndex}`);
           newThumbsIndex = thumbsSwiper.slides.indexOf(newThumbsSlide);
           direction = swiper.activeIndex > swiper.previousIndex ? 'next' : 'prev';
         } else {
@@ -34739,15 +35164,16 @@ var Swiper = (function () {
             init();
             update(true);
           } else if (thumbsElement) {
+            const eventName = `${swiper.params.eventsPrefix}init`;
             const onThumbsSwiper = e => {
               thumbs.swiper = e.detail[0];
-              thumbsElement.removeEventListener('init', onThumbsSwiper);
+              thumbsElement.removeEventListener(eventName, onThumbsSwiper);
               init();
               update(true);
               thumbs.swiper.update();
               swiper.update();
             };
-            thumbsElement.addEventListener('init', onThumbsSwiper);
+            thumbsElement.addEventListener(eventName, onThumbsSwiper);
           }
           return thumbsElement;
         };
@@ -35185,9 +35611,9 @@ var Swiper = (function () {
     const appendElement = slideEl => {
       if (typeof slideEl === 'string') {
         const tempDOM = document.createElement('div');
-        tempDOM.innerHTML = slideEl;
+        setInnerHTML(tempDOM, slideEl);
         slidesEl.append(tempDOM.children[0]);
-        tempDOM.innerHTML = '';
+        setInnerHTML(tempDOM, '');
       } else {
         slidesEl.append(slideEl);
       }
@@ -35222,9 +35648,9 @@ var Swiper = (function () {
     const prependElement = slideEl => {
       if (typeof slideEl === 'string') {
         const tempDOM = document.createElement('div');
-        tempDOM.innerHTML = slideEl;
+        setInnerHTML(tempDOM, slideEl);
         slidesEl.prepend(tempDOM.children[0]);
-        tempDOM.innerHTML = '';
+        setInnerHTML(tempDOM, '');
       } else {
         slidesEl.prepend(slideEl);
       }
@@ -35385,7 +35811,7 @@ var Swiper = (function () {
       Object.assign(swiper.params, overwriteParamsResult);
       Object.assign(swiper.originalParams, overwriteParamsResult);
     });
-    on('setTranslate', () => {
+    on('setTranslate _virtualUpdated', () => {
       if (swiper.params.effect !== effect) return;
       setTranslate();
     });
@@ -35442,7 +35868,7 @@ var Swiper = (function () {
     const getSlide = el => {
       if (!el.parentElement) {
         // assume shadow root
-        const slide = swiper.slides.filter(slideEl => slideEl.shadowRoot && slideEl.shadowRoot === el.parentNode)[0];
+        const slide = swiper.slides.find(slideEl => slideEl.shadowRoot && slideEl.shadowRoot === el.parentNode);
         return slide;
       }
       return el.parentElement;
@@ -35581,6 +36007,7 @@ var Swiper = (function () {
         size: swiperSize,
         browser
       } = swiper;
+      const r = getRotateFix(swiper);
       const params = swiper.params.cubeEffect;
       const isHorizontal = swiper.isHorizontal();
       const isVirtual = swiper.virtual && swiper.params.virtual.enabled;
@@ -35638,13 +36065,10 @@ var Swiper = (function () {
           ty = tx;
           tx = 0;
         }
-        const transform = `rotateX(${isHorizontal ? 0 : -slideAngle}deg) rotateY(${isHorizontal ? slideAngle : 0}deg) translate3d(${tx}px, ${ty}px, ${tz}px)`;
+        const transform = `rotateX(${r(isHorizontal ? 0 : -slideAngle)}deg) rotateY(${r(isHorizontal ? slideAngle : 0)}deg) translate3d(${tx}px, ${ty}px, ${tz}px)`;
         if (progress <= 1 && progress > -1) {
           wrapperRotate = slideIndex * 90 + progress * 90;
           if (rtl) wrapperRotate = -slideIndex * 90 - progress * 90;
-          if (swiper.browser && swiper.browser.isSafari && Math.abs(wrapperRotate) / 90 % 2 === 1) {
-            wrapperRotate += 0.001;
-          }
         }
         slideEl.style.transform = transform;
         if (params.slideShadows) {
@@ -35666,7 +36090,7 @@ var Swiper = (function () {
         }
       }
       const zFactor = (browser.isSafari || browser.isWebView) && browser.needPerspectiveFix ? -swiperSize / 2 : 0;
-      wrapperEl.style.transform = `translate3d(0px,0,${zFactor}px) rotateX(${swiper.isHorizontal() ? 0 : wrapperRotate}deg) rotateY(${swiper.isHorizontal() ? -wrapperRotate : 0}deg)`;
+      wrapperEl.style.transform = `translate3d(0px,0,${zFactor}px) rotateX(${r(swiper.isHorizontal() ? 0 : wrapperRotate)}deg) rotateY(${r(swiper.isHorizontal() ? -wrapperRotate : 0)}deg)`;
       wrapperEl.style.setProperty('--swiper-cube-translate-z', `${zFactor}px`);
     };
     const setTransition = duration => {
@@ -35758,6 +36182,7 @@ var Swiper = (function () {
         rtlTranslate: rtl
       } = swiper;
       const params = swiper.params.flipEffect;
+      const rotateFix = getRotateFix(swiper);
       for (let i = 0; i < slides.length; i += 1) {
         const slideEl = slides[i];
         let progress = slideEl.progress;
@@ -35778,19 +36203,11 @@ var Swiper = (function () {
         } else if (rtl) {
           rotateY = -rotateY;
         }
-        if (swiper.browser && swiper.browser.isSafari) {
-          if (Math.abs(rotateY) / 90 % 2 === 1) {
-            rotateY += 0.001;
-          }
-          if (Math.abs(rotateX) / 90 % 2 === 1) {
-            rotateX += 0.001;
-          }
-        }
         slideEl.style.zIndex = -Math.abs(Math.round(progress)) + slides.length;
         if (params.slideShadows) {
           createSlideShadows(slideEl, progress);
         }
-        const transform = `translate3d(${tx}px, ${ty}px, 0px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        const transform = `translate3d(${tx}px, ${ty}px, 0px) rotateX(${rotateFix(rotateX)}deg) rotateY(${rotateFix(rotateY)}deg)`;
         const targetEl = effectTarget(params, slideEl);
         targetEl.style.transform = transform;
       }
@@ -35857,6 +36274,7 @@ var Swiper = (function () {
       const center = isHorizontal ? -transform + swiperWidth / 2 : -transform + swiperHeight / 2;
       const rotate = isHorizontal ? params.rotate : -params.rotate;
       const translate = params.depth;
+      const r = getRotateFix(swiper);
       // Each slide offset from center
       for (let i = 0, length = slides.length; i < length; i += 1) {
         const slideEl = slides[i];
@@ -35884,15 +36302,7 @@ var Swiper = (function () {
         if (Math.abs(rotateY) < 0.001) rotateY = 0;
         if (Math.abs(rotateX) < 0.001) rotateX = 0;
         if (Math.abs(scale) < 0.001) scale = 0;
-        if (swiper.browser && swiper.browser.isSafari) {
-          if (Math.abs(rotateY) / 90 % 2 === 1) {
-            rotateY += 0.001;
-          }
-          if (Math.abs(rotateX) / 90 % 2 === 1) {
-            rotateX += 0.001;
-          }
-        }
-        const slideTransform = `translate3d(${translateX}px,${translateY}px,${translateZ}px)  rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale})`;
+        const slideTransform = `translate3d(${translateX}px,${translateY}px,${translateZ}px)  rotateX(${r(rotateX)}deg) rotateY(${r(rotateY)}deg) scale(${scale})`;
         const targetEl = effectTarget(params, slideEl);
         targetEl.style.transform = slideTransform;
         slideEl.style.zIndex = -Math.abs(Math.round(offsetMultiplier)) + 1;
@@ -35974,6 +36384,7 @@ var Swiper = (function () {
         progressMultiplier: multiplier
       } = params;
       const isCenteredSlides = swiper.params.centeredSlides;
+      const rotateFix = getRotateFix(swiper);
       if (isCenteredSlides) {
         const margin = slidesSizesGrid[0] / 2 - swiper.params.slidesOffsetBefore || 0;
         wrapperEl.style.transform = `translateX(calc(50% - ${margin}px))`;
@@ -36014,14 +36425,11 @@ var Swiper = (function () {
         // set rotates
         r.forEach((value, index) => {
           let val = data.rotate[index] * Math.abs(progress * multiplier);
-          if (swiper.browser && swiper.browser.isSafari && Math.abs(val) / 90 % 2 === 1) {
-            val += 0.001;
-          }
           r[index] = val;
         });
         slideEl.style.zIndex = -Math.abs(Math.round(slideProgress)) + slides.length;
         const translateString = t.join(', ');
-        const rotateString = `rotateX(${r[0]}deg) rotateY(${r[1]}deg) rotateZ(${r[2]}deg)`;
+        const rotateString = `rotateX(${rotateFix(r[0])}deg) rotateY(${rotateFix(r[1])}deg) rotateZ(${rotateFix(r[2])}deg)`;
         const scaleString = originalProgress < 0 ? `scale(${1 + (1 - data.scale) * originalProgress * multiplier})` : `scale(${1 - (1 - data.scale) * originalProgress * multiplier})`;
         const opacityString = originalProgress < 0 ? 1 + (1 - data.opacity) * originalProgress * multiplier : 1 - (1 - data.opacity) * originalProgress * multiplier;
         const transform = `translate3d(${translateString}) ${rotateString} ${scaleString}`;
@@ -36186,22 +36594,25 @@ var Swiper = (function () {
       setTransition,
       perspective: () => true,
       overwriteParams: () => ({
+        _loopSwapReset: false,
         watchSlidesProgress: true,
+        loopAdditionalSlides: swiper.params.cardsEffect.rotate ? 3 : 2,
+        centeredSlides: true,
         virtualTranslate: !swiper.params.cssMode
       })
     });
   }
 
   /**
-   * Swiper 11.0.5
+   * Swiper 11.2.10
    * Most modern mobile touch slider and framework with hardware accelerated transitions
    * https://swiperjs.com
    *
-   * Copyright 2014-2023 Vladimir Kharlampidi
+   * Copyright 2014-2025 Vladimir Kharlampidi
    *
    * Released under the MIT License
    *
-   * Released on: November 22, 2023
+   * Released on: June 28, 2025
    */
 
 
