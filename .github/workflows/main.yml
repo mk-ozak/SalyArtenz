@@ -12,5 +12,5 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@v4.3.5
       with:
         server: ftp.artenz.sk
-        username: new.artenz.sk
+        username: admin.artenz.sk
         password: ${{ secrets.FTP_PASSWORD }}
