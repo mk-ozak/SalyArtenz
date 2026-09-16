@@ -174,6 +174,25 @@ footer .footer-logo img {
 .z-index-99 {
 	z-index: 99;
 }
+/* caste otazky: <details> vo vzhlade akordeonu sluzieb */
+.accordion-style-02 summary.accordion-header {
+	display: block;
+	list-style: none;
+}
+.accordion-style-02 summary.accordion-header::-webkit-details-marker {
+	display: none;
+}
+.accordion-style-02 summary.accordion-header:focus-visible {
+	outline: 2px solid var(--dark-gray);
+	outline-offset: 4px;
+}
+.accordion-style-02 details.accordion-item[open] > .accordion-header {
+	border-bottom-color: transparent !important;
+}
+.accordion-style-02 details.accordion-item[open] .icon-feather-plus,
+.accordion-style-02 details.accordion-item:not([open]) .icon-feather-minus {
+	display: none;
+}
 @media (min-width: 992px) {
 	.navbar .navbar-nav .dropdown.dropdown-with-icon-style02 .dropdown-menu li a {
 		padding: 20px 30px;
