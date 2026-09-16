@@ -193,6 +193,54 @@ footer .footer-logo img {
 .accordion-style-02 details.accordion-item:not([open]) .icon-feather-minus {
 	display: none;
 }
+/* nezavazny dopyt */
+.dopyt-form .form-control {
+	color: var(--dark-gray);
+	border-radius: 0;
+}
+.dopyt-form .form-control:focus {
+	border-color: var(--dark-gray);
+	color: var(--dark-gray);
+}
+.dopyt-form .form-control.is-invalid {
+	border-color: var(--red) !important;
+	background-image: none;
+	padding-right: 25px;
+}
+.dopyt-form .btn:focus-visible {
+	outline: 2px solid var(--dark-gray);
+	outline-offset: 4px;
+}
+.dopyt-chyba,
+.dopyt-chyba-celkova {
+	color: var(--red);
+	font-size: 14px;
+	line-height: 22px;
+}
+.dopyt-chyba {
+	margin-top: 6px;
+}
+.dopyt-chyba:empty {
+	display: none;
+}
+.dopyt-chyba-celkova:not(:empty) {
+	margin-top: 20px;
+}
+.dopyt-chyba-celkova a {
+	color: inherit;
+	text-decoration: underline;
+	white-space: nowrap;
+}
+.dopyt-stav {
+	font-family: var(--alt-font);
+	font-weight: 600;
+	font-size: 1.75rem;
+	line-height: 2.2rem;
+	color: var(--dark-gray);
+}
+.dopyt-stav:focus {
+	outline: none;
+}
 @media (min-width: 992px) {
 	.navbar .navbar-nav .dropdown.dropdown-with-icon-style02 .dropdown-menu li a {
 		padding: 20px 30px;

@@ -6,7 +6,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="author" content="Artenz" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0" />
-		<meta name="description" content="Sály Artenz a Artenz PLUS v centre Čadce. Svadby, oslavy, stužkové a firemné akcie až pre 150 hostí. Vlastná kuchyňa a kompletný servis. Volajte 0948 103 310." />
+		<meta name="description" content="Sály Artenz a Artenz PLUS v centre Čadce. Svadby, oslavy, stužkové a firemné akcie až pre 150 hostí. Vlastná kuchyňa a kompletný servis. Volajte 0948 10 33 10." />
 		<!-- favicon icon -->
 		<link rel="shortcut icon" href="img/favicon.png" />
 		<link rel="apple-touch-icon" href="img/apple-touch-icon-57x57.png" />
@@ -772,7 +772,7 @@
 									</span>
 								</summary>
 								<div class="accordion-body last-paragraph-no-margin border-bottom border-color-transparent">
-									<p>Áno. Obhliadku robíme vždy po telefonickom dohovore, zavolajte na <a href="tel:+421948103310" class="text-dark-gray text-decoration-line-bottom">0948&nbsp;103&nbsp;310</a> a dohodneme si termín.</p>
+									<p>Áno. Obhliadku robíme vždy po telefonickom dohovore, zavolajte na <a href="tel:+421948103310" class="text-dark-gray text-decoration-line-bottom">0948&nbsp;10&nbsp;33&nbsp;10</a> a dohodneme si termín.</p>
 								</div>
 							</details>
 							<!-- end faq item -->
@@ -834,11 +834,105 @@
 						{
 							"@type": "Question",
 							"name": "Môžeme si prísť sálu pozrieť?",
-							"acceptedAnswer": { "@type": "Answer", "text": "Áno. Obhliadku robíme vždy po telefonickom dohovore, zavolajte na 0948 103 310 a dohodneme si termín." }
+							"acceptedAnswer": { "@type": "Answer", "text": "Áno. Obhliadku robíme vždy po telefonickom dohovore, zavolajte na 0948 10 33 10 a dohodneme si termín." }
 						}
 					]
 				}
 			</script>
+		</section>
+		<!-- end section -->
+
+		<!-- !   ----------------------------------  NEZAVAZNY DOPYT  ---------------------------------- -->
+
+		<!-- start section -->
+		<section id="dopyt" class="pt-0">
+			<div class="container">
+				<div class="row mb-6">
+					<div class="col-xl-5 col-md-6" data-anime='{ "el": "childs", "translateY": [30, 0], "opacity": [0,1], "duration": 600, "delay":0, "staggervalue": 300, "easing": "easeOutQuad" }'>
+						<h2 class="h4 text-dark-gray alt-font fw-600 ls-minus-2px mb-20px">Nezáväzný dopyt</h2>
+						<p class="mb-0">Napíšte nám základné údaje o akcii a ozveme sa vám s konkrétnou ponukou.</p>
+					</div>
+				</div>
+				<!-- formulár odosiela js/dopyt.js, bez JavaScriptu ostane tlačidlo vypnuté -->
+				<form id="dopyt-form" class="dopyt-form" novalidate>
+					<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+						<div class="col mb-30px">
+							<label for="dopyt-name" class="d-block text-dark-gray fw-500 mb-5px">Meno a priezvisko <span aria-hidden="true">*</span></label>
+							<input type="text" id="dopyt-name" name="name" class="form-control" maxlength="120" autocomplete="name" required aria-describedby="dopyt-name-chyba" />
+							<div id="dopyt-name-chyba" class="dopyt-chyba"></div>
+						</div>
+						<div class="col mb-30px">
+							<label for="dopyt-phone" class="d-block text-dark-gray fw-500 mb-5px">Telefón <span aria-hidden="true">*</span></label>
+							<input type="tel" id="dopyt-phone" name="phone" class="form-control" maxlength="40" autocomplete="tel" required aria-describedby="dopyt-phone-chyba" />
+							<div id="dopyt-phone-chyba" class="dopyt-chyba"></div>
+						</div>
+						<div class="col mb-30px">
+							<label for="dopyt-email" class="d-block text-dark-gray fw-500 mb-5px">E-mail <span aria-hidden="true">*</span></label>
+							<input type="email" id="dopyt-email" name="email" class="form-control" maxlength="200" autocomplete="email" required aria-describedby="dopyt-email-chyba" />
+							<div id="dopyt-email-chyba" class="dopyt-chyba"></div>
+						</div>
+						<div class="col mb-30px">
+							<label for="dopyt-event-type" class="d-block text-dark-gray fw-500 mb-5px">Typ akcie</label>
+							<div class="select">
+								<select id="dopyt-event-type" name="event_type" class="form-control" aria-describedby="dopyt-event-type-chyba">
+									<option value="">Vyberte</option>
+									<option value="svadba">Svadba</option>
+									<option value="oslava">Oslava alebo jubileum</option>
+									<option value="stuzkova">Stužková</option>
+									<option value="kar">Kar</option>
+									<option value="firemna">Firemná akcia</option>
+									<option value="posedenie">Posedenie</option>
+									<option value="ine">Iné</option>
+								</select>
+							</div>
+							<div id="dopyt-event-type-chyba" class="dopyt-chyba"></div>
+						</div>
+						<div class="col mb-30px">
+							<label for="dopyt-event-date" class="d-block text-dark-gray fw-500 mb-5px">Dátum akcie</label>
+							<div class="date-icon">
+								<input type="date" id="dopyt-event-date" name="event_date" class="form-control" aria-describedby="dopyt-event-date-chyba" />
+							</div>
+							<div id="dopyt-event-date-chyba" class="dopyt-chyba"></div>
+						</div>
+						<div class="col mb-30px">
+							<label for="dopyt-guests" class="d-block text-dark-gray fw-500 mb-5px">Približný počet hostí</label>
+							<input type="number" id="dopyt-guests" name="guests" class="form-control" min="1" step="1" inputmode="numeric" aria-describedby="dopyt-guests-chyba" />
+							<div id="dopyt-guests-chyba" class="dopyt-chyba"></div>
+						</div>
+					</div>
+					<div class="mb-30px">
+						<label for="dopyt-message" class="d-block text-dark-gray fw-500 mb-5px">Poznámka</label>
+						<textarea id="dopyt-message" name="message" class="form-control" rows="5" maxlength="2000" aria-describedby="dopyt-message-chyba"></textarea>
+						<div id="dopyt-message-chyba" class="dopyt-chyba"></div>
+					</div>
+					<!-- pole proti robotom: človek ho nevidí a nevyplní -->
+					<div style="position:absolute;left:-9999px" aria-hidden="true">
+						<label>Webová stránka
+							<input type="text" name="website" tabindex="-1" autocomplete="off">
+						</label>
+					</div>
+					<div class="row align-items-center">
+						<div class="col-lg-auto md-mb-20px">
+							<div class="cf-turnstile" data-sitekey="0x4AAAAAAE5N9OQkC_7eCrVl" data-theme="light"></div>
+							<div id="dopyt-turnstile-chyba" class="dopyt-chyba"></div>
+						</div>
+						<div class="col-lg">
+							<button type="submit" class="btn btn-large btn-dark-gray btn-switch-text btn-box-shadow border-1 left-icon" disabled>
+								<span>
+									<span><i class="feather icon-feather-send"></i></span>
+									<span class="btn-double-text" data-text="Odoslať dopyt">Odoslať dopyt</span>
+								</span>
+							</button>
+							<p class="fs-14 lh-22 mt-15px mb-0">Odoslaním formulára beriete na vedomie spracúvanie údajov podľa <a href="ochrana-osobnych-udajov/" class="text-dark-gray text-decoration-line-bottom">zásad ochrany osobných údajov</a>.</p>
+						</div>
+					</div>
+					<div id="dopyt-chyba" class="dopyt-chyba-celkova" role="alert"></div>
+				</form>
+				<div id="dopyt-stav" class="dopyt-stav" role="status" tabindex="-1"></div>
+				<noscript>
+					<p class="dopyt-chyba-celkova">Formulár potrebuje zapnutý JavaScript. Zavolajte nám na <a href="tel:+421948103310">0948&nbsp;10&nbsp;33&nbsp;10</a> alebo napíšte na <a href="mailto:info@artenz.sk">info@artenz.sk</a>.</p>
+				</noscript>
+			</div>
 		</section>
 		<!-- end section -->
 
@@ -956,5 +1050,7 @@
 		</script>
 		<script type="text/javascript" src="js/main.js"></script>
 		<script type="text/javascript" src="js/artenz.js"></script>
+		<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+		<script type="text/javascript" src="js/dopyt.js"></script>
 	</body>
 </html>
