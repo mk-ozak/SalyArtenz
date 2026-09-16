@@ -207,3 +207,33 @@ footer .footer-logo img {
 		top: auto;
 	}
 }
+/* panely sal: ked sa text nezmesti do vysky okna pod hlavickou, js/artenz.js prida triedu
+   stack-box-auto a panely sa neprekryvaju, maju vysku podla obsahu (ako tema robi pod 1200px) */
+@media (min-width: 1200px) {
+	.stack-box.stack-box-auto,
+	.stack-box.stack-box-auto .stack-box-contain,
+	.stack-box.stack-box-auto .stack-item,
+	.stack-box.stack-box-auto .stack-item .stack-item-wrapper,
+	.stack-box.stack-box-auto .stack-item .full-screen,
+	.stack-box.stack-box-auto .stack-item .full-screen > .cover-background {
+		height: auto !important;
+	}
+	.stack-box.stack-box-auto .stack-box-contain,
+	.stack-box.stack-box-auto .stack-item,
+	.stack-box.stack-box-auto .stack-item .stack-item-wrapper {
+		position: relative;
+	}
+	.stack-box.stack-box-auto .stack-item {
+		display: block;
+	}
+	.stack-box.stack-box-auto .stack-item .full-screen {
+		min-height: 100vh;
+	}
+	.stack-box.stack-box-auto .stack-item .full-screen > .cover-background {
+		align-self: stretch;
+	}
+	.stack-box.stack-box-auto .stack-item .full-screen > .col-lg-6:not(.cover-background) {
+		padding-top: 60px;
+		padding-bottom: 60px;
+	}
+}
