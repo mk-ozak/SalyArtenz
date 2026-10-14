@@ -10,7 +10,7 @@ const DOPYT_URL = "https://fmkralairvdhjnsfhcxo.supabase.co/functions/v1/dopyt";
 	var loadedAt = Date.now();
 
 	var HLASKY = {
-		missing_name: "Vyplňte meno a priezvisko.",
+		missing_name: "Vyplňte meno a\u00A0priezvisko.",
 		missing_phone: "Vyplňte telefónne číslo.",
 		missing_email: "Vyplňte e-mailovú adresu.",
 		invalid_email: "E-mailová adresa nevyzerá správne.",
@@ -18,12 +18,12 @@ const DOPYT_URL = "https://fmkralairvdhjnsfhcxo.supabase.co/functions/v1/dopyt";
 		invalid_event_date: "Dátum akcie nie je platný.",
 		invalid_guests: "Počet hostí zadajte ako číslo.",
 		too_long: "Text je príliš dlhý, skráťte ho.",
-		turnstile_failed: "Overenie zlyhalo, obnovte stránku a skúste to znova.",
+		turnstile_failed: "Overenie zlyhalo, obnovte stránku a\u00A0skúste to znova.",
 		invalid_json: "Dopyt sa nepodarilo odoslať, skúste to znova.",
 	};
-	var OVERENIE_NEDOKONCENE = "Počkajte na dokončenie overenia a odošlite dopyt znova.";
+	var OVERENIE_NEDOKONCENE = "Počkajte na dokončenie overenia a\u00A0odošlite dopyt znova.";
 	var CHYBA_VSEOBECNA = "Dopyt sa nepodarilo odoslať. Zavolajte nám na ";
-	var CHYBA_SERVERA = "Skúste to o chvíľu znova alebo nám zavolajte na ";
+	var CHYBA_SERVERA = "Skúste to o\u00A0chvíľu znova alebo nám zavolajte na ";
 	var DAKUJEME = "Ďakujeme, ozveme sa vám do 24 hodín.";
 	var ODOSIELAM = "Odosielam…";
 	var TELEFON = { text: "0948 10 33 10", href: "tel:+421948103310" };
